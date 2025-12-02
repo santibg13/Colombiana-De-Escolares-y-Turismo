@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>COLESTUR S.A.S.</title>
+
+    <style>
+        /* PALETA CORPORATIVA */
+        :root {
+            --dark-bg: #16212F;
+            --dark-card: #1F2C3C;
+            --text-light: #E8EDF3;
+            --accent-blue: #3A7CE9;
+            --accent-red: #D9534F;
+            --btn-bg: #244C7A;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', sans-serif;
+            background: var(--dark-bg);
+            color: var(--text-light);
+        }
+
+        /* HERO */
+        header {
+            text-align: center;
+            padding: 70px 20px;
+            background: linear-gradient(135deg, #11202F, #0A151F);
+            color: white;
+        }
+
+        h1 {
+            font-size: 40px;
+            letter-spacing: 1px;
+        }
+
+        /* BOTONES */
+        a.btn {
+            display: inline-block;
+            background: var(--btn-bg);
+            padding: 14px 28px;
+            margin: 10px;
+            border-radius: 8px;
+            color: white;
+            text-decoration: none;
+            transition: .25s;
+            font-weight: 600;
+        }
+
+        a.btn:hover {
+            background: #1d3b5c;
+        }
+
+        /* CONTENEDOR */
+        .container {
+            max-width: 1100px;
+            margin: auto;
+            padding: 40px 20px;
+        }
+
+        /* TITULO SERVICIOS */
+        .services-title {
+            text-align: center;
+            font-size: 30px;
+            margin-bottom: 40px;
+            font-weight: bold;
+        }
+
+        /* GRID */
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 50px;
+            justify-items: center;
+        }
+
+        /* CÍRCULO DE SERVICIO */
+        .service-card {
+            position: relative;
+            width: 260px;
+            height: 260px;
+            border-radius: 50%;
+            overflow: hidden;
+            cursor: pointer;
+            border: 4px solid rgba(255,255,255,0.06);
+            transition: .3s;
+        }
+
+        .service-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: brightness(0.9);
+            transition: .3s;
+        }
+
+        /* EFECTO HOVER: OSCURECER + TEXTO */
+        .service-card:hover img {
+            filter: brightness(0.35);
+            transform: scale(1.05);
+        }
+
+        .service-info {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: white;
+            opacity: 0;
+            transition: .3s ease-in-out;
+            padding: 10px;
+        }
+
+        .service-card:hover .service-info {
+            opacity: 1;
+        }
+
+        .service-title {
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .service-desc {
+            font-size: 14px;
+            margin-top: 6px;
+            color: var(--accent-red);
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <!-- HERO -->
+    <header>
+        <h1>COLESTUR S.A.S.</h1>
+        <h2>Transporte Especial de Pasajeros</h2>
+        <p>Escolar • Empresarial • Turismo • Transfer Aeropuerto</p>
+
+       <a class="btn" href="#reservar">Reservar</a>
+        <a class="btn" href="https://wa.me/573028541648">WhatsApp</a>
+        <a class="btn" href="tel:+573028541648">Llamar</a>
+    </header>
+
+    <!-- SERVICIOS -->
+    <div class="container">
+        <div class="services-title">Nuestros Servicios</div>
+
+        <div class="services-grid">
+
+            <!-- Servicio 1 -->
+            <div class="service-card">
+                <img src="https://carepa-antioquia.gov.co/NuestraAlcaldia/SaladePrensa/Noticias/Lists/Fotos/RUTA%20ESCOLAR.jpg">
+                <div class="service-info">
+                    <div class="service-title">Transporte Escolar</div>
+                    <div class="service-desc">Seguro, confiable y acompañado.</div>
+                </div>
+            </div>
+
+            <!-- Servicio 2 -->
+            <div class="service-card">
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQSTXobnlUUEFRJCzxgArv2f65QPRoM8gcZbg&s">
+                <div class="service-info">
+                    <div class="service-title">Transporte Empresarial</div>
+                    <div class="service-desc">Movilidad para empresas y eventos.</div>
+                </div>
+            </div>
+
+            <!-- Servicio 3 -->
+            <div class="service-card">
+                <img src="https://st.depositphotos.com/1019192/4338/i/450/depositphotos_43389909-stock-photo-tourist-bus-traveling-on-road.jpg">
+                <div class="service-info">
+                    <div class="service-title">Turismo</div>
+                    <div class="service-desc">Recorridos y viajes intermunicipales.</div>
+                </div>
+            </div>
+
+            <!-- Servicio 4 -->
+            <div class="service-card">
+                <img src="https://www.italyluxurytrips.com/wp-content/uploads/2020/09/137646764_3902016329830237_2185497418909258490_n.jpg">
+                <div class="service-info">
+                    <div class="service-title">Transfer Aeropuerto</div>
+                    <div class="service-desc">Traslados puerta a puerta.</div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</body>
+</html>
