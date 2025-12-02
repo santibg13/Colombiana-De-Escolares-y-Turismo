@@ -1,7 +1,8 @@
 {
   "name": "COLESTUR S.A.S.",
   "short_name": "COLESTUR",
-  "start_url": "/",
+  "start_url": "/Colombiana-De-Escolares-y-Turismo/",
+  "scope": "/Colombiana-De-Escolares-y-Turismo/",
   "display": "standalone",
   "background_color": "#16212F",
   "theme_color": "#16212F",
