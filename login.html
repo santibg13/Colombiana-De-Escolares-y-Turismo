@@ -1,18 +1,125 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login Administración - COLESTUR</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: "Segoe UI", sans-serif;
+      background: #16212f;
+      color: #e8edf3;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .card {
+      background: #1f2c3c;
+      padding: 24px;
+      border-radius: 12px;
+      width: 100%;
+      max-width: 380px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+    }
+
+    h1 {
+      text-align: center;
+      margin-top: 0;
+      margin-bottom: 14px;
+    }
+
+    label {
+      display: block;
+      margin-top: 10px;
+      margin-bottom: 4px;
+      font-size: 14px;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      border-radius: 8px;
+      border: none;
+      margin-bottom: 6px;
+      background: #223142;
+      color: #e8edf3;
+      box-sizing: border-box;
+    }
+
+    button {
+      width: 100%;
+      margin-top: 14px;
+      padding: 12px;
+      border-radius: 8px;
+      border: none;
+      background: #274b78;
+      color: white;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.25s;
+    }
+
+    button:hover {
+      background: #1c3a5d;
+      transform: translateY(-1px);
+    }
+
+    #msg {
+      text-align: center;
+      margin-top: 12px;
+      min-height: 18px;
+      font-size: 14px;
+    }
+
+    a {
+      color: #3a7ce9;
+      text-decoration: none;
+      font-size: 14px;
+      display: block;
+      margin-top: 10px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>Admin COLESTUR</h1>
+    <p style="text-align:center;font-size:13px;opacity:.8;">
+      Acceso exclusivo para personal autorizado.
+    </p>
+
+    <label>Correo</label>
+    <input id="email" type="email" value="santibg13@gmail.com" />
+
+    <label>Contraseña</label>
+    <input id="password" type="password" />
+
+    <button id="loginBtn">Ingresar</button>
+
+    <div id="msg"></div>
+
+    <a href="index.html">← Volver al sitio</a>
+  </div>
+
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { 
-    getAuth, 
-    signInWithEmailAndPassword,
-    onAuthStateChanged 
+  getAuth, 
+  signInWithEmailAndPassword,
+  onAuthStateChanged 
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
 const firebaseConfig = {
-    apiKey: "AIzaSyCpuX28qe2YFhX2rSzH01AIPP9EQDIsP94",
-    authDomain: "colestur-reservas.firebaseapp.com",
-    projectId: "colestur-reservas",
-    storageBucket: "colestur-reservas.firebasestorage.app",
-    messagingSenderId: "123689903908",
-    appId: "1:123689903908:web:d4d710d7165e64a369f5b1",
+  apiKey: "AIzaSyCpuX28qe2YFhX2rSzH01AIPP9EQDIsP94",
+  authDomain: "colestur-reservas.firebaseapp.com",
+  projectId: "colestur-reservas",
+  storageBucket: "colestur-reservas.firebasestorage.app",
+  messagingSenderId: "123689903908",
+  appId: "1:123689903908:web:d4d710d7165e64a369f5b1",
 };
 
 const app = initializeApp(firebaseConfig);
@@ -23,24 +130,28 @@ const passInput = document.getElementById("password");
 const btn = document.getElementById("loginBtn");
 const msg = document.getElementById("msg");
 
+// LOGIN
 btn.addEventListener("click", async () => {
-    msg.style.color = "#e8edf3";
-    msg.textContent = "Ingresando...";
+  msg.style.color = "#e8edf3";
+  msg.textContent = "Ingresando...";
 
-    try {
-        await signInWithEmailAndPassword(auth, emailInput.value, passInput.value);
-        window.location.href = "admin.html";
-    } catch (err) {
-        msg.style.color = "#ff5252";
-        msg.textContent = "Correo o contraseña incorrectos.";
-    }
+  try {
+    await signInWithEmailAndPassword(auth, emailInput.value, passInput.value);
+    window.location.href = "admin.html";
+  } catch (err) {
+    msg.style.color = "#ff5252";
+    msg.textContent = "Correo o contraseña incorrectos.";
+  }
 });
 
-// ❌ Ya NO redirige aquí
+// YA NO REDIRIGE SOLO
 onAuthStateChanged(auth, (user) => {
-    if (user) {
-        msg.style.color = "#4caf50";
-        msg.innerHTML = "Sesión iniciada.<br>Puedes continuar.";
-    }
+  if (user) {
+    msg.style.color = "#4caf50";
+    msg.innerHTML = "Sesión iniciada.<br>Puedes continuar.";
+  }
 });
 </script>
+
+</body>
+</html>
