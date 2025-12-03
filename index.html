@@ -261,6 +261,85 @@ const observer = new IntersectionObserver(entries => {
 
 wrappers.forEach(w => observer.observe(w));
 </script>
+<!-- POPUP DESCARGAR APP -->
+<div id="appInstallPopup" style="
+    display:none;
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #1F2C3C;
+    padding: 20px;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 400px;
+    color: white;
+    text-align: center;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+    z-index: 9999;
+">
+    <h3 style="margin-top:0; font-size:20px;">Instalar COLESTUR App</h3>
+
+    <p id="appInstallText" style="font-size:16px; opacity:0.9; line-height:1.5;"></p>
+
+    <button onclick="cerrarPopup()" style="
+        margin-top: 15px;
+        padding: 10px 20px;
+        background:#3A7CE9;
+        border:none;
+        color:white;
+        border-radius:8px;
+        font-size:16px;
+        cursor:pointer;">
+        Cerrar
+    </button>
+</div>
+
+<script>
+// BOTÓN DESCARGAR APP
+document.getElementById("descargarAppBtn").addEventListener("click", function() {
+    const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+    const isAndroid = /android/i.test(navigator.userAgent);
+
+    let mensaje = "";
+
+    if (isIOS) {
+        mensaje = `
+        <b>iPhone detectado 📱</b><br><br>
+        Para instalar la app:<br>
+        1. Toca el botón <b>Compartir</b> (cuadrado con flecha ↑)<br>
+        2. Selecciona <b>"Agregar a pantalla de inicio"</b><br><br>
+        ¡Tu app COLESTUR estará lista!
+        `;
+    }
+
+    if (isAndroid) {
+        mensaje = `
+        <b>Android detectado 🤖</b><br><br>
+        Para instalar la app:<br>
+        1. Toca el menú <b>⋮</b> arriba a la derecha<br>
+        2. Selecciona <b>"Agregar a pantalla de inicio"</b><br><br>
+        ¡La instalación será automática!
+        `;
+    }
+
+    if (!isAndroid && !isIOS) {
+        mensaje = `
+        Tu dispositivo no soporta instalación automática.<br>
+        Prueba desde un iPhone o un Android.
+        `;
+    }
+
+    document.getElementById("appInstallText").innerHTML = mensaje;
+    document.getElementById("appInstallPopup").style.display = "block";
+});
+
+// CERRAR POPUP
+function cerrarPopup() {
+    document.getElementById("appInstallPopup").style.display = "none";
+}
+</script>
 
 </body>
 </html>
+
