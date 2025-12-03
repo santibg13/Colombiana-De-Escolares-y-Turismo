@@ -70,65 +70,115 @@
             font-weight: bold;
         }
 
-        /* GRID */
+        /* ⬇⬇ DISEÑO ULTRA PREMIUM DE SERVICIOS ⬇⬇ */
+
         .services-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-            gap: 50px;
+            gap: 80px;
             justify-items: center;
         }
 
-        /* CÍRCULO DE SERVICIO */
-        .service-card {
+        .service-wrapper {
+            text-align: center;
             position: relative;
-            width: 260px;
-            height: 260px;
-            border-radius: 50%;
-            overflow: hidden;
-            cursor: pointer;
-            border: 4px solid rgba(255,255,255,0.06);
-            transition: .3s;
         }
 
-        .service-card img {
+        .flip-card {
+            width: 260px;
+            height: 260px;
+            perspective: 1100px;
+            border-radius: 50%;
+            transition: transform 0.4s ease;
+        }
+
+        .flip-card:hover {
+            transform: translateY(-10px) scale(1.03);
+        }
+
+        .flip-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.9s cubic-bezier(0.22, 1, 0.27, 1);
+            transform-style: preserve-3d;
+            border-radius: 50%;
+        }
+
+        .flip-card:hover .flip-card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .flip-card-front, .flip-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            overflow: hidden;
+        }
+
+        .flip-card-front {
+            border: 4px solid rgba(255,255,255,0.08);
+            box-shadow: 0 10px 35px rgba(0,0,0,0.25);
+        }
+
+        .flip-card-front img {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            filter: brightness(0.9);
-            transition: .3s;
+            filter: brightness(0.85);
+            transition: 0.4s;
         }
 
-        /* EFECTO HOVER: OSCURECER + TEXTO */
-        .service-card:hover img {
-            filter: brightness(0.35);
-            transform: scale(1.05);
+        .flip-card:hover img {
+            filter: brightness(0.4);
+            transform: scale(1.08);
         }
 
-        .service-info {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
+        .flip-card-back {
+            background: rgba(31, 44, 60, 0.7);
+            backdrop-filter: blur(8px);
+            border: 2px solid rgba(255,255,255,0.08);
+            transform: rotateY(180deg);
+            box-shadow: inset 0 0 40px rgba(0,0,0,0.3);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 25px;
             text-align: center;
-            color: white;
-            opacity: 0;
-            transition: .3s ease-in-out;
-            padding: 10px;
         }
 
-        .service-card:hover .service-info {
-            opacity: 1;
+        .flip-card-back h3 {
+            font-size: 22px;
+            margin-bottom: 15px;
+            letter-spacing: 1px;
+            color: #ffffff;
         }
 
-        .service-title {
-            font-size: 20px;
-            font-weight: bold;
+        .flip-card-back p {
+            font-size: 15px;
+            opacity: 0.85;
         }
 
-        .service-desc {
-            font-size: 14px;
-            margin-top: 6px;
-            color: var(--accent-red);
+        .service-title-below {
+            font-size: 22px;
+            font-weight: 700;
+            margin-top: 18px;
+            letter-spacing: 1px;
+            color: #EAF3FF;
+            text-shadow: 0 2px 6px rgba(0,0,0,0.4);
+        }
+
+        .service-title-below::after {
+            content: "";
+            display: block;
+            margin: 8px auto 0;
+            width: 40px;
+            height: 3px;
+            background: var(--accent-blue);
+            border-radius: 3px;
         }
 
     </style>
@@ -141,7 +191,7 @@
         <h2>Transporte Especial de Pasajeros</h2>
         <p>Escolar • Empresarial • Turismo • Transfer Aeropuerto</p>
 
-       <a class="btn" href="#reservar">Reservar</a>
+        <a class="btn" href="#reservar">Reservar</a>
         <a class="btn" href="https://wa.me/573028541648">WhatsApp</a>
         <a class="btn" href="tel:+573028541648">Llamar</a>
         <a class="btn" id="descargarAppBtn">📲 Descargar App</a>
@@ -154,50 +204,82 @@
         <div class="services-grid">
 
             <!-- Servicio 1 -->
-            <div class="service-card">
-                <img src="https://carepa-antioquia.gov.co/NuestraAlcaldia/SaladePrensa/Noticias/Lists/Fotos/RUTA%20ESCOLAR.jpg">
-                <div class="service-info">
-                    <div class="service-title">Transporte Escolar</div>
-                    <div class="service-desc">Seguro, confiable y acompañado.</div>
+            <div class="service-wrapper">
+                <div class="flip-card">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front">
+                            <img src="https://carepa-antioquia.gov.co/NuestraAlcaldia/SaladePrensa/Noticias/Lists/Fotos/RUTA%20ESCOLAR.jpg">
+                        </div>
+                        <div class="flip-card-back">
+                            <h3>Transporte Escolar</h3>
+                            <p>Seguro, confiable y acompañado.</p>
+                        </div>
+                    </div>
                 </div>
+                <div class="service-title-below">Transporte Escolar</div>
             </div>
 
             <!-- Servicio 2 -->
-            <div class="service-card">
-                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQSTXobnlUUEFRJCzxgArv2f65QPRoM8gcZbg&s">
-                <div class="service-info">
-                    <div class="service-title">Transporte Empresarial</div>
-                    <div class="service-desc">Movilidad para empresas y eventos.</div>
+            <div class="service-wrapper">
+                <div class="flip-card">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front">
+                            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQSTXobnlUUEFRJCzxgArv2f65QPRoM8gcZbg&s">
+                        </div>
+                        <div class="flip-card-back">
+                            <h3>Transporte Empresarial</h3>
+                            <p>Movilidad para empresas y eventos.</p>
+                        </div>
+                    </div>
                 </div>
+                <div class="service-title-below">Transporte Empresarial</div>
             </div>
 
             <!-- Servicio 3 -->
-            <div class="service-card">
-                <img src="https://st.depositphotos.com/1019192/4338/i/450/depositphotos_43389909-stock-photo-tourist-bus-traveling-on-road.jpg">
-                <div class="service-info">
-                    <div class="service-title">Turismo</div>
-                    <div class="service-desc">Recorridos y viajes intermunicipales.</div>
+            <div class="service-wrapper">
+                <div class="flip-card">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front">
+                            <img src="https://st.depositphotos.com/1019192/4338/i/450/depositphotos_43389909-stock-photo-tourist-bus-traveling-on-road.jpg">
+                        </div>
+                        <div class="flip-card-back">
+                            <h3>Turismo</h3>
+                            <p>Recorridos y viajes intermunicipales.</p>
+                        </div>
+                    </div>
                 </div>
+                <div class="service-title-below">Turismo</div>
             </div>
 
             <!-- Servicio 4 -->
-            <div class="service-card">
-                <img src="https://www.italyluxurytrips.com/wp-content/uploads/2020/09/137646764_3902016329830237_2185497418909258490_n.jpg">
-                <div class="service-info">
-                    <div class="service-title">Transfer Aeropuerto</div>
-                    <div class="service-desc">Traslados puerta a puerta.</div>
+            <div class="service-wrapper">
+                <div class="flip-card">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front">
+                            <img src="https://www.italyluxurytrips.com/wp-content/uploads/2020/09/137646764_3902016329830237_2185497418909258490_n.jpg">
+                        </div>
+                        <div class="flip-card-back">
+                            <h3>Transfer Aeropuerto</h3>
+                            <p>Traslados puerta a puerta.</p>
+                        </div>
+                    </div>
                 </div>
+                <div class="service-title-below">Transfer Aeropuerto</div>
             </div>
 
         </div>
     </div>
-    
+
+
+<!-- Service Worker -->
 <script>
   if ("serviceWorker" in navigator) {
     navigator.serviceWorker.register("service-worker.js");
   }
 </script>
-    <!-- POPUP DESCARGAR APP -->
+
+
+<!-- POPUP DESCARGAR APP -->
 <div id="appInstallPopup" style="
     display:none;
     position: fixed;
@@ -212,10 +294,9 @@
     color: white;
     text-align: center;
     box-shadow: 0 8px 25px rgba(0,0,0,0.4);
-    z-index: 9999;
-">
+    z-index: 9999;">
+    
     <h3 style="margin-top:0; font-size:20px;">Instalar COLESTUR App</h3>
-
     <p id="appInstallText" style="font-size:16px; opacity:0.9; line-height:1.5;"></p>
 
     <button onclick="cerrarPopup()" style="
@@ -230,7 +311,8 @@
         Cerrar
     </button>
 </div>
-    <script>
+
+<script>
 // BOTÓN DESCARGAR APP
 document.getElementById("descargarAppBtn").addEventListener("click", function() {
     const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
@@ -274,10 +356,6 @@ function cerrarPopup() {
     document.getElementById("appInstallPopup").style.display = "none";
 }
 </script>
+
 </body>
 </html>
-
-
-
-
-
