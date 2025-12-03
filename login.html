@@ -149,12 +149,16 @@
       }
     });
 
-    // Si ya está logueado, mandar directo al admin
     onAuthStateChanged(auth, (user) => {
-      if (user) {
-        window.location.href = "admin.html";
-      }
-    });
+  // Si ya está logueado NO redirige automáticamente
+  // Solo muestra un mensaje y un botón para continuar
+  if (user) {
+    msg.style.color = "#4caf50";
+    msg.innerHTML = "Ya has iniciado sesión.<br><br><a href='admin.html' style='color:#3A7CE9;'>Ir al panel →</a>";
+  }
+});
+
+   
   </script>
 </body>
 </html>
