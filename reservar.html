@@ -29,21 +29,10 @@
       box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
     }
 
-    header h1 {
-      margin: 0;
-      font-size: 34px;
-      font-weight: 800;
-    }
-
-    header p {
-      margin-top: 8px;
-      opacity: 0.85;
-    }
-
     .container {
       max-width: 600px;
-      margin: 30px auto 50px;
-      padding: 0 20px;
+      margin: 30px auto;
+      padding: 20px;
     }
 
     form {
@@ -60,8 +49,7 @@
       font-weight: 500;
     }
 
-    input,
-    select {
+    input, select {
       width: 100%;
       padding: 10px;
       border-radius: 8px;
@@ -69,12 +57,6 @@
       margin-bottom: 6px;
       background: #223142;
       color: var(--text-light);
-      box-sizing: border-box;
-    }
-
-    input:focus,
-    select:focus {
-      outline: 2px solid var(--accent-blue);
     }
 
     button {
@@ -94,7 +76,6 @@
     button:hover {
       background: var(--btn-hover);
       transform: translateY(-1px);
-      box-shadow: 0 5px 16px rgba(0, 0, 0, 0.35);
     }
 
     #mensajeReserva {
@@ -103,143 +84,140 @@
       margin-top: 18px;
       min-height: 22px;
     }
-
-    a.volver {
-      display: inline-block;
-      margin-top: 18px;
-      color: var(--accent-blue);
-      text-decoration: none;
-    }
   </style>
 </head>
-
 <body>
-  <header>
-    <h1>Reservar servicio</h1>
-    <p>COLESTUR S.A.S. • Transporte especial</p>
-  </header>
 
-  <div class="container">
-    <form id="reservaForm">
-      <label>Nombre completo</label>
-      <input id="nombre" required />
+<header>
+  <h1>Reservar servicio</h1>
+  <p>COLESTUR S.A.S • Transporte especial</p>
+</header>
 
-      <label>WhatsApp (con indicativo, ej: 573001234567)</label>
-      <input id="telefono" required type="tel" />
+<div class="container">
+  <form id="reservaForm">
+    <label>Nombre completo</label>
+    <input id="nombre" required />
 
-      <label>Origen</label>
-      <input id="origen" required />
+    <label>WhatsApp (con indicativo, ej: 573001234567)</label>
+    <input id="telefono" required type="tel" />
 
-      <label>Destino</label>
-      <input id="destino" required />
+    <label>Origen</label>
+    <input id="origen" required />
 
-      <label>Fecha</label>
-      <input id="fecha" type="date" required />
+    <label>Destino</label>
+    <input id="destino" required />
 
-      <label>Hora</label>
-      <input id="hora" type="time" required />
+    <label>Fecha</label>
+    <input id="fecha" type="date" required />
 
-      <label>Pasajeros</label>
-      <input id="pasajeros" type="number" min="1" required />
+    <label>Hora</label>
+    <input id="hora" type="time" required />
 
-      <label>Tipo de servicio</label>
-      <select id="servicio" required>
-        <option value="Escolar">Escolar</option>
-        <option value="Empresarial">Empresarial</option>
-        <option value="Turismo">Turismo</option>
-        <option value="Aeropuerto">Transfer Aeropuerto</option>
-      </select>
+    <label>Pasajeros</label>
+    <input id="pasajeros" type="number" min="1" required />
 
-      <button type="submit">Confirmar reserva</button>
-    </form>
+    <label>Tipo de servicio</label>
+    <select id="servicio" required>
+      <option value="Escolar">Escolar</option>
+      <option value="Empresarial">Empresarial</option>
+      <option value="Turismo">Turismo</option>
+      <option value="Aeropuerto">Transfer Aeropuerto</option>
+    </select>
 
-    <p id="mensajeReserva"></p>
+    <button type="submit">Confirmar reserva</button>
+  </form>
 
-    <div style="text-align:center;">
-      <a href="index.html" class="volver">← Volver a la página principal</a>
-    </div>
-  </div>
+  <p id="mensajeReserva"></p>
+</div>
 
-  <!-- EmailJS -->
-  <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
-  <script>
-    (function() {
-      emailjs.init("BBBTYChL9Rq9ynJgJ");  
-    })();
-  </script>
+<!-- FIREBASE -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+  import { 
+    getFirestore, collection, addDoc, serverTimestamp 
+  } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-  <!-- Firebase + Guardar + Email -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import {
-      getFirestore,
-      collection,
-      addDoc,
-      serverTimestamp,
-    } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+  const firebaseConfig = {
+    apiKey: "AIzaSyCpuX28qe2YFhX2rSzH01AIPP9EQDIsP94",
+    authDomain: "colestur-reservas.firebaseapp.com",
+    projectId: "colestur-reservas",
+    storageBucket: "colestur-reservas.firebasestorage.app",
+    messagingSenderId: "123689903908",
+    appId: "1:123689903908:web:d4d710d7165e64a369f5b1",
+  };
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyCpuX28qe2YFhX2rSzH01AIPP9EQDIsP94",
-      authDomain: "colestur-reservas.firebaseapp.com",
-      projectId: "colestur-reservas",
-      storageBucket: "colestur-reservas.firebasestorage.app",
-      messagingSenderId: "123689903908",
-      appId: "1:123689903908:web:d4d710d7165e64a369f5b1",
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  // EMAILJS SCRIPT
+</script>
+
+<!-- EMAILJS SDK -->
+<script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+<script>
+  emailjs.init("BBBTYChL9Rq9ynJgJ");
+</script>
+
+<script type="module">
+  const form = document.getElementById("reservaForm");
+  const mensaje = document.getElementById("mensajeReserva");
+
+  import { 
+    getFirestore, collection, addDoc, serverTimestamp 
+  } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+  const db = getFirestore();
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const reserva = {
+      nombre: nombre.value.trim(),
+      telefono: telefono.value.trim(),
+      origen: origen.value.trim(),
+      destino: destino.value.trim(),
+      fecha: fecha.value,
+      hora: hora.value,
+      pasajeros: pasajeros.value,
+      servicio: servicio.value,
+      estado: "Pendiente",
+      creadaEn: serverTimestamp(),
     };
 
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
+    mensaje.style.color = "#e8edf3";
+    mensaje.textContent = "Enviando reserva...";
 
-    const form = document.getElementById("reservaForm");
-    const mensaje = document.getElementById("mensajeReserva");
+    try {
+      // GUARDAR EN FIREBASE
+      await addDoc(collection(db, "reservas"), reserva);
 
-    form.addEventListener("submit", async (e) => {
-      e.preventDefault();
+      // ENVIAR CORREO AUTOMÁTICO
+      await emailjs.send("service_bsdpr26", "template_fmqabdi", {
+        to_email: "santibg13@gmail.com",
+        nombre: reserva.nombre,
+        telefono: reserva.telefono,
+        servicio: reserva.servicio,
+        origen: reserva.origen,
+        destino: reserva.destino,
+        fecha: reserva.fecha,
+        hora: reserva.hora,
+        pasajeros: reserva.pasajeros
+      });
 
-      const reserva = {
-        nombre: document.getElementById("nombre").value.trim(),
-        telefono: document.getElementById("telefono").value.trim(),
-        origen: document.getElementById("origen").value.trim(),
-        destino: document.getElementById("destino").value.trim(),
-        fecha: document.getElementById("fecha").value,
-        hora: document.getElementById("hora").value,
-        pasajeros: Number(document.getElementById("pasajeros").value),
-        servicio: document.getElementById("servicio").value,
-        estado: "Pendiente",
-        creadaEn: serverTimestamp(),
-      };
+      mensaje.style.color = "#4caf50";
+      mensaje.textContent =
+        "✔ Tu reserva fue registrada con éxito. Un asesor de COLESTUR te contactará pronto.";
 
-      mensaje.style.color = "#e8edf3";
-      mensaje.textContent = "Enviando reserva...";
+      form.reset();
 
-      try {
-        await addDoc(collection(db, "reservas"), reserva);
-
-        /* ---------------- EMAIL AUTOMÁTICO ---------------- */
-        emailjs.send("Reservas", "template_fmqabdi", {
-          to_email: "santibg13@gmail.com",
-          nombre: reserva.nombre,
-          telefono: reserva.telefono,
-          servicio: reserva.servicio,
-          origen: reserva.origen,
-          destino: reserva.destino,
-          fecha: reserva.fecha,
-          hora: reserva.hora,
-          pasajeros: reserva.pasajeros,
-        });
-
-        mensaje.style.color = "#4caf50";
-        mensaje.textContent =
-          "✔ Tu reserva fue registrada con éxito. Un asesor de COLESTUR te contactará pronto.";
-
-        form.reset();
-      } catch (err) {
-        mensaje.style.color = "#ff5252";
-        mensaje.textContent =
-          "❌ Ocurrió un error al registrar la reserva. Intenta de nuevo.";
-      }
-    });
-  </script>
+    } catch (err) {
+      console.error(err);
+      mensaje.style.color = "#ff5252";
+      mensaje.textContent =
+        "❌ Ocurrió un error al registrar la reserva. Intenta de nuevo.";
+    }
+  });
+</script>
 
 </body>
 </html>
