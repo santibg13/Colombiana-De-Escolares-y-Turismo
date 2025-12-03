@@ -158,7 +158,7 @@
     </div>
   </div>
 
-  <!-- Firebase + Firestore -->
+  <!-- Firebase -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import {
@@ -205,6 +205,10 @@
       try {
         await addDoc(collection(db, "reservas"), reserva);
 
+        if (window.enviarNotificaciones) {
+          window.enviarNotificaciones(reserva);
+        }
+
         mensaje.style.color = "#4caf50";
         mensaje.textContent =
           "✔ Tu reserva fue registrada con éxito. Un asesor de COLESTUR te contactará pronto.";
@@ -218,5 +222,61 @@
       }
     });
   </script>
+
+  <!-- EmailJS -->
+  <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+
+  <script>
+    /* TUS DATOS DE EMAILJS */
+    const EMAILJS_PUBLIC_KEY  = "BBBTYChL9Rq9ynJgJ";
+    const EMAILJS_SERVICE_ID  = "Reservas";
+    const EMAILJS_TEMPLATE_ID = "template_fmqabdi";
+
+    emailjs.init(EMAILJS_PUBLIC_KEY);
+
+    /* WHATSAPP (FALTA API KEY DE CALLMEBOT) */
+    const CALLMEBOT_PHONE = "573102869505";
+    const CALLMEBOT_APIKEY = "AQUI_TU_API_KEY";
+
+    function enviarWhatsApp(reserva) {
+      if (CALLMEBOT_APIKEY === "AQUI_TU_API_KEY") return;
+
+      const texto =
+        "Nueva reserva COLESTUR:%0A" +
+        Nombre: ${reserva.nombre}%0A +
+        Teléfono: ${reserva.telefono}%0A +
+        Servicio: ${reserva.servicio}%0A +
+        Origen: ${reserva.origen}%0A +
+        Destino: ${reserva.destino}%0A +
+        Fecha: ${reserva.fecha}%0A +
+        Hora: ${reserva.hora}%0A +
+        Pasajeros: ${reserva.pasajeros};
+
+      const url =
+        https://api.callmebot.com/whatsapp.php?phone=${CALLMEBOT_PHONE}&apikey=${CALLMEBOT_APIKEY}&text=${texto};
+
+      fetch(url).catch(console.error);
+    }
+
+    function enviarCorreo(reserva) {
+      emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+        to_email: "Colestursas@gmail.com",
+        nombre: reserva.nombre,
+        telefono: reserva.telefono,
+        servicio: reserva.servicio,
+        origen: reserva.origen,
+        destino: reserva.destino,
+        fecha: reserva.fecha,
+        hora: reserva.hora,
+        pasajeros: reserva.pasajeros,
+      });
+    }
+
+    window.enviarNotificaciones = function(reserva) {
+      enviarWhatsApp(reserva);
+      enviarCorreo(reserva);
+    };
+  </script>
+
 </body>
 </html>
