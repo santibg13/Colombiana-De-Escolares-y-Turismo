@@ -7,274 +7,262 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>COLESTUR S.A.S.</title>
 
-    <style>
-        /* PALETA CORPORATIVA */
-        :root {
-            --dark-bg: #16212F;
-            --dark-card: #1F2C3C;
-            --text-light: #E8EDF3;
-            --accent-blue: #3A7CE9;
-            --accent-red: #D9534F;
-            --btn-bg: #244C7A;
-        }
+<style>
+/* PALETA CORPORATIVA */
+:root {
+    --dark-bg: #16212F;
+    --dark-card: #1F2C3C;
+    --text-light: #E8EDF3;
+    --accent-blue: #3A7CE9;
+    --btn-bg: #244C7A;
+}
 
-        body {
-            margin: 0;
-            font-family: 'Segoe UI', sans-serif;
-            background: var(--dark-bg);
-            color: var(--text-light);
-        }
+body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background: var(--dark-bg);
+    color: var(--text-light);
+}
 
-        /* HERO */
-        header {
-            text-align: center;
-            padding: 70px 20px;
-            background: linear-gradient(135deg, #11202F, #0A151F);
-            color: white;
-        }
+/* HERO */
+header {
+    text-align: center;
+    padding: 70px 20px;
+    background: linear-gradient(135deg, #11202F, #0A151F);
+    color: white;
+}
 
-        h1 {
-            font-size: 40px;
-            letter-spacing: 1px;
-        }
+h1 {
+    font-size: 40px;
+    letter-spacing: 1px;
+}
 
-        /* BOTONES */
-        a.btn {
-            display: inline-block;
-            background: var(--btn-bg);
-            padding: 14px 28px;
-            margin: 10px;
-            border-radius: 8px;
-            color: white;
-            text-decoration: none;
-            transition: .25s;
-            font-weight: 600;
-        }
+/* BOTONES */
+a.btn {
+    display: inline-block;
+    background: var(--btn-bg);
+    padding: 14px 28px;
+    margin: 10px;
+    border-radius: 8px;
+    color: white;
+    text-decoration: none;
+    transition: .25s;
+    font-weight: 600;
+}
 
-        a.btn:hover {
-            background: #1d3b5c;
-        }
+a.btn:hover {
+    background: #1d3b5c;
+}
 
-        /* CONTENEDOR */
-        .container {
-            max-width: 1100px;
-            margin: auto;
-            padding: 40px 20px;
-        }
+/* CONTENEDOR */
+.container {
+    max-width: 1100px;
+    margin: auto;
+    padding: 40px 20px;
+}
 
-        /* TITULO SERVICIOS */
-        .services-title {
-            text-align: center;
-            font-size: 30px;
-            margin-bottom: 40px;
-            font-weight: bold;
-        }
+/* TITULO SERVICIOS */
+.services-title {
+    text-align: center;
+    font-size: 30px;
+    margin-bottom: 40px;
+    font-weight: bold;
+}
 
-        /* SERVICIOS (ANIMACIÓN PREMIUM) */
+/* SERVICIOS CON ANIMACIÓN */
+.services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 80px;
+    justify-items: center;
+}
 
-        .services-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-            gap: 80px;
-            justify-items: center;
-        }
+.service-wrapper {
+    text-align: center;
+    opacity: 0;
+    transform: translateY(60px);
+    transition: all 0.9s ease-out;
+}
 
-        .service-wrapper {
-            text-align: center;
-            opacity: 0;
-            transform: translateY(60px);
-            transition: all 0.9s ease-out;
-        }
+/* Cuando entra en pantalla */
+.service-wrapper.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
 
-        .service-wrapper.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
+/* TARJETA FLIP */
+.flip-card {
+    width: 260px;
+    height: 260px;
+    perspective: 1100px;
+    border-radius: 50%;
+}
 
-        /* TARJETA FLIP */
-        .flip-card {
-            width: 260px;
-            height: 260px;
-            perspective: 1100px;
-            border-radius: 50%;
-        }
+.flip-card-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    border-radius: 50%;
+    transition: transform 1s ease-out;
+}
 
-        .flip-card-inner {
-            position: relative;
-            width: 100%;
-            height: 100%;
-            transition: transform 1s ease-out;
-            transform-style: preserve-3d;
-            border-radius: 50%;
-        }
+/* CARAS DEL FLIP */
+.flip-card-front, .flip-card-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    overflow: hidden;
+}
 
-        /* Flip automático */
-        .service-wrapper.visible .flip-card-inner {
-            transform: rotateY(180deg);
-        }
+/* FRONT */
+.flip-card-front {
+    border: 4px solid rgba(255,255,255,0.08);
+    box-shadow: 0 10px 35px rgba(0,0,0,0.25);
+}
 
-        .flip-card-front, .flip-card-back {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            -webkit-backface-visibility: hidden;
-            backface-visibility: hidden;
-            overflow: hidden;
-        }
+.flip-card-front img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: brightness(0.85);
+}
 
-        .flip-card-front {
-            border: 4px solid rgba(255,255,255,0.08);
-            box-shadow: 0 10px 35px rgba(0,0,0,0.25);
-        }
+/* BACK - GLASS EFFECT */
+.flip-card-back {
+    background: rgba(31, 44, 60, 0.7);
+    border: 2px solid rgba(255,255,255,0.1);
+    transform: rotateY(180deg);
+    box-shadow: inset 0 0 40px rgba(0,0,0,0.3);
+    backdrop-filter: blur(9px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    padding: 20px;
+}
 
-        .flip-card-front img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            filter: brightness(0.85);
-        }
+.flip-card-back h3 {
+    font-size: 20px;
+    margin-bottom: 6px;
+}
 
-        .flip-card-back {
-            background: rgba(31, 44, 60, 0.7);
-            border: 2px solid rgba(255,255,255,0.1);
-            transform: rotateY(180deg);
-            box-shadow: inset 0 0 40px rgba(0,0,0,0.3);
-            backdrop-filter: blur(9px);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            text-align: center;
-            padding: 20px;
-        }
+.flip-card-back p {
+    font-size: 14px;
+    line-height: 1.3;
+    padding: 0 10px;
+}
 
-        .flip-card-back h3 {
-            font-size: 22px;
-            margin-bottom: 10px;
-        }
+/* TÍTULO DEBAJO */
+.service-title-below {
+    font-size: 22px;
+    font-weight: 700;
+    margin-top: 18px;
+    letter-spacing: 1px;
+    color: #EAF3FF;
+    text-shadow: 0 2px 6px rgba(0,0,0,0.4);
+}
 
-        .flip-card-back p {
-            font-size: 15px;
-            opacity: 0.85;
-        }
-
-        /* Título bajo el círculo */
-        .service-title-below {
-            font-size: 22px;
-            font-weight: 700;
-            margin-top: 18px;
-            letter-spacing: 1px;
-            color: #EAF3FF;
-            text-shadow: 0 2px 6px rgba(0,0,0,0.4);
-        }
-
-        .service-title-below::after {
-            content: "";
-            display: block;
-            margin: 8px auto 0;
-            width: 40px;
-            height: 3px;
-            background: var(--accent-blue);
-            border-radius: 3px;
-        }
-
-    </style>
+.service-title-below::after {
+    content: "";
+    display: block;
+    margin: 8px auto 0;
+    width: 40px;
+    height: 3px;
+    background: var(--accent-blue);
+    border-radius: 3px;
+}
+</style>
 </head>
 <body>
 
-    <!-- HERO -->
-    <header>
-        <h1>COLESTUR S.A.S.</h1>
-        <h2>Transporte Especial de Pasajeros</h2>
-        <p>Escolar • Empresarial • Turismo • Transfer Aeropuerto</p>
+<!-- HERO -->
+<header>
+    <h1>COLESTUR S.A.S.</h1>
+    <h2>Transporte Especial de Pasajeros</h2>
+    <p>Escolar • Empresarial • Turismo • Transfer Aeropuerto</p>
 
-        <a class="btn" href="#reservar">Reservar</a>
-        <a class="btn" href="https://wa.me/573028541648">WhatsApp</a>
-        <a class="btn" href="tel:+573028541648">Llamar</a>
-        <a class="btn" id="descargarAppBtn">📲 Descargar App</a>
-    </header>
+    <a class="btn" href="#reservar">Reservar</a>
+    <a class="btn" href="https://wa.me/573028541648">WhatsApp</a>
+    <a class="btn" href="tel:+573028541648">Llamar</a>
+    <a class="btn" id="descargarAppBtn">📲 Descargar App</a>
+</header>
 
-    <!-- SERVICIOS -->
-    <div class="container">
-        <div class="services-title">Nuestros Servicios</div>
+<!-- SERVICIOS -->
+<div class="container">
+    <div class="services-title">Nuestros Servicios</div>
 
-        <div class="services-grid">
+    <div class="services-grid">
 
-            <!-- Servicio 1 -->
-            <div class="service-wrapper">
-                <div class="flip-card">
-                    <div class="flip-card-inner">
-                        <div class="flip-card-front">
-                            <img src="https://carepa-antioquia.gov.co/NuestraAlcaldia/SaladePrensa/Noticias/Lists/Fotos/RUTA%20ESCOLAR.jpg">
-                        </div>
-                        <div class="flip-card-back">
-                            <h3>Transporte Escolar</h3>
-                            <p>Seguro, confiable y acompañado.</p>
-                        </div>
+        <!-- Servicio 1 -->
+        <div class="service-wrapper">
+            <div class="flip-card">
+                <div class="flip-card-inner">
+                    <div class="flip-card-front">
+                        <img src="https://carepa-antioquia.gov.co/NuestraAlcaldia/SaladePrensa/Noticias/Lists/Fotos/RUTA%20ESCOLAR.jpg">
+                    </div>
+                    <div class="flip-card-back">
+                        <h3>Transporte Escolar</h3>
+                        <p>Seguro, confiable y acompañado.</p>
                     </div>
                 </div>
-                <div class="service-title-below">Transporte Escolar</div>
             </div>
-
-            <!-- Servicio 2 -->
-            <div class="service-wrapper">
-                <div class="flip-card">
-                    <div class="flip-card-inner">
-                        <div class="flip-card-front">
-                            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQSTXobnlUUEFRJCzxgArv2f65QPRoM8gcZbg&s">
-                        </div>
-                        <div class="flip-card-back">
-                            <h3>Transporte Empresarial</h3>
-                            <p>Movilidad para empresas y eventos.</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="service-title-below">Transporte Empresarial</div>
-            </div>
-
-            <!-- Servicio 3 -->
-            <div class="service-wrapper">
-                <div class="flip-card">
-                    <div class="flip-card-inner">
-                        <div class="flip-card-front">
-                            <img src="https://st.depositphotos.com/1019192/4338/i/450/depositphotos_43389909-stock-photo-tourist-bus-traveling-on-road.jpg">
-                        </div>
-                        <div class="flip-card-back">
-                            <h3>Turismo</h3>
-                            <p>Recorridos y viajes intermunicipales.</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="service-title-below">Turismo</div>
-            </div>
-
-            <!-- Servicio 4 -->
-            <div class="service-wrapper">
-                <div class="flip-card">
-                    <div class="flip-card-inner">
-                        <div class="flip-card-front">
-                            <img src="https://www.italyluxurytrips.com/wp-content/uploads/2020/09/137646764_3902016329830237_2185497418909258490_n.jpg">
-                        </div>
-                        <div class="flip-card-back">
-                            <h3>Transfer Aeropuerto</h3>
-                            <p>Traslados puerta a puerta.</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="service-title-below">Transfer Aeropuerto</div>
-            </div>
-
+            <div class="service-title-below">Transporte Escolar</div>
         </div>
+
+        <!-- Servicio 2 -->
+        <div class="service-wrapper">
+            <div class="flip-card">
+                <div class="flip-card-inner">
+                    <div class="flip-card-front">
+                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQSTXobnlUUEFRJCzxgArv2f65QPRoM8gcZbg&s">
+                    </div>
+                    <div class="flip-card-back">
+                        <h3>Transporte Empresarial</h3>
+                        <p>Movilidad para empresas y eventos.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="service-title-below">Transporte Empresarial</div>
+        </div>
+
+        <!-- Servicio 3 -->
+        <div class="service-wrapper">
+            <div class="flip-card">
+                <div class="flip-card-inner">
+                    <div class="flip-card-front">
+                        <img src="https://st.depositphotos.com/1019192/4338/i/450/depositphotos_43389909-stock-photo-tourist-bus-traveling-on-road.jpg">
+                    </div>
+                    <div class="flip-card-back">
+                        <h3>Turismo</h3>
+                        <p>Recorridos y viajes intermunicipales.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="service-title-below">Turismo</div>
+        </div>
+
+        <!-- Servicio 4 -->
+        <div class="service-wrapper">
+            <div class="flip-card">
+                <div class="flip-card-inner">
+                    <div class="flip-card-front">
+                        <img src="https://www.italyluxurytrips.com/wp-content/uploads/2020/09/137646764_3902016329830237_2185497418909258490_n.jpg">
+                    </div>
+                    <div class="flip-card-back">
+                        <h3>Transfer Aeropuerto</h3>
+                        <p>Traslados puerta a puerta.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="service-title-below">Transfer Aeropuerto</div>
+        </div>
+
     </div>
-
-
-<!-- Service Worker -->
-<script>
-  if ("serviceWorker" in navigator) {
-    navigator.serviceWorker.register("service-worker.js");
-  }
-</script>
-
+</div>
 
 <!-- POPUP DESCARGAR APP -->
 <div id="appInstallPopup" style="
@@ -310,7 +298,7 @@
 </div>
 
 <script>
-// BOTÓN DESCARGAR APP
+// POPUP INSTALAR APP
 document.getElementById("descargarAppBtn").addEventListener("click", function() {
     const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
     const isAndroid = /android/i.test(navigator.userAgent);
@@ -331,16 +319,9 @@ document.getElementById("descargarAppBtn").addEventListener("click", function() 
         mensaje = `
         <b>Android detectado 🤖</b><br><br>
         Para instalar la app:<br>
-        1. Toca el menú <b>⋮</b> arriba a la derecha<br>
+        1. Toca el menú <b>⋮</b><br>
         2. Selecciona <b>"Agregar a pantalla de inicio"</b><br><br>
-        ¡La instalación será automática!
-        `;
-    }
-
-    if (!isAndroid && !isIOS) {
-        mensaje = `
-        Tu dispositivo no soporta instalación automática.<br>
-        Prueba desde un iPhone o un Android.
+        ¡Instalación automática!
         `;
     }
 
@@ -348,25 +329,30 @@ document.getElementById("descargarAppBtn").addEventListener("click", function() 
     document.getElementById("appInstallPopup").style.display = "block";
 });
 
-// CERRAR POPUP
 function cerrarPopup() {
     document.getElementById("appInstallPopup").style.display = "none";
 }
 </script>
 
-<!-- ANIMACIÓN SCROLL (APARICIÓN + FLIP AUTOMÁTICO) -->
+<!-- ANIMACIÓN SCROLL + FLIP AUTOMÁTICO -->
 <script>
-const services = document.querySelectorAll(".service-wrapper");
+const wrappers = document.querySelectorAll(".service-wrapper");
 
 const observer = new IntersectionObserver(entries => {
     entries.forEach(entry => {
+        const card = entry.target.querySelector(".flip-card-inner");
+
         if (entry.isIntersecting) {
             entry.target.classList.add("visible");
+            card.style.transform = "rotateY(180deg)";
+        } else {
+            entry.target.classList.remove("visible");
+            card.style.transform = "rotateY(0deg)";
         }
     });
-}, { threshold: 0.4 });
+}, { threshold: 0.5 });
 
-services.forEach(service => observer.observe(service));
+wrappers.forEach(wrapper => observer.observe(wrapper));
 </script>
 
 </body>
