@@ -70,7 +70,7 @@
             font-weight: bold;
         }
 
-        /* ⬇⬇ DISEÑO ULTRA PREMIUM DE SERVICIOS ⬇⬇ */
+        /* SERVICIOS (ANIMACIÓN PREMIUM) */
 
         .services-grid {
             display: grid;
@@ -81,31 +81,35 @@
 
         .service-wrapper {
             text-align: center;
-            position: relative;
+            opacity: 0;
+            transform: translateY(60px);
+            transition: all 0.9s ease-out;
         }
 
+        .service-wrapper.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* TARJETA FLIP */
         .flip-card {
             width: 260px;
             height: 260px;
             perspective: 1100px;
             border-radius: 50%;
-            transition: transform 0.4s ease;
-        }
-
-        .flip-card:hover {
-            transform: translateY(-10px) scale(1.03);
         }
 
         .flip-card-inner {
             position: relative;
             width: 100%;
             height: 100%;
-            transition: transform 0.9s cubic-bezier(0.22, 1, 0.27, 1);
+            transition: transform 1s ease-out;
             transform-style: preserve-3d;
             border-radius: 50%;
         }
 
-        .flip-card:hover .flip-card-inner {
+        /* Flip automático */
+        .service-wrapper.visible .flip-card-inner {
             transform: rotateY(180deg);
         }
 
@@ -129,32 +133,24 @@
             height: 100%;
             object-fit: cover;
             filter: brightness(0.85);
-            transition: 0.4s;
-        }
-
-        .flip-card:hover img {
-            filter: brightness(0.4);
-            transform: scale(1.08);
         }
 
         .flip-card-back {
             background: rgba(31, 44, 60, 0.7);
-            backdrop-filter: blur(8px);
-            border: 2px solid rgba(255,255,255,0.08);
+            border: 2px solid rgba(255,255,255,0.1);
             transform: rotateY(180deg);
             box-shadow: inset 0 0 40px rgba(0,0,0,0.3);
+            backdrop-filter: blur(9px);
             display: flex;
             flex-direction: column;
             justify-content: center;
-            padding: 25px;
             text-align: center;
+            padding: 20px;
         }
 
         .flip-card-back h3 {
             font-size: 22px;
-            margin-bottom: 15px;
-            letter-spacing: 1px;
-            color: #ffffff;
+            margin-bottom: 10px;
         }
 
         .flip-card-back p {
@@ -162,6 +158,7 @@
             opacity: 0.85;
         }
 
+        /* Título bajo el círculo */
         .service-title-below {
             font-size: 22px;
             font-weight: 700;
@@ -355,6 +352,21 @@ document.getElementById("descargarAppBtn").addEventListener("click", function() 
 function cerrarPopup() {
     document.getElementById("appInstallPopup").style.display = "none";
 }
+</script>
+
+<!-- ANIMACIÓN SCROLL (APARICIÓN + FLIP AUTOMÁTICO) -->
+<script>
+const services = document.querySelectorAll(".service-wrapper");
+
+const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.classList.add("visible");
+        }
+    });
+}, { threshold: 0.4 });
+
+services.forEach(service => observer.observe(service));
 </script>
 
 </body>
