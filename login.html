@@ -149,16 +149,14 @@
       }
     });
 
+    // NO REDIRIGE EN LOOP → solo muestra un botón si ya estás logueado
     onAuthStateChanged(auth, (user) => {
-  // Si ya está logueado NO redirige automáticamente
-  // Solo muestra un mensaje y un botón para continuar
-  if (user) {
-    msg.style.color = "#4caf50";
-    msg.innerHTML = "Ya has iniciado sesión.<br><br><a href='admin.html' style='color:#3A7CE9;'>Ir al panel →</a>";
-  }
-});
-
-   
+      if (user) {
+        msg.style.color = "#4caf50";
+        msg.innerHTML =
+          "Sesión iniciada.<br><br><a href='admin.html' style='color:#3A7CE9;'>Ir al panel →</a>";
+      }
+    });
   </script>
 </body>
 </html>
