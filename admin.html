@@ -73,19 +73,19 @@ const auth = getAuth(app);
 const loading = document.getElementById("loading");
 const panel = document.getElementById("panel");
 
+// 🔥 CORREGIDO — SOLO UN onAuthStateChanged
 onAuthStateChanged(auth, (user) => {
   if (user) {
+    // Usuario logueado
     loading.style.display = "none";
     panel.style.display = "block";
   } else {
-    setTimeout(() => {
-      onAuthStateChanged(auth, (u2) => {
-        if (!u2) window.location.href = "login.html";
-      });
-    }, 1200);
+    // No logueado → redirigir
+    window.location.href = "login.html";
   }
 });
 
+// LOGOUT
 document.getElementById("logout").onclick = () => {
   signOut(auth).then(() => window.location.href = "login.html");
 };
