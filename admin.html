@@ -575,7 +575,7 @@ function renderTabla() {
         <div class="actions-cell">
           <button class="btn-small" data-action="detalle" data-id="${r.id}">Ver</button>
           ${estado !== "Completada" ? 
-            <button class="btn-small" data-action="completar" data-id="${r.id}">Completar</button> 
+            `<button class="btn-small" data-action="completar" data-id="${r.id}">Completar</button>` 
             : ""
           }
           <button class="btn-small btn-danger" data-action="eliminar" data-id="${r.id}">Eliminar</button>
@@ -760,7 +760,7 @@ exportarBtn.addEventListener("click", () => {
   let csv = "";
   csv += encabezados.join(";") + "\n";
   filas.forEach(f => {
-    csv += f.map(v => "${(v ?? "").toString().replace(/"/g, '""')}").join(";") + "\n";
+    csv += f.map(v => `"${(v ?? "").toString().replace(/"/g, '""')}"`).join(";") + "\n";
   });
 
   const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
