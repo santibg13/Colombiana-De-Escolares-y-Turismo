@@ -6,99 +6,410 @@
 <title>Panel Administrativo - COLESTUR</title>
 
 <style>
-body {
-  margin: 0;
-  background: #16212f;
-  color: #e8edf3;
-  font-family: "Segoe UI", sans-serif;
-}
+  :root {
+    --bg: #16212f;
+    --card: #1f2c3c;
+    --accent: #3a7ce9;
+    --accent-soft: #274b78;
+    --danger: #d9534f;
+    --text: #e8edf3;
+    --muted: #9ba7b8;
+    --border: #2a3a4d;
+    --success: #4caf50;
+  }
 
-#loading {
-  text-align: center;
-  padding: 40px;
-  font-size: 20px;
-}
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: "Segoe UI", sans-serif;
+  }
 
-#panel {
-  display: none;
-  padding: 20px;
-}
+  header {
+    background: #141c29;
+    padding: 14px 22px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--border);
+  }
 
-/* Tabla */
-table {
-  width: 100%;
-  border-collapse: collapse;
-  background: #1f2c3c;
-  border-radius: 10px;
-  overflow: hidden;
-}
+  .brand {
+    font-weight: 700;
+    font-size: 18px;
+  }
 
-th, td {
-  padding: 12px;
-  border-bottom: 1px solid #2a3a4d;
-  text-align: left;
-}
+  .brand span {
+    color: var(--accent);
+  }
 
-th {
-  background: #274b78;
-  font-weight: 600;
-}
+  .top-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
 
-tr:hover {
-  background: #223142;
-}
+  button,
+  .btn {
+    background: var(--accent-soft);
+    padding: 8px 16px;
+    color: white;
+    border-radius: 999px;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
 
-button {
-  background: #274b78;
-  padding: 10px 20px;
-  color: white;
-  border-radius: 8px;
-  border: none;
-  cursor: pointer;
-  font-size: 16px;
-}
-button:hover {
-  background: #1c3a5d;
-}
+  button:hover,
+  .btn:hover {
+    background: #1c3a5d;
+  }
+
+  .btn-danger {
+    background: var(--danger);
+  }
+
+  .btn-danger:hover {
+    background: #b23b38;
+  }
+
+  .btn-small {
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+
+  #loading {
+    text-align: center;
+    padding: 40px;
+    font-size: 18px;
+    color: var(--muted);
+  }
+
+  #panel {
+    display: none;
+    padding: 18px 22px 30px;
+  }
+
+  h1 {
+    margin-top: 0;
+    font-size: 22px;
+  }
+
+  .sub {
+    color: var(--muted);
+    font-size: 13px;
+    margin-bottom: 18px;
+  }
+
+  /* Filtros */
+  .filters {
+    background: var(--card);
+    border-radius: 12px;
+    padding: 12px 14px;
+    margin-bottom: 18px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+  }
+
+  .filters-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+  }
+
+  label {
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  select,
+  input[type="date"],
+  input[type="text"] {
+    background: #223142;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    padding: 8px 12px;
+    color: var(--text);
+    font-size: 13px;
+    outline: none;
+  }
+
+  select:focus,
+  input[type="date"]:focus,
+  input[type="text"]:focus {
+    border-color: var(--accent);
+  }
+
+  .filters-search {
+    flex: 1;
+    min-width: 160px;
+  }
+
+  .filters-search input {
+    width: 100%;
+  }
+
+  /* Tabla */
+  .table-wrapper {
+    background: var(--card);
+    border-radius: 12px;
+    padding: 10px 0 4px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.35);
+    overflow-x: auto;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 800px;
+  }
+
+  th, td {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+    text-align: left;
+    vertical-align: middle;
+  }
+
+  th {
+    background: #1a2636;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+  }
+
+  th.sortable {
+    cursor: pointer;
+    user-select: none;
+  }
+
+  th.sortable::after {
+    content: "⇅";
+    font-size: 11px;
+    opacity: 0.5;
+    margin-left: 4px;
+  }
+
+  th.sortable.sorted-asc::after {
+    content: "▲";
+    opacity: 0.9;
+  }
+
+  th.sortable.sorted-desc::after {
+    content: "▼";
+    opacity: 0.9;
+  }
+
+  tr:hover {
+    background: #223142;
+  }
+
+  .estado-pill {
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 500;
+    display: inline-block;
+  }
+
+  .estado-pendiente {
+    background: rgba(217, 83, 79, 0.15);
+    color: #ff8d85;
+  }
+
+  .estado-completada {
+    background: rgba(76, 175, 80, 0.15);
+    color: #7ee28a;
+  }
+
+  .actions-cell {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+
+  .empty-row {
+    text-align: center;
+    color: var(--muted);
+    font-size: 13px;
+  }
+
+  /* Modal */
+  .modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.6);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+  }
+
+  .modal {
+    background: var(--card);
+    padding: 18px 20px;
+    border-radius: 14px;
+    max-width: 420px;
+    width: 90%;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+  }
+
+  .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+
+  .modal-header h3 {
+    margin: 0;
+    font-size: 18px;
+  }
+
+  .modal-body p {
+    margin: 4px 0;
+    font-size: 14px;
+  }
+
+  .modal-close {
+    background: transparent;
+    border: none;
+    color: var(--muted);
+    font-size: 20px;
+    cursor: pointer;
+  }
+
+  .badge-service {
+    font-size: 12px;
+    padding: 3px 8px;
+    border-radius: 999px;
+    background: rgba(58,124,233,0.12);
+    color: var(--accent);
+  }
+
+  .footer-note {
+    margin-top: 10px;
+    font-size: 11px;
+    color: var(--muted);
+  }
+
+  @media (max-width: 768px) {
+    header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
+    }
+    .top-actions {
+      width: 100%;
+      justify-content: flex-start;
+      flex-wrap: wrap;
+    }
+  }
 </style>
 </head>
 <body>
 
+<header>
+  <div class="brand">Panel <span>COLESTUR</span></div>
+  <div class="top-actions">
+    <button id="exportar">⬇ Exportar a Excel (CSV)</button>
+    <button id="logout" class="btn-danger">Cerrar sesión</button>
+  </div>
+</header>
+
 <div id="loading">Cargando panel...</div>
 
 <div id="panel">
-  <h1>Panel Administrativo COLESTUR</h1>
+  <h1>Reservas</h1>
+  <div class="sub">Visualiza, filtra y administra las reservas recibidas desde la web.</div>
 
-  <h2>Reservas registradas</h2>
+  <!-- Filtros -->
+  <div class="filters">
+    <div class="filters-group">
+      <div>
+        <label>Servicio</label><br>
+        <select id="filtroServicio">
+          <option value="Todos">Todos</option>
+          <option value="Escolar">Escolar</option>
+          <option value="Empresarial">Empresarial</option>
+          <option value="Turismo">Turismo</option>
+          <option value="Aeropuerto">Transfer Aeropuerto</option>
+        </select>
+      </div>
 
-  <table>
-    <thead>
-      <tr>
-        <th>Nombre</th>
-        <th>Teléfono</th>
-        <th>Origen</th>
-        <th>Destino</th>
-        <th>Fecha</th>
-        <th>Hora</th>
-        <th>Pasajeros</th>
-        <th>Servicio</th>
-        <th>Estado</th>
-      </tr>
-    </thead>
-    <tbody id="tablaReservas"></tbody>
-  </table>
+      <div>
+        <label>Estado</label><br>
+        <select id="filtroEstado">
+          <option value="Todos">Todos</option>
+          <option value="Pendiente">Pendiente</option>
+          <option value="Completada">Completada</option>
+        </select>
+      </div>
 
-  <br>
-  <button id="logout">Cerrar sesión</button>
+      <div>
+        <label>Fecha (salida)</label><br>
+        <input id="filtroFecha" type="date">
+      </div>
+    </div>
+
+    <div class="filters-search">
+      <label>Buscar (nombre o teléfono)</label><br>
+      <input id="buscador" type="text" placeholder="Ej: Juan, 3001234567">
+    </div>
+  </div>
+
+  <!-- Tabla -->
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th class="sortable" data-sort="creadaEn">Creada</th>
+          <th class="sortable" data-sort="nombre">Nombre</th>
+          <th class="sortable" data-sort="telefono">Teléfono</th>
+          <th class="sortable" data-sort="servicio">Servicio</th>
+          <th>Origen</th>
+          <th>Destino</th>
+          <th class="sortable" data-sort="fecha">Fecha</th>
+          <th>Hora</th>
+          <th>Pasajeros</th>
+          <th class="sortable" data-sort="estado">Estado</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody id="tablaReservas"></tbody>
+    </table>
+  </div>
+
+  <div class="footer-note">
+    * Los cambios (estado / eliminación) se guardan directamente en Firebase.
+  </div>
+</div>
+
+<!-- MODAL DETALLES -->
+<div id="modalBackdrop" class="modal-backdrop">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>Detalle de reserva</h3>
+      <button class="modal-close" id="cerrarModal">&times;</button>
+    </div>
+    <div class="modal-body" id="modalContenido"></div>
+  </div>
 </div>
 
 <script type="module">
-/* FIREBASE */
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { 
   getAuth, 
   onAuthStateChanged,
-  signOut 
+  signOut
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
 import {
@@ -106,9 +417,13 @@ import {
   collection,
   onSnapshot,
   orderBy,
-  query
+  query,
+  updateDoc,
+  deleteDoc,
+  doc
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
+/* CONFIG FIREBASE */
 const firebaseConfig = {
   apiKey: "AIzaSyCpuX28qe2YFhX2rSzH01AIPP9EQDIsP94",
   authDomain: "colestur-reservas.firebaseapp.com",
@@ -125,49 +440,344 @@ const db = getFirestore(app);
 const loading = document.getElementById("loading");
 const panel = document.getElementById("panel");
 const tabla = document.getElementById("tablaReservas");
+const filtroServicio = document.getElementById("filtroServicio");
+const filtroEstado = document.getElementById("filtroEstado");
+const filtroFecha = document.getElementById("filtroFecha");
+const buscador = document.getElementById("buscador");
+const exportarBtn = document.getElementById("exportar");
+const logoutBtn = document.getElementById("logout");
 
-/* VERIFICAR LOGIN */
+const modalBackdrop = document.getElementById("modalBackdrop");
+const modalContenido = document.getElementById("modalContenido");
+const cerrarModalBtn = document.getElementById("cerrarModal");
+
+/* Estado en memoria */
+let reservas = [];
+let sortBy = "creadaEn";
+let sortDir = "desc";
+
+/* AUTH */
 onAuthStateChanged(auth, (user) => {
   if (user) {
     loading.style.display = "none";
     panel.style.display = "block";
-    cargarReservas();
+    escucharReservas();
   } else {
     window.location.href = "login.html";
   }
 });
 
-/* CARGAR RESERVAS EN TIEMPO REAL */
-function cargarReservas() {
+/* ESCUCHAR RESERVAS EN TIEMPO REAL */
+function escucharReservas() {
   const q = query(collection(db, "reservas"), orderBy("creadaEn", "desc"));
 
   onSnapshot(q, (snapshot) => {
-    tabla.innerHTML = ""; // Limpiar tabla
-
-    snapshot.forEach((doc) => {
-      const r = doc.data();
-
-      tabla.innerHTML += `
-        <tr>
-          <td>${r.nombre}</td>
-          <td>${r.telefono}</td>
-          <td>${r.origen}</td>
-          <td>${r.destino}</td>
-          <td>${r.fecha}</td>
-          <td>${r.hora}</td>
-          <td>${r.pasajeros}</td>
-          <td>${r.servicio}</td>
-          <td>${r.estado}</td>
-        </tr>
-      `;
+    reservas = [];
+    snapshot.forEach((docSnap) => {
+      const d = docSnap.data();
+      let creada = d.creadaEn && d.creadaEn.toDate ? d.creadaEn.toDate() : null;
+      reservas.push({
+        id: docSnap.id,
+        ...d,
+        creadaEnDate: creada
+      });
     });
+    renderTabla();
   });
 }
 
+/* APLICAR FILTROS + ORDENAR + PINTAR TABLA */
+function renderTabla() {
+  tabla.innerHTML = "";
+
+  let filtradas = reservas.slice();
+
+  // Filtro servicio
+  const fs = filtroServicio.value;
+  if (fs !== "Todos") {
+    filtradas = filtradas.filter(r => r.servicio === fs);
+  }
+
+  // Filtro estado
+  const fe = filtroEstado.value;
+  if (fe !== "Todos") {
+    filtradas = filtradas.filter(r => (r.estado || "Pendiente") === fe);
+  }
+
+  // Filtro fecha
+  const ff = filtroFecha.value;
+  if (ff) {
+    filtradas = filtradas.filter(r => r.fecha === ff);
+  }
+
+  // Buscador
+  const texto = buscador.value.trim().toLowerCase();
+  if (texto) {
+    filtradas = filtradas.filter(r => {
+      const nombre = (r.nombre || "").toLowerCase();
+      const tel = (r.telefono || "").toLowerCase();
+      return nombre.includes(texto) || tel.includes(texto);
+    });
+  }
+
+  // Ordenar
+  filtradas.sort((a, b) => {
+    let va, vb;
+    if (sortBy === "creadaEn") {
+      va = a.creadaEnDate ? a.creadaEnDate.getTime() : 0;
+      vb = b.creadaEnDate ? b.creadaEnDate.getTime() : 0;
+    } else {
+      va = (a[sortBy] ?? "").toString().toLowerCase();
+      vb = (b[sortBy] ?? "").toString().toLowerCase();
+    }
+
+    if (va < vb) return sortDir === "asc" ? -1 : 1;
+    if (va > vb) return sortDir === "asc" ? 1 : -1;
+    return 0;
+  });
+
+  if (filtradas.length === 0) {
+    tabla.innerHTML = `
+      <tr>
+        <td class="empty-row" colspan="11">
+          No hay reservas con los filtros actuales.
+        </td>
+      </tr>
+    `;
+    return;
+  }
+
+  for (const r of filtradas) {
+    const estado = (r.estado || "Pendiente");
+    const estadoClass = estado === "Completada" ? "estado-completada" : "estado-pendiente";
+
+    const creadaTxt = r.creadaEnDate 
+      ? r.creadaEnDate.toLocaleString("es-CO", { dateStyle: "short", timeStyle: "short" })
+      : "-";
+
+    const row = document.createElement("tr");
+    row.innerHTML = `
+      <td>${creadaTxt}</td>
+      <td>${r.nombre || "-"}</td>
+      <td>${r.telefono || "-"}</td>
+      <td><span class="badge-service">${r.servicio || "-"}</span></td>
+      <td>${r.origen || "-"}</td>
+      <td>${r.destino || "-"}</td>
+      <td>${r.fecha || "-"}</td>
+      <td>${r.hora || "-"}</td>
+      <td>${r.pasajeros ?? "-"}</td>
+      <td>
+        <span class="estado-pill ${estadoClass}">
+          ${estado}
+        </span>
+      </td>
+      <td>
+        <div class="actions-cell">
+          <button class="btn-small" data-action="detalle" data-id="${r.id}">Ver</button>
+          ${estado !== "Completada" ? 
+            <button class="btn-small" data-action="completar" data-id="${r.id}">Completar</button> 
+            : ""
+          }
+          <button class="btn-small btn-danger" data-action="eliminar" data-id="${r.id}">Eliminar</button>
+        </div>
+      </td>
+    `;
+    tabla.appendChild(row);
+  }
+
+  actualizarHeadersOrden();
+}
+
+/* ACTUALIZAR ICONOS DE ORDEN EN HEADERS */
+function actualizarHeadersOrden() {
+  const ths = document.querySelectorAll("th.sortable");
+  ths.forEach(th => {
+    th.classList.remove("sorted-asc", "sorted-desc");
+    const key = th.dataset.sort;
+    if (key === sortBy) {
+      th.classList.add(sortDir === "asc" ? "sorted-asc" : "sorted-desc");
+    }
+  });
+}
+
+/* LISTENERS FILTROS / BUSCADOR */
+[filtroServicio, filtroEstado, filtroFecha, buscador].forEach(el => {
+  el.addEventListener("input", renderTabla);
+});
+
+/* ORDENAR AL HACER CLICK EN HEADERS */
+document.querySelectorAll("th.sortable").forEach(th => {
+  th.addEventListener("click", () => {
+    const key = th.dataset.sort;
+    if (sortBy === key) {
+      sortDir = sortDir === "asc" ? "desc" : "asc";
+    } else {
+      sortBy = key;
+      sortDir = key === "creadaEn" ? "desc" : "asc";
+    }
+    renderTabla();
+  });
+});
+
+/* ACCIONES EN TABLA (DETALLE / COMPLETAR / ELIMINAR) */
+tabla.addEventListener("click", async (e) => {
+  const btn = e.target.closest("button[data-action]");
+  if (!btn) return;
+  const id = btn.dataset.id;
+  const action = btn.dataset.action;
+  const res = reservas.find(r => r.id === id);
+  if (!res) return;
+
+  if (action === "detalle") {
+    abrirModalDetalle(res);
+  }
+
+  if (action === "completar") {
+    const ok = confirm("¿Marcar esta reserva como COMPLETADA?");
+    if (!ok) return;
+    await updateDoc(doc(db, "reservas", id), { estado: "Completada" });
+  }
+
+  if (action === "eliminar") {
+    const ok = confirm("¿Eliminar esta reserva? Esta acción no se puede deshacer.");
+    if (!ok) return;
+    await deleteDoc(doc(db, "reservas", id));
+  }
+});
+
+/* MODAL DETALLE */
+function abrirModalDetalle(r) {
+  const creadaTxt = r.creadaEnDate 
+    ? r.creadaEnDate.toLocaleString("es-CO", { dateStyle: "full", timeStyle: "short" })
+    : "-";
+
+  modalContenido.innerHTML = `
+    <p><b>Nombre:</b> ${r.nombre || "-"}</p>
+    <p><b>Teléfono:</b> ${r.telefono || "-"}</p>
+    <p><b>Servicio:</b> ${r.servicio || "-"}</p>
+    <p><b>Origen:</b> ${r.origen || "-"}</p>
+    <p><b>Destino:</b> ${r.destino || "-"}</p>
+    <p><b>Fecha:</b> ${r.fecha || "-"}</p>
+    <p><b>Hora:</b> ${r.hora || "-"}</p>
+    <p><b>Pasajeros:</b> ${r.pasajeros ?? "-"}</p>
+    <p><b>Estado:</b> ${r.estado || "Pendiente"}</p>
+    <p><b>Creada:</b> ${creadaTxt}</p>
+  `;
+  modalBackdrop.style.display = "flex";
+}
+
+cerrarModalBtn.addEventListener("click", () => {
+  modalBackdrop.style.display = "none";
+});
+
+modalBackdrop.addEventListener("click", (e) => {
+  if (e.target === modalBackdrop) {
+    modalBackdrop.style.display = "none";
+  }
+});
+
+/* EXPORTAR A CSV (EXCEL) */
+exportarBtn.addEventListener("click", () => {
+  if (!reservas.length) {
+    alert("No hay reservas para exportar.");
+    return;
+  }
+
+  // Usamos las reservas filtradas y ordenadas según la vista actual
+  let filtradas = reservas.slice();
+
+  const fs = filtroServicio.value;
+  if (fs !== "Todos") filtradas = filtradas.filter(r => r.servicio === fs);
+
+  const fe = filtroEstado.value;
+  if (fe !== "Todos") filtradas = filtradas.filter(r => (r.estado || "Pendiente") === fe);
+
+  const ff = filtroFecha.value;
+  if (ff) filtradas = filtradas.filter(r => r.fecha === ff);
+
+  const texto = buscador.value.trim().toLowerCase();
+  if (texto) {
+    filtradas = filtradas.filter(r => {
+      const n = (r.nombre || "").toLowerCase();
+      const t = (r.telefono || "").toLowerCase();
+      return n.includes(texto) || t.includes(texto);
+    });
+  }
+
+  if (!filtradas.length) {
+    alert("No hay reservas con los filtros actuales para exportar.");
+    return;
+  }
+
+  // Ordenar igual que la tabla
+  filtradas.sort((a, b) => {
+    let va, vb;
+    if (sortBy === "creadaEn") {
+      va = a.creadaEnDate ? a.creadaEnDate.getTime() : 0;
+      vb = b.creadaEnDate ? b.creadaEnDate.getTime() : 0;
+    } else {
+      va = (a[sortBy] ?? "").toString().toLowerCase();
+      vb = (b[sortBy] ?? "").toString().toLowerCase();
+    }
+    if (va < vb) return sortDir === "asc" ? -1 : 1;
+    if (va > vb) return sortDir === "asc" ? 1 : -1;
+    return 0;
+  });
+
+  const encabezados = [
+    "ID",
+    "Nombre",
+    "Telefono",
+    "Servicio",
+    "Origen",
+    "Destino",
+    "Fecha",
+    "Hora",
+    "Pasajeros",
+    "Estado",
+    "Creada"
+  ];
+
+  const filas = filtradas.map(r => {
+    const creadaTxt = r.creadaEnDate 
+      ? r.creadaEnDate.toLocaleString("es-CO", { dateStyle: "short", timeStyle: "short" })
+      : "-";
+    return [
+      r.id,
+      r.nombre || "",
+      r.telefono || "",
+      r.servicio || "",
+      r.origen || "",
+      r.destino || "",
+      r.fecha || "",
+      r.hora || "",
+      r.pasajeros ?? "",
+      r.estado || "Pendiente",
+      creadaTxt
+    ];
+  });
+
+  let csv = "";
+  csv += encabezados.join(";") + "\n";
+  filas.forEach(f => {
+    csv += f.map(v => "${(v ?? "").toString().replace(/"/g, '""')}").join(";") + "\n";
+  });
+
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "reservas_colestur.csv";
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+});
+
 /* LOGOUT */
-document.getElementById("logout").onclick = () => {
+logoutBtn.addEventListener("click", () => {
   signOut(auth).then(() => window.location.href = "login.html");
-};
+});
 </script>
 
 </body>
