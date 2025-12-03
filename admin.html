@@ -1,167 +1,46 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Panel Administrativo – COLESTUR</title>
-
-<style>
-    body {
-        margin: 0;
-        font-family: "Segoe UI", sans-serif;
-        background: #16212f;
-        color: white;
-    }
-
-    header {
-        background: #1f2c3c;
-        padding: 20px;
-        text-align: center;
-        font-size: 24px;
-        font-weight: bold;
-    }
-
-    #loading {
-        text-align: center;
-        margin-top: 40px;
-        font-size: 18px;
-        opacity: 0.7;
-    }
-
-    .container {
-        display: none;
-        padding: 20px;
-    }
-
-    #logout {
-        background: #d9534f;
-        border: none;
-        padding: 10px 20px;
-        border-radius: 8px;
-        cursor: pointer;
-        color: white;
-        float: right;
-        margin-right: 20px;
-        font-weight: bold;
-    }
-
-    table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-top: 20px;
-    }
-
-    th, td {
-        padding: 12px;
-        border-bottom: 1px solid #3a4b5c;
-        text-align: left;
-    }
-
-    th {
-        background: #274b78;
-    }
-</style>
-
-</head>
-<body>
-
-<header>
-    Panel Administrativo – COLESTUR
-    <button id="logout">Cerrar sesión</button>
-</header>
-
-<div id="loading">Verificando sesión... por favor espera</div>
-
-<div class="container" id="panel">
-    <h2>Reservas registradas</h2>
-
-    <table>
-        <thead>
-            <tr>
-                <th>Nombre</th>
-                <th>Teléfono</th>
-                <th>Fecha</th>
-                <th>Servicio</th>
-            </tr>
-        </thead>
-        <tbody id="tabla-reservas">
-            <tr><td colspan="4">Cargando datos...</td></tr>
-        </tbody>
-    </table>
-</div>
-
 <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { 
-        getAuth, 
-        onAuthStateChanged,
-        signOut
-    } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { 
+    getAuth, 
+    onAuthStateChanged,
+    signOut
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
-    import {
-        getFirestore,
-        collection,
-        onSnapshot
-    } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+const firebaseConfig = {
+    apiKey: "AIzaSyCpuX28qe2YFhX2rSzH01AIPP9EQDIsP94",
+    authDomain: "colestur-reservas.firebaseapp.com",
+    projectId: "colestur-reservas",
+    storageBucket: "colestur-reservas.firebasestorage.app",
+    messagingSenderId: "123689903908",
+    appId: "1:123689903908:web:d4d710d7165e64a369f5b1",
+};
 
-    const firebaseConfig = {
-        apiKey: "AIzaSyCpuX28qe2YFhX2rSzH01AIPP9EQDIsP94",
-        authDomain: "colestur-reservas.firebaseapp.com",
-        projectId: "colestur-reservas",
-        storageBucket: "colestur-reservas.firebasestorage.app",
-        messagingSenderId: "123689903908",
-        appId: "1:123689903908:web:d4d710d7165e64a369f5b1",
-    };
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
 
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
+const loading = document.getElementById("loading");
+const panel = document.getElementById("panel");
 
-    const loading = document.getElementById("loading");
-    const panel = document.getElementById("panel");
-
-    // 🔥 FIX ESPECIAL PARA GITHUB PAGES
-    let authChecked = false;
-
-    onAuthStateChanged(auth, (user) => {
-        if (user) {
-            // Usuario autenticado correctamente
-            loading.style.display = "none";
-            panel.style.display = "block";
-            cargarReservas();
-            authChecked = true;
-        } else {
-            // Esperar más tiempo para Firebase (GitHub Pages es lento)
-            setTimeout(() => {
-                if (!authChecked) {
+onAuthStateChanged(auth, (user) => {
+    if (user) {
+        loading.style.display = "none";
+        panel.style.display = "block";
+    } else {
+        // 🔥 GitHub Pages necesita MÁS tiempo:
+        setTimeout(() => {
+            onAuthStateChanged(auth, (user2) => {
+                if (user2) {
+                    loading.style.display = "none";
+                    panel.style.display = "block";
+                } else {
                     window.location.href = "login.html";
                 }
-            }, 2500);
-        }
-    });
-
-    function cargarReservas() {
-        const tabla = document.getElementById("tabla-reservas");
-        onSnapshot(collection(db, "reservas"), (snapshot) => {
-            tabla.innerHTML = "";
-            snapshot.forEach((doc) => {
-                const d = doc.data();
-                tabla.innerHTML += `
-                    <tr>
-                        <td>${d.nombre || "-"}</td>
-                        <td>${d.telefono || "-"}</td>
-                        <td>${d.fecha || "-"}</td>
-                        <td>${d.servicio || "-"}</td>
-                    </tr>
-                `;
             });
-        });
+        }, 1200);
     }
+});
 
-    document.getElementById("logout").onclick = () => {
-        signOut(auth).then(() => window.location.href = "login.html");
-    };
+document.getElementById("logout").onclick = () => {
+    signOut(auth).then(() => window.location.href = "login.html");
+};
 </script>
-
-</body>
-</html>
