@@ -21,6 +21,18 @@
         font-weight: bold;
     }
 
+    #loading {
+        text-align: center;
+        margin-top: 40px;
+        font-size: 18px;
+        opacity: 0.7;
+    }
+
+    .container {
+        display: none;
+        padding: 20px;
+    }
+
     #logout {
         background: #d9534f;
         border: none;
@@ -31,10 +43,6 @@
         float: right;
         margin-right: 20px;
         font-weight: bold;
-    }
-
-    .container {
-        padding: 20px;
     }
 
     table {
@@ -62,7 +70,9 @@
     <button id="logout">Cerrar sesión</button>
 </header>
 
-<div class="container">
+<div id="loading">Verificando sesión... por favor espera</div>
+
+<div class="container" id="panel">
     <h2>Reservas registradas</h2>
 
     <table>
@@ -107,40 +117,50 @@
     const auth = getAuth(app);
     const db = getFirestore(app);
 
-    // 🔥 PROTECCIÓN REAL DEL PANEL ADMIN
+    const loading = document.getElementById("loading");
+    const panel = document.getElementById("panel");
+
+    // 🔥 FIX ESPECIAL PARA GITHUB PAGES
+    let authChecked = false;
+
     onAuthStateChanged(auth, (user) => {
-        if (!user) {
+        if (user) {
+            // Usuario autenticado correctamente
+            loading.style.display = "none";
+            panel.style.display = "block";
+            cargarReservas();
+            authChecked = true;
+        } else {
+            // Esperar más tiempo para Firebase (GitHub Pages es lento)
             setTimeout(() => {
-                window.location.href = "login.html";
-            }, 700);
+                if (!authChecked) {
+                    window.location.href = "login.html";
+                }
+            }, 2500);
         }
     });
 
-    // 🔥 Cerrar sesión
+    function cargarReservas() {
+        const tabla = document.getElementById("tabla-reservas");
+        onSnapshot(collection(db, "reservas"), (snapshot) => {
+            tabla.innerHTML = "";
+            snapshot.forEach((doc) => {
+                const d = doc.data();
+                tabla.innerHTML += `
+                    <tr>
+                        <td>${d.nombre || "-"}</td>
+                        <td>${d.telefono || "-"}</td>
+                        <td>${d.fecha || "-"}</td>
+                        <td>${d.servicio || "-"}</td>
+                    </tr>
+                `;
+            });
+        });
+    }
+
     document.getElementById("logout").onclick = () => {
-        signOut(auth).then(() => {
-            window.location.href = "login.html";
-        });
+        signOut(auth).then(() => window.location.href = "login.html");
     };
-
-    // 🔥 Cargar reservas desde Firestore
-    const tabla = document.getElementById("tabla-reservas");
-
-    onSnapshot(collection(db, "reservas"), (snapshot) => {
-        tabla.innerHTML = "";
-
-        snapshot.forEach((doc) => {
-            const data = doc.data();
-            tabla.innerHTML += `
-                <tr>
-                    <td>${data.nombre || "-"}</td>
-                    <td>${data.telefono || "-"}</td>
-                    <td>${data.fecha || "-"}</td>
-                    <td>${data.servicio || "-"}</td>
-                </tr>
-            `;
-        });
-    });
 </script>
 
 </body>
