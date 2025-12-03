@@ -13,7 +13,6 @@
     --dark-card: #1F2C3C;
     --text-light: #E8EDF3;
     --accent-blue: #3A7CE9;
-    --accent-red: #D9534F;
     --btn-bg: #274B78;
     --btn-hover: #1c3a5d;
 }
@@ -37,13 +36,11 @@ header h1 {
     font-size: 45px;
     margin: 0;
     font-weight: 800;
-    letter-spacing: 1px;
 }
 
 header p {
     font-size: 18px;
     opacity: 0.8;
-    margin-top: 10px;
 }
 
 /* 🔵 BOTONES PREMIUM */
@@ -87,86 +84,59 @@ header p {
     font-weight: 800;
 }
 
-/* GRID DE SERVICIOS */
+/* TARJETAS DE SERVICIO VERSION PREMIUM */
 .services-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 80px;
+    grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+    gap: 40px;
     justify-items: center;
 }
 
-/* TARJETA */
-.service-wrapper {
-    text-align: center;
+.service-card {
+    width: 100%;
+    max-width: 350px;
+    background: #1F2C3C;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 4px 18px rgba(0,0,0,0.25);
+    transition: transform .35s ease, box-shadow .35s ease;
+    cursor: default;
     opacity: 0;
-    transform: translateY(70px);
-    transition: all .8s ease-out;
+    transform: translateY(50px);
 }
 
-/* Cuando aparece */
-.service-wrapper.visible {
+.service-card.visible {
     opacity: 1;
     transform: translateY(0);
+    box-shadow: 0 8px 26px rgba(0,0,0,0.35);
 }
 
-/* TARJETA CÍRCULO */
-.service-card {
-    width: 260px;
-    height: 260px;
-    border-radius: 50%;
-    position: relative;
-    overflow: hidden;
-    border: 4px solid rgba(255,255,255,0.05);
-    box-shadow: 0 10px 30px rgba(0,0,0,0.35);
-}
-
-/* Imagen */
-.card-img {
-    position: absolute;
+.service-card img {
     width: 100%;
-    height: 100%;
+    height: 180px;
     object-fit: cover;
-    transition: opacity .8s ease, filter .8s ease;
 }
 
-/* Texto descripción */
-.card-info {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    top: 0;
-    padding-top: 100px;
-    text-align: center;
-    opacity: 0;
-    transition: opacity .8s ease;
+.service-content {
+    padding: 18px 20px;
 }
 
-/* Cuando entra en pantalla */
-.service-wrapper.visible .card-img {
-    opacity: 0;
-    filter: blur(3px);
-}
-
-.service-wrapper.visible .card-info {
-    opacity: 1;
-}
-
-/* TITULO BAJO EL CÍRCULO */
-.service-title-below {
+.service-content h3 {
     font-size: 22px;
+    margin: 0 0 8px 0;
     font-weight: 700;
-    margin-top: 20px;
-    color: var(--text-light);
 }
 
-.service-title-below::after {
-    content: "";
-    width: 45px;
-    height: 3px;
-    background: var(--accent-blue);
-    display: block;
-    margin: 8px auto 0;
-    border-radius: 2px;
+.service-content p {
+    font-size: 15px;
+    opacity: 0.85;
+    margin: 0;
+}
+
+/* Hover (opcional) */
+.service-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.45);
 }
 
 </style>
@@ -194,73 +164,44 @@ header p {
     <div class="services-grid">
 
         <!-- Servicio 1 -->
-        <div class="service-wrapper">
-            <div class="service-card">
-                <img class="card-img"
-                     src="https://carepa-antioquia.gov.co/NuestraAlcaldia/SaladePrensa/Noticias/Lists/Fotos/RUTA%20ESCOLAR.jpg">
-                <div class="card-info">
-                    <h3>Transporte Escolar</h3>
-                    <p>Seguro, confiable y acompañado.</p>
-                </div>
+        <div class="service-card">
+            <img src="https://carepa-antioquia.gov.co/NuestraAlcaldia/SaladePrensa/Noticias/Lists/Fotos/RUTA%20ESCOLAR.jpg">
+            <div class="service-content">
+                <h3>Transporte Escolar</h3>
+                <p>Seguro, confiable y acompañado.</p>
             </div>
-            <div class="service-title-below">Transporte Escolar</div>
         </div>
 
         <!-- Servicio 2 -->
-        <div class="service-wrapper">
-            <div class="service-card">
-                <img class="card-img"
-                     src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQSTXobnlUUEFRJCzxgArv2f65QPRoM8gcZbg&s">
-                <div class="card-info">
-                    <h3>Transporte Empresarial</h3>
-                    <p>Movilidad corporativa y empresarial.</p>
-                </div>
+        <div class="service-card">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQSTXobnlUUEFRJCzxgArv2f65QPRoM8gcZbg&s">
+            <div class="service-content">
+                <h3>Transporte Empresarial</h3>
+                <p>Movilidad para empresas y eventos corporativos.</p>
             </div>
-            <div class="service-title-below">Transporte Empresarial</div>
         </div>
 
         <!-- Servicio 3 -->
-        <div class="service-wrapper">
-            <div class="service-card">
-                <img class="card-img"
-                     src="https://st.depositphotos.com/1019192/4338/i/450/depositphotos_43389909-stock-photo-tourist-bus-traveling-on-road.jpg">
-                <div class="card-info">
-                    <h3>Turismo</h3>
-                    <p>Recorridos, tours y viajes intermunicipales.</p>
-                </div>
+        <div class="service-card">
+            <img src="https://st.depositphotos.com/1019192/4338/i/450/depositphotos_43389909-stock-photo-tourist-bus-traveling-on-road.jpg">
+            <div class="service-content">
+                <h3>Turismo</h3>
+                <p>Recorridos, tours y viajes intermunicipales.</p>
             </div>
-            <div class="service-title-below">Turismo</div>
         </div>
 
         <!-- Servicio 4 -->
-        <div class="service-wrapper">
-            <div class="service-card">
-                <img class="card-img"
-                     src="https://www.italyluxurytrips.com/wp-content/uploads/2020/09/137646764_3902016329830237_2185497418909258490_n.jpg">
-                <div class="card-info">
-                    <h3>Transfer Aeropuerto</h3>
-                    <p>Traslados puerta a puerta.</p>
-                </div>
+        <div class="service-card">
+            <img src="https://www.italyluxurytrips.com/wp-content/uploads/2020/09/137646764_3902016329830237_2185497418909258490_n.jpg">
+            <div class="service-content">
+                <h3>Transfer Aeropuerto</h3>
+                <p>Traslados puerta a puerta.</p>
             </div>
-            <div class="service-title-below">Transfer Aeropuerto</div>
         </div>
 
     </div>
 </div>
 
-<!-- 🔵 ANIMACIÓN SCROLL -->
-<script>
-const wrappers = document.querySelectorAll(".service-wrapper");
-
-const observer = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) entry.target.classList.add("visible");
-        else entry.target.classList.remove("visible");
-    });
-}, { threshold: 0.4 });
-
-wrappers.forEach(w => observer.observe(w));
-</script>
 <!-- POPUP DESCARGAR APP -->
 <div id="appInstallPopup" style="
     display:none;
@@ -279,8 +220,7 @@ wrappers.forEach(w => observer.observe(w));
     z-index: 9999;
 ">
     <h3 style="margin-top:0; font-size:20px;">Instalar COLESTUR App</h3>
-
-    <p id="appInstallText" style="font-size:16px; opacity:0.9; line-height:1.5;"></p>
+    <p id="appInstallText" style="font-size:16px; opacity:0.9;"></p>
 
     <button onclick="cerrarPopup()" style="
         margin-top: 15px;
@@ -295,8 +235,23 @@ wrappers.forEach(w => observer.observe(w));
     </button>
 </div>
 
+<!-- 🔵 SCRIPT: ANIMACIÓN DE TARJETAS -->
 <script>
-// BOTÓN DESCARGAR APP
+const cards = document.querySelectorAll(".service-card");
+
+const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.classList.add("visible");
+        }
+    });
+}, { threshold: 0.4 });
+
+cards.forEach(card => observer.observe(card));
+</script>
+
+<!-- 🔵 SCRIPT POPUP DESCARGAR APP -->
+<script>
 document.getElementById("descargarAppBtn").addEventListener("click", function() {
     const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
     const isAndroid = /android/i.test(navigator.userAgent);
@@ -308,8 +263,7 @@ document.getElementById("descargarAppBtn").addEventListener("click", function() 
         <b>iPhone detectado 📱</b><br><br>
         Para instalar la app:<br>
         1. Toca el botón <b>Compartir</b> (cuadrado con flecha ↑)<br>
-        2. Selecciona <b>"Agregar a pantalla de inicio"</b><br><br>
-        ¡Tu app COLESTUR estará lista!
+        2. Selecciona <b>"Agregar a pantalla de inicio"</b>.
         `;
     }
 
@@ -317,16 +271,15 @@ document.getElementById("descargarAppBtn").addEventListener("click", function() 
         mensaje = `
         <b>Android detectado 🤖</b><br><br>
         Para instalar la app:<br>
-        1. Toca el menú <b>⋮</b> arriba a la derecha<br>
-        2. Selecciona <b>"Agregar a pantalla de inicio"</b><br><br>
-        ¡La instalación será automática!
+        1. Toca el menú <b>⋮</b><br>
+        2. Selecciona <b>"Agregar a pantalla de inicio"</b>.
         `;
     }
 
     if (!isAndroid && !isIOS) {
         mensaje = `
         Tu dispositivo no soporta instalación automática.<br>
-        Prueba desde un iPhone o un Android.
+        Prueba desde un iPhone o Android.
         `;
     }
 
@@ -334,7 +287,6 @@ document.getElementById("descargarAppBtn").addEventListener("click", function() 
     document.getElementById("appInstallPopup").style.display = "block";
 });
 
-// CERRAR POPUP
 function cerrarPopup() {
     document.getElementById("appInstallPopup").style.display = "none";
 }
@@ -342,4 +294,3 @@ function cerrarPopup() {
 
 </body>
 </html>
-
