@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Contacto - COLESTUR</title>
 
   <style>
@@ -10,9 +10,9 @@
       --bg: #050608;
       --card: #111217;
       --card-soft: #181920;
+      --accent: #3a7ce9;
       --text: #f5f5f7;
       --muted: #9da3b0;
-      --accent: #3a7ce9;
       --border: #20222e;
     }
 
@@ -23,7 +23,7 @@
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI";
     }
 
-    /* HEADER EXACTO AL DE RESERVAR */
+    /* HEADER */
     header {
       padding: 14px 18px 6px;
       display: flex;
@@ -63,103 +63,97 @@
     }
 
     main {
-      padding: 0 16px 100px;
+      padding: 0 16px 110px;
       max-width: 640px;
       margin: 0 auto;
     }
 
-    h2 {
-      margin: 16px 0 6px;
-      font-size: 18px;
-      font-weight: 600;
-    }
-
-    p {
-      margin: 0 0 14px;
-      color: var(--muted);
-      font-size: 14px;
-      line-height: 1.4;
-    }
-
-    /* TARJETAS IGUALES A RESERVAR */
+    /* CARD */
     .contact-card {
-      margin-top: 10px;
       background: var(--card);
+      margin-top: 16px;
+      padding: 20px;
       border-radius: 18px;
-      padding: 16px;
-      border: 1px solid rgba(255,255,255,0.03);
-      box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+      border: 1px solid rgba(255,255,255,0.05);
+      box-shadow: 0 20px 35px rgba(0,0,0,0.6);
     }
 
-    .contact-item {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      padding: 12px 0;
-      border-bottom: 1px solid var(--border);
-      cursor: pointer;
-    }
-
-    .contact-item:last-child {
-      border-bottom: none;
-    }
-
-    .icon {
-      width: 40px;
-      height: 40px;
-      border-radius: 12px;
-      background: #14151b;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+    h2 {
+      margin-top: 0;
+      margin-bottom: 12px;
       font-size: 20px;
-      color: var(--accent);
+      font-weight: 700;
+      text-align: center;
     }
 
-    .item-title {
-      font-size: 15px;
-      font-weight: 600;
-    }
-
-    .item-sub {
-      font-size: 13px;
+    .address {
+      margin-top: 8px;
+      text-align: center;
+      font-size: 14px;
       color: var(--muted);
     }
 
-    /* MAPA */
-    #map {
-      margin-top: 18px;
-      width: 100%;
-      height: 260px;
-      border-radius: 18px;
-      overflow: hidden;
-      border: 1px solid #20232e;
-      box-shadow: 0 18px 35px rgba(0,0,0,0.65);
+    /* BOTONES */
+    .contact-list {
+      margin-top: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
     }
 
-    /* BOTTOM BAR — IDÉNTICA */
+    .contact-btn {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 16px;
+      border-radius: 14px;
+      background: var(--card-soft);
+      border: 1px solid var(--border);
+      color: var(--text);
+      text-decoration: none;
+      font-size: 16px;
+      transition: .2s;
+    }
+
+    .contact-btn:hover {
+      border-color: var(--accent);
+    }
+
+    .contact-btn img {
+      width: 28px;
+      height: 28px;
+    }
+
+    /* BOTTOM NAV */
     .bottom-bar {
       position: fixed;
       bottom: 0;
       left: 0;
       right: 0;
-      padding: 12px 16px;
+      padding: 10px 16px;
       display: flex;
       justify-content: space-around;
       background: linear-gradient(to top, rgba(5,6,8,0.98), rgba(5,6,8,0.95), transparent);
       border-top: 1px solid rgba(255,255,255,0.05);
-      z-index: 200;
+      z-index: 300;
     }
 
     .nav-btn {
+      text-align: center;
+      text-decoration: none;
       color: var(--text);
       font-size: 14px;
-      text-decoration: none;
       opacity: 0.85;
     }
 
     .nav-btn:hover {
       opacity: 1;
+    }
+
+    .nav-icon {
+      font-size: 20px;
+      display: block;
+      margin-bottom: 2px;
     }
   </style>
 </head>
@@ -176,81 +170,60 @@
 
 <main>
 
-  <h2>¿Dónde encontrarnos?</h2>
-  <p>Estamos disponibles para resolver tus dudas y ayudarte con tu transporte especial.</p>
-
   <div class="contact-card">
+    <h2>Contáctanos</h2>
 
-    <div class="contact-item" onclick="window.location.href='https://wa.me/573102869505?text=Hola%20Colestur%2C%20necesito%20información'">
-      <div class="icon">💬</div>
-      <div>
-        <div class="item-title">WhatsApp</div>
-        <div class="item-sub">310 286 9505</div>
-      </div>
-    </div>
+    <p class="address">
+      📍 <b>Calle 77 # 81-83, Bogotá, Colombia</b>
+    </p>
 
-    <div class="contact-item" onclick="window.location.href='mailto:dfms.87@outlook.com'">
-      <div class="icon">✉</div>
-      <div>
-        <div class="item-title">Correo electrónico</div>
-        <div class="item-sub">dfms.87@outlook.com</div>
-      </div>
-    </div>
+    <div class="contact-list">
 
-    <div class="contact-item" onclick="window.location.href='tel:3102869505'">
-      <div class="icon">📞</div>
-      <div>
-        <div class="item-title">Teléfono</div>
-        <div class="item-sub">310 286 9505</div>
-      </div>
-    </div>
+      <a class="contact-btn" href="https://wa.me/573102869505" target="_blank">
+        <img src="https://cdn-icons-png.flaticon.com/512/124/124034.png">
+        WhatsApp
+      </a>
 
-    <div class="contact-item" onclick="window.open('https://maps.app.goo.gl/Dz5i21BsWbqtruzZ7')">
-      <div class="icon">📍</div>
-      <div>
-        <div class="item-title">Dirección</div>
-        <div class="item-sub">Calle 77 #81-83, Bogotá</div>
-      </div>
+      <a class="contact-btn" href="tel:3102869505">
+        <img src="https://cdn-icons-png.flaticon.com/512/724/724664.png">
+        Llamar
+      </a>
+
+      <a class="contact-btn" href="mailto:dfms.87@outlook.com">
+        <img src="https://cdn-icons-png.flaticon.com/512/732/732200.png">
+        Gmail
+      </a>
+
+      <a class="contact-btn" href="https://maps.app.goo.gl/p2iPbbHcA7yoP6vJ8" target="_blank">
+        <img src="https://cdn-icons-png.flaticon.com/512/2991/2991231.png">
+        Google Maps
+      </a>
+
+      <a class="contact-btn" href="https://waze.com/ul?q=Colestur%20Bogotá" target="_blank">
+        <img src="https://cdn-icons-png.flaticon.com/512/732/732244.png">
+        Waze
+      </a>
+
     </div>
 
   </div>
 
-  <div id="map"></div>
-
 </main>
 
-<!-- BAR INFERIOR -->
+<!-- BARRA INFERIOR -->
 <div class="bottom-bar">
-  <a class="nav-btn" href="index.html">Inicio</a>
-  <a class="nav-btn" href="reservar.html">Reserva</a>
-  <a class="nav-btn" href="contacto.html">Contacto</a>
+  <a class="nav-btn" href="index.html">
+    <span class="nav-icon">🏠</span>Inicio
+  </a>
+
+  <a class="nav-btn" href="reservar.html">
+    <span class="nav-icon">📅</span>Reservar
+  </a>
+
+  <a class="nav-btn" href="contacto.html">
+    <span class="nav-icon">📞</span>Contacto
+  </a>
 </div>
-
-<!-- GOOGLE MAPS -->
-<script>
-  function initMap() {
-    const oficina = { lat: 4.694710, lng: -74.090690 };
-
-    const map = new google.maps.Map(document.getElementById("map"), {
-      zoom: 17,
-      center: oficina,
-      styles: [
-        { elementType: "geometry", stylers: [{ color: "#1e1f26" }] },
-        { elementType: "labels.text.fill", stylers: [{ color: "#f5f5f7" }] },
-      ]
-    });
-
-    new google.maps.Marker({
-      position: oficina,
-      map,
-      title: "COLESTUR S.A.S."
-    });
-  }
-
-  window.initMap = initMap;
-</script>
-
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD32zkRd46s5jKHkTjj2868WOMfv7m_V48&callback=initMap" async defer></script>
 
 </body>
 </html>
