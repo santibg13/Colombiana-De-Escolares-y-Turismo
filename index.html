@@ -1,157 +1,168 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>COLESTUR S.A.S.</title>
 
-<link rel="stylesheet" href="styles.css">
-
 <style>
-body {
-  margin: 0;
-  background: #0f1620;
-  font-family: 'Segoe UI', sans-serif;
-  color: white;
-}
+    body {
+        margin: 0;
+        background: #0a0d12;
+        font-family: system-ui, sans-serif;
+        color: #f5f5f7;
+    }
 
-header {
-  padding: 18px;
-  font-size: 32px;
-  font-weight: 800;
-}
+    /* Logo centrado */
+    .logo-container {
+        text-align: center;
+        padding-top: 35px;
+    }
 
-.banner {
-  margin: 15px;
-  background: #1c2635;
-  padding: 20px;
-  border-radius: 14px;
-}
+    .logo-container img {
+        width: 120px;
+        height: auto;
+    }
 
-.banner p {
-  font-size: 22px;
-  font-weight: 700;
-}
+    /* Título + slogan */
+    h1 {
+        text-align: center;
+        margin: 8px 0 4px;
+        font-size: 22px;
+        font-weight: 700;
+    }
 
-.section-title {
-  font-size: 22px;
-  font-weight: 700;
-  padding: 15px;
-}
+    .slogan {
+        text-align: center;
+        margin-top: 0;
+        font-size: 13px;
+        color: #b5b5b5;
+    }
 
-.cards {
-  display: flex;
-  overflow-x: auto;
-  gap: 14px;
-  padding: 0 15px;
-}
+    /* Botones principales */
+    .main-buttons {
+        margin: 26px auto;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        width: 80%;
+        max-width: 340px;
+    }
 
-.card {
-  min-width: 140px;
-  background: #1c2635;
-  padding: 20px;
-  border-radius: 16px;
-  text-align: center;
-  cursor: pointer;
-  user-select: none;
-}
+    .btn {
+        background: #2f69ff;
+        padding: 13px;
+        border-radius: 12px;
+        color: white;
+        text-align: center;
+        font-size: 16px;
+        font-weight: 600;
+        text-decoration: none;
+        display: block;
+    }
 
-#map-container {
-  margin: 15px;
-  height: 300px;
-  border-radius: 16px;
-  overflow: hidden;
-  cursor: pointer;
-}
+    .btn-secondary {
+        background: #1c1f26;
+        border: 1px solid #333842;
+    }
 
-#map {
-  width: 100%;
-  height: 100%;
-}
+    /* Servicios */
+    .services-title {
+        text-align: center;
+        margin-bottom: 10px;
+        font-size: 17px;
+        font-weight: 600;
+    }
 
-nav {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  background: #1c2635;
-  display: flex;
-  justify-content: space-around;
-  padding: 10px 0;
-}
+    .services-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+        padding: 0 20px;
+        margin-bottom: 40px;
+    }
 
-nav a {
-  text-align: center;
-  color: white;
-  font-size: 14px;
-  text-decoration: none;
-}
+    .service-box {
+        background: #11141b;
+        border-radius: 14px;
+        padding: 14px;
+        text-align: center;
+        border: 1px solid #1f232e;
+        font-size: 14px;
+    }
+
+    .service-box span {
+        display: block;
+        font-size: 22px;
+        margin-bottom: 4px;
+    }
+
+    /* Navegación inferior */
+    .nav-bar {
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: #0d1016;
+        border-top: 1px solid #1c1f26;
+        padding: 10px 0;
+        display: flex;
+        justify-content: space-around;
+    }
+
+    .nav-item {
+        text-align: center;
+        font-size: 13px;
+        color: #c9c9c9;
+        text-decoration: none;
+    }
+
+    .nav-item span {
+        display: block;
+        font-size: 20px;
+        margin-bottom: 3px;
+    }
 </style>
 </head>
 
 <body>
 
-<header>COLESTUR S.A.S.</header>
-
-<!-- BANNER -->
-<div class="banner">
-  <p>🔵 En COLESTUR estamos listos para rodar contigo.</p>
+<!-- Logo -->
+<div class="logo-container">
+    <img src="logo512.png" alt="COLESTUR Logo">
 </div>
 
-<!-- SUGERENCIAS -->
-<div class="section-title">Servicios</div>
+<h1>COLESTUR S.A.S.</h1>
+<p class="slogan">En COLESTUR estamos listos para rodar contigo.</p>
 
-<div class="cards">
-  <div class="card" onclick="location.href='reservar.html'">Escolar</div>
-  <div class="card" onclick="location.href='reservar.html'">Empresarial</div>
-  <div class="card" onclick="location.href='reservar.html'">Turismo</div>
-  <div class="card" onclick="location.href='reservar.html'">Transfer Aeropuerto</div>
+<!-- Botones principales -->
+<div class="main-buttons">
+    <a href="reservar.html" class="btn">Solicitar Transporte</a>
+    <a href="contacto.html" class="btn btn-secondary">Contacto</a>
 </div>
 
-<!-- MAPA TIPO UBER -->
-<div class="section-title">A tu alrededor</div>
+<!-- Servicios -->
+<p class="services-title">Nuestros Servicios</p>
 
-<div id="map-container" onclick="location.href='reservar.html'">
-  <div id="map"></div>
+<div class="services-grid">
+    <div class="service-box"><span>🚐</span>Transporte Escolar</div>
+    <div class="service-box"><span>👔</span>Transporte Empresarial</div>
+    <div class="service-box"><span>🗺</span>City Tour y Turismo</div>
+    <div class="service-box"><span>✈</span>Transfer Aeropuerto</div>
 </div>
 
-<!-- NAVBAR -->
-<nav>
-  <a href="index.html">🏠<br>Inicio</a>
-  <a href="reservar.html">📅<br>Reservar</a>
-  <a href="contacto.html">📞<br>Contacto</a>
-</nav>
-
-<!-- GOOGLE MAPS -->
-<script>
-function initMap() {
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(position => {
-      const userPos = {
-        lat: position.coords.latitude,
-        lng: position.coords.longitude
-      };
-
-      const map = new google.maps.Map(document.getElementById("map"), {
-        zoom: 15,
-        center: userPos,
-        styles: [{ "featureType": "poi", "stylers": [{ "visibility": "off" }]}],
-        disableDefaultUI: true
-      });
-
-      new google.maps.Marker({
-        position: userPos,
-        map: map
-      });
-
-    }, () => {
-      alert("No se pudo obtener tu ubicación.");
-    });
-  }
-}
-</script>
-
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD32zkRd46s5jKHkTjj2868WOMfv7m_V48&callback=initMap" async defer></script>
+<!-- Navegación inferior -->
+<div class="nav-bar">
+    <a class="nav-item" href="index.html">
+        <span>🏠</span>Inicio
+    </a>
+    <a class="nav-item" href="reservar.html">
+        <span>🚌</span>Reservar
+    </a>
+    <a class="nav-item" href="contacto.html">
+        <span>📞</span>Contacto
+    </a>
+</div>
 
 </body>
 </html>
