@@ -5,8 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Reservar – COLESTUR</title>
 
-<link rel="stylesheet" href="css/style.css">
-
 <style>
   :root {
     --bg: #050508;
@@ -31,7 +29,6 @@
     color: var(--text);
   }
 
-  /* HEADER */
   header {
     padding: 16px;
     display: flex;
@@ -66,14 +63,12 @@
     color: var(--muted);
   }
 
-  /* LAYOUT */
   main {
-    padding: 20px 16px 110px;
+    padding: 20px 16px 120px;
     max-width: 780px;
     margin: auto;
   }
 
-  /* WELCOME */
   .welcome {
     background: linear-gradient(135deg, #14151d, #0c0d11);
     padding: 18px;
@@ -83,9 +78,6 @@
     box-shadow: var(--shadow-deep);
   }
 
-  .welcome p { margin: 6px 0 0; color: var(--muted); font-size: 13px; }
-
-  /* TRIP CARD */
   .trip-card {
     background: var(--card);
     padding: 18px;
@@ -95,16 +87,7 @@
     margin-bottom: 22px;
   }
 
-  .trip-title {
-    font-size: 16px;
-    font-weight: 600;
-    margin-bottom: 12px;
-  }
-
-  /* FIELDS */
-  .input-block {
-    margin-bottom: 14px;
-  }
+  .input-block { margin-bottom: 14px; }
 
   label {
     font-size: 12px;
@@ -124,13 +107,6 @@
     transition: .2s;
   }
 
-  input:focus, select:focus {
-    border-color: var(--accent);
-    box-shadow: 0 0 9px var(--accent-glow);
-    outline: none;
-  }
-
-  /* MAPA */
   #map {
     width: 100%;
     height: 300px;
@@ -141,29 +117,45 @@
     margin-bottom: 22px;
   }
 
-  /* DETAIL GRID */
   .grid {
     display: grid;
     gap: 14px;
     grid-template-columns: repeat(auto-fit,minmax(150px,1fr));
   }
 
-  /* MESSAGE */
   #mensajeReserva {
     margin-top: 12px;
     font-size: 14px;
     min-height: 20px;
   }
 
-  /* BOTTOM BUTTON */
   .bottom-bar {
     position: fixed;
-    bottom: 0; left: 0; right: 0;
-    background: linear-gradient(to top, rgba(5,6,8,1), rgba(5,6,8,0.6), transparent);
-    padding: 18px 16px 30px;
+    left: 0; right: 0; bottom: 0;
+    background: #090a0d;
+    border-top: 1px solid #13141b;
     display: flex;
-    justify-content: center;
-    z-index: 10;
+    justify-content: space-around;
+    padding: 10px 0;
+    z-index: 20;
+  }
+
+  .bottom-item {
+    text-align: center;
+    font-size: 12px;
+    color: var(--muted);
+    text-decoration: none;
+  }
+
+  .bottom-item img {
+    width: 26px;
+    opacity: 0.85;
+    display: block;
+    margin: auto;
+  }
+
+  .bottom-item.active img {
+    opacity: 1;
   }
 
   .btn-primary {
@@ -178,13 +170,7 @@
     color: white;
     box-shadow: 0 15px 35px var(--accent-glow);
     cursor: pointer;
-    transition: 0.2s;
   }
-
-  .btn-primary:active {
-    transform: scale(0.98);
-  }
-
 </style>
 </head>
 
@@ -198,21 +184,18 @@
   </div>
 </header>
 
-
 <main>
 
-  <!-- BIENVENIDA -->
   <section class="welcome">
     <h2 style="margin:0;">Planifica tu servicio</h2>
-    <p>Reserva tu transporte especial con recogida automática y mapa interactivo.</p>
+    <p>Reserva tu transporte especial con ubicación real y mapa interactivo.</p>
   </section>
 
-  <!-- TRIP CARD -->
   <section class="trip-card">
 
     <div class="input-block">
       <label>Punto de recogida</label>
-      <input id="origen" placeholder="Buscando tu ubicación..." />
+      <input id="origen" placeholder="Cargando ubicación..." />
     </div>
 
     <div class="input-block">
@@ -221,13 +204,10 @@
     </div>
   </section>
 
-  <!-- MAPA -->
   <div id="map"></div>
 
-  <!-- DETALLES -->
   <section class="trip-card">
     <div class="grid">
-      
       <div class="input-block">
         <label>Nombre completo</label>
         <input id="nombre" />
@@ -263,48 +243,48 @@
         <input type="number" id="pasajeros" value="1" min="1">
       </div>
     </div>
-
-    <p id="mensajeReserva"></p>
   </section>
 
-  <!-- HIDDEN COORDS -->
   <input type="hidden" id="origen_lat">
   <input type="hidden" id="origen_lng">
-  <input type="hidden" id="destino_lat">
-  <input type="hidden" id="destino_lng">
 
 </main>
 
-<!-- BOTTOM BUTTON -->
+<!-- Barra inferior -->
 <div class="bottom-bar">
-  <button class="btn-primary" id="btnReservar">Confirmar reserva</button>
+  <a class="bottom-item" href="index.html">
+    <img src="img/home.png">
+    Inicio
+  </a>
+
+  <a class="bottom-item active" href="reservar.html">
+    <img src="img/car.png">
+    Reservar
+  </a>
+
+  <a class="bottom-item" href="contacto.html">
+    <img src="img/contact.png">
+    Contacto
+  </a>
 </div>
 
-
-
-
-
-<!-- ============= SCRIPTS =============== -->
-
-
-<!-- Google Maps -->
+<!-- GOOGLE MAPS + REVERSE GEOCODING -->
 <script>
 let map, originMarker;
 
 function initMap() {
   navigator.geolocation.getCurrentPosition(
-    (pos) => {
-      const userLoc = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+    async (pos) => {
+      const loc = { lat: pos.coords.latitude, lng: pos.coords.longitude };
 
       map = new google.maps.Map(document.getElementById("map"), {
-        center: userLoc,
-        zoom: 14,
+        center: loc,
+        zoom: 15,
         disableDefaultUI: true,
-        styles: [{elementType:"geometry",stylers:[{color:"#1c1d25"}]}]
       });
 
       originMarker = new google.maps.Marker({
-        position: userLoc,
+        position: loc,
         map,
         icon: {
           path: google.maps.SymbolPath.CIRCLE,
@@ -316,23 +296,31 @@ function initMap() {
         }
       });
 
-      document.getElementById("origen").value = "Mi ubicación actual";
-      document.getElementById("origen_lat").value = userLoc.lat;
-      document.getElementById("origen_lng").value = userLoc.lng;
+      // Guardar coords
+      document.getElementById("origen_lat").value = loc.lat;
+      document.getElementById("origen_lng").value = loc.lng;
+
+      // Reverse geocoding: obtener dirección real
+      const geocoder = new google.maps.Geocoder();
+      const result = await geocoder.geocode({ location: loc });
+
+      if (result.results && result.results[0]) {
+        document.getElementById("origen").value = result.results[0].formatted_address;
+      } else {
+        document.getElementById("origen").value = "Ubicación detectada";
+      }
+
     },
-    () => { console.log("Ubicación no disponible."); }
+    () => {
+      document.getElementById("origen").value = "No se pudo detectar tu ubicación";
+    }
   );
 }
 
 window.initMap = initMap;
 </script>
 
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD32zkRd46s5jKHkTjj2868WOMfv7m_V48&libraries=places&callback=initMap" async defer></script>
-<!-- Bottom nav -->
-<nav class="bottom-nav">
-  <a href="index.html">🏠 Inicio</a>
-  <a href="reservar.html">🚌 Reservar</a>
-  <a href="contacto.html" style="color:white;">📞 Contacto</a>
-</nav>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD32zkRd46s5jKHkTjj2868WOMfv7m_V48&callback=initMap" async defer></script>
+
 </body>
 </html>
