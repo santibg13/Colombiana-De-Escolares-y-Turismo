@@ -168,6 +168,13 @@
     cursor: pointer;
   }
 
+  /* Mensaje de confirmación / error */
+  #mensajeReserva {
+    margin-top: 12px;
+    font-size: 14px;
+    min-height: 20px;
+  }
+
   /* Autocomplete por encima de todo */
   .pac-container {
     z-index: 10000 !important;
@@ -225,6 +232,8 @@
 
     <label style="margin-top:12px;">Pasajeros</label>
     <input type="number" id="pasajeros" value="1" min="1">
+
+    <p id="mensajeReserva"></p>
   </section>
 
   <!-- COORDENADAS -->
@@ -255,7 +264,116 @@
   </a>
 </div>
 
-<!-- ===================== MAPS SCRIPT ===================== -->
+<!-- ===================== EMAILJS ===================== -->
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script>
+  (function () {
+    emailjs.init("BBBTYChL9Rq9ynJgJ"); // TU PUBLIC KEY DE EMAILJS
+  })();
+</script>
+
+<!-- ===================== FIREBASE + GUARDAR RESERVA ===================== -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+  import {
+    getFirestore,
+    collection,
+    addDoc,
+    serverTimestamp
+  } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyCpuX28qe2YFhX2rSzH01AIPP9EQDIsP94",
+    authDomain: "colestur-reservas.firebaseapp.com",
+    projectId: "colestur-reservas",
+    storageBucket: "colestur-reservas.firebasestorage.app",
+    messagingSenderId: "123689903908",
+    appId: "1:123689903908:web:d4d710d7165e64a369f5b1",
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  const btn = document.getElementById("btnReservar");
+  const msg = document.getElementById("mensajeReserva");
+
+  const nombre = document.getElementById("nombre");
+  const telefono = document.getElementById("telefono");
+  const servicio = document.getElementById("servicio");
+  const origen = document.getElementById("origen");
+  const destino = document.getElementById("destino");
+  const fecha = document.getElementById("fecha");
+  const hora = document.getElementById("hora");
+  const pasajeros = document.getElementById("pasajeros");
+
+  btn.addEventListener("click", async () => {
+    msg.style.color = "#f4f6f9";
+    msg.textContent = "Enviando reserva...";
+
+    if (!origen.value.trim() || !destino.value.trim() ||
+        !nombre.value.trim() || !telefono.value.trim() ||
+        !fecha.value || !hora.value) {
+      msg.style.color = "#ff5a5f";
+      msg.textContent = "Por favor completa todos los campos obligatorios.";
+      return;
+    }
+
+    const reserva = {
+      nombre: nombre.value.trim(),
+      telefono: telefono.value.trim(),
+      servicio: servicio.value,
+      origen: origen.value.trim(),
+      destino: destino.value.trim(),
+      fecha: fecha.value,
+      hora: hora.value,
+      pasajeros: Number(pasajeros.value || 1),
+      origen_lat: parseFloat(document.getElementById("origen_lat").value) || null,
+      origen_lng: parseFloat(document.getElementById("origen_lng").value) || null,
+      destino_lat: parseFloat(document.getElementById("destino_lat").value) || null,
+      destino_lng: parseFloat(document.getElementById("destino_lng").value) || null,
+      distancia: document.getElementById("distancia").textContent,
+      tiempo_estimado: document.getElementById("tiempo").textContent,
+      estado: "Pendiente",
+      creadaEn: serverTimestamp(),
+      fuente: "PWA COLESTUR"
+    };
+
+    try {
+      // 1) Guardar en Firestore
+      await addDoc(collection(db, "reservas"), reserva);
+
+      // 2) Enviar correo con EmailJS
+      await emailjs.send("service_bsdpr26", "template_fmqabdi", {
+        to_email: "santibg13@gmail.com",
+        nombre: reserva.nombre,
+        telefono: reserva.telefono,
+        servicio: reserva.servicio,
+        origen: reserva.origen,
+        destino: reserva.destino,
+        fecha: reserva.fecha,
+        hora: reserva.hora,
+        pasajeros: reserva.pasajeros,
+        distancia: reserva.distancia,
+        tiempo_estimado: reserva.tiempo_estimado
+      });
+
+      msg.style.color = "#42ba96";
+      msg.textContent = "✔ Tu reserva fue registrada con éxito. Un asesor de COLESTUR te contactará pronto.";
+
+      destino.value = "";
+      fecha.value = "";
+      hora.value = "";
+      pasajeros.value = "1";
+
+    } catch (err) {
+      console.error(err);
+      msg.style.color = "#ff5a5f";
+      msg.textContent = "❌ Ocurrió un error al registrar la reserva. Intenta de nuevo.";
+    }
+  });
+</script>
+
+<!-- ===================== MAPAS / RUTA / TIEMPO ===================== -->
 <script>
 let map, originMarker, destMarker, directionsService, directionsRenderer, distanceMatrix;
 
@@ -277,7 +395,7 @@ function initMap() {
 
   const geocoder = new google.maps.Geocoder();
 
-  // GEOLOCALIZACIÓN: origen REAL
+  // GEOLOCALIZACIÓN: origen real
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(
       (pos) => {
@@ -304,7 +422,7 @@ function initMap() {
     );
   }
 
-  // AUTOCOMPLETE (origen y destino) – deja que sugiera todo
+  // AUTOCOMPLETE
   const acOrigen = new google.maps.places.Autocomplete(
     document.getElementById("origen"),
     {
@@ -343,7 +461,6 @@ function updateOrigin(place){
   document.getElementById("origen_lat").value = lat;
   document.getElementById("origen_lng").value = lng;
 
-  // Mostrar el nombre del sitio si existe (ej. "Centro Comercial Fontanar")
   const texto = place.name || place.formatted_address || "";
   document.getElementById("origen").value = texto;
 
@@ -423,13 +540,11 @@ function calcularRuta() {
       if (status === "OK") {
         directionsRenderer.setDirections(res);
 
-        // CENTRAR MAPA EN LA RUTA
         const bounds = new google.maps.LatLngBounds();
         bounds.extend(origenCoord);
         bounds.extend(destinoCoord);
         map.fitBounds(bounds);
 
-        // Distancia / tiempo con tráfico (Distance Matrix)
         distanceMatrix.getDistanceMatrix(
           {
             origins:[origenCoord],
@@ -459,14 +574,7 @@ function calcularRuta() {
   );
 }
 
-// Hacer visible la función para el callback
 window.initMap = initMap;
-
-// Aquí luego puedes enganchar btnReservar con Firestore / EmailJS
-document.getElementById("btnReservar").addEventListener("click", () => {
-  // Lógica de guardado / envío (que ya tenías) va aquí
-  alert("Aquí va la lógica de guardar/enviar la reserva 😄");
-});
 </script>
 
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD32zkRd46s5jKHkTjj2868WOMfv7m_V48&libraries=places&callback=initMap" async defer></script>
