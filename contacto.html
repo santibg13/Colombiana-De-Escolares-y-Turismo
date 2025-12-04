@@ -1,13 +1,71 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Contacto - COLESTUR</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contacto - COLESTUR</title>
 
-  <link rel="manifest" href="manifest.json">
-  <link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/style.css">
+<link rel="manifest" href="manifest.json">
+
+<style>
+  main {
+    padding: 20px;
+    padding-bottom: 90px;
+  }
+
+  h2 {
+    margin-bottom: 14px;
+    font-size: 20px;
+  }
+
+  .contact-card {
+    background: var(--card);
+    padding: 20px;
+    border-radius: 18px;
+    border: 1px solid rgba(255,255,255,0.04);
+    margin-bottom: 20px;
+  }
+
+  .contact-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-top: 20px;
+  }
+
+  .contact-btn {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px;
+    border-radius: 14px;
+    background: #0f1016;
+    border: 1px solid #20222e;
+    color: white;
+    font-size: 16px;
+    text-decoration: none;
+  }
+
+  .contact-btn:hover {
+    border-color: var(--accent);
+    background: #11131a;
+  }
+
+  .icon {
+    font-size: 26px;
+    width: 32px;
+    text-align: center;
+  }
+
+  .section-title {
+    margin-top: 30px;
+    font-size: 18px;
+    color: var(--muted);
+  }
+</style>
 </head>
+
 <body>
 
 <header class="header">
@@ -20,55 +78,60 @@
 
 <main>
 
-<section class="contact-card">
-  <h2>¿Dónde encontrarnos?</h2>
+  <h2>Contáctanos</h2>
 
-  <div class="contact-list">
+  <p style="color:var(--muted); font-size:14px;">
+    Estamos disponibles para resolver tus dudas, enviar cotizaciones y ofrecerte la mejor experiencia en transporte especial.
+  </p>
 
-    <a class="contact-item" href="https://wa.me/573001234567" target="_blank">
-      <img src="img/whatsapp.png">
-      <span>WhatsApp</span>
-    </a>
+  <div class="contact-card">
 
-    <a class="contact-item" href="tel:+573001234567">
-      <img src="img/phone.png">
-      <span>Llamar</span>
-    </a>
+    <div class="contact-buttons">
 
-    <a class="contact-item" href="mailto:contacto@colestur.com">
-      <img src="img/mail.png">
-      <span>Correo electrónico</span>
-    </a>
+      <!-- WHATSAPP -->
+      <a class="contact-btn" href="https://wa.me/573102869505?text=Hola%20quiero%20más%20información%20sobre%20los%20servicios%20COLESTUR" target="_blank">
+        <span class="icon">💬</span>
+        WhatsApp
+      </a>
 
-    <a class="contact-item" href="https://maps.apple.com/?q=Cra+12+%23+12-34+Ch%C3%ADa" target="_blank">
-      <img src="img/apple-maps.png">
-      <span>Apple Maps</span>
-    </a>
+      <!-- LLAMAR -->
+      <a class="contact-btn" href="tel:3102869505">
+        <span class="icon">📞</span>
+        Llamar
+      </a>
 
-    <a class="contact-item" href="https://www.google.com/maps?q=Cra+12+%2312-34+Ch%C3%ADa" target="_blank">
-      <img src="img/google-maps.png">
-      <span>Google Maps</span>
-    </a>
+      <!-- EMAIL -->
+      <a class="contact-btn" href="mailto:dfms.87@outlook.com">
+        <span class="icon">📧</span>
+        Correo electrónico
+      </a>
 
-    <a class="contact-item" href="https://waze.com/ul?q=Cra+12+%23+12-34+Ch%C3%ADa" target="_blank">
-      <img src="img/waze.png">
-      <span>Waze</span>
-    </a>
+      <!-- GOOGLE MAPS -->
+      <a class="contact-btn" href="https://maps.google.com/?q=Calle+77+%2381-83,+Bogotá" target="_blank">
+        <span class="icon">📍</span>
+        Cómo llegar (Google Maps)
+      </a>
 
+      <!-- WAZE -->
+      <a class="contact-btn" href="https://waze.com/ul?ll=4.675800,-74.058900&navigate=yes" target="_blank">
+        <span class="icon">🧭</span>
+        Abrir en Waze
+      </a>
+
+    </div>
   </div>
-</section>
+
+  <h3 class="section-title">Dónde encontrarnos</h3>
+  <p style="font-size:15px; color:white;">📍 Calle 77 #81-83 — Bogotá, Colombia</p>
 
 </main>
 
+<!-- Bottom nav -->
 <nav class="bottom-nav">
   <a href="index.html">🏠 Inicio</a>
   <a href="reservar.html">🚌 Reservar</a>
-  <a href="contacto.html">📞 Contacto</a>
+  <a href="contacto.html" style="color:white;">📞 Contacto</a>
 </nav>
-
-<script>
-navigator.serviceWorker.register("service-worker.js");
-</script>
 
 </body>
 </html>
