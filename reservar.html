@@ -694,6 +694,50 @@
   async
   defer
 ></script>
+<!-- Navegación inferior fija -->
+<div class="nav-bar">
+    <a class="nav-item" href="index.html">
+        <span>🏠</span>
+        Inicio
+    </a>
 
+    <a class="nav-item" href="reservar.html">
+        <span>🚌</span>
+        Reservar
+    </a>
+
+    <a class="nav-item" href="contacto.html">
+        <span>📞</span>
+        Contacto
+    </a>
+</div>
+
+<style>
+.nav-bar {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: #0d1016;
+    border-top: 1px solid #1c1f26;
+    padding: 10px 0 6px;
+    display: flex;
+    justify-content: space-around;
+    z-index: 9999;
+}
+
+.nav-item {
+    text-align: center;
+    font-size: 13px;
+    color: #c9c9c9;
+    text-decoration: none;
+}
+
+.nav-item span {
+    display: block;
+    font-size: 21px;
+    margin-bottom: 3px;
+}
+</style>
 </body>
 </html>
