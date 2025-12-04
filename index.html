@@ -5,210 +5,153 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>COLESTUR S.A.S.</title>
 
+<link rel="stylesheet" href="styles.css">
+
 <style>
-:root {
-    --bg: #0F1115;
-    --card: #181A20;
-    --text: #F5F5F7;
-    --subtext: #B5B5B7;
-    --accent: #3A7CE9;
-    --highlight: #1A73E8;
-}
-
 body {
-    margin: 0;
-    font-family: "Segoe UI", sans-serif;
-    background: var(--bg);
-    color: var(--text);
+  margin: 0;
+  background: #0f1620;
+  font-family: 'Segoe UI', sans-serif;
+  color: white;
 }
 
-/* HEADER */
 header {
-    padding: 18px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
+  padding: 18px;
+  font-size: 32px;
+  font-weight: 800;
 }
 
-header img {
-    width: 38px;
-    height: 38px;
-    border-radius: 8px;
+.banner {
+  margin: 15px;
+  background: #1c2635;
+  padding: 20px;
+  border-radius: 14px;
 }
 
-header h1 {
-    font-size: 22px;
-    font-weight: 700;
-    margin: 0;
+.banner p {
+  font-size: 22px;
+  font-weight: 700;
 }
 
-/* SEARCH BAR */
-.search-box {
-    background: #1E2127;
-    margin: 15px 15px;
-    padding: 14px 18px;
-    border-radius: 50px;
-    font-size: 16px;
-    color: var(--subtext);
+.section-title {
+  font-size: 22px;
+  font-weight: 700;
+  padding: 15px;
 }
 
-/* CARDS */
+.cards {
+  display: flex;
+  overflow-x: auto;
+  gap: 14px;
+  padding: 0 15px;
+}
+
 .card {
-    background: var(--card);
-    margin: 12px 15px;
-    padding: 18px;
-    border-radius: 16px;
+  min-width: 140px;
+  background: #1c2635;
+  padding: 20px;
+  border-radius: 16px;
+  text-align: center;
+  cursor: pointer;
+  user-select: none;
 }
 
-.card h2 {
-    margin: 0 0 8px;
-    font-size: 20px;
+#map-container {
+  margin: 15px;
+  height: 300px;
+  border-radius: 16px;
+  overflow: hidden;
+  cursor: pointer;
 }
 
-.card .small {
-    font-size: 14px;
-    color: var(--subtext);
+#map {
+  width: 100%;
+  height: 100%;
 }
 
-/* SERVICE GRID */
-.services {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 12px;
-    padding: 10px 15px;
+nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: #1c2635;
+  display: flex;
+  justify-content: space-around;
+  padding: 10px 0;
 }
 
-.service-box {
-    background: var(--card);
-    padding: 18px;
-    border-radius: 12px;
-    text-align: center;
-    cursor: pointer;
-}
-
-.service-box:hover {
-    background: #22242C;
-}
-
-.service-box img {
-    width: 36px;
-    margin-bottom: 8px;
-}
-
-.service-box p {
-    margin: 0;
-    font-size: 14px;
-}
-
-/* CONTACT CARD */
-.contact {
-    background: var(--card);
-    padding: 20px;
-    margin: 15px;
-    border-radius: 14px;
-}
-
-.contact p {
-    margin: 6px 0;
-    font-size: 15px;
-}
-
-a {
-    color: var(--accent);
-}
-
-/* BOTTOM NAV */
-.navbar {
-    position: fixed;
-    bottom: 0;
-    width: 100%;
-    background: #0C0D12;
-    padding: 10px 0;
-    display: flex;
-    justify-content: space-around;
-}
-
-.nav-item {
-    text-align: center;
-    font-size: 13px;
-    color: var(--subtext);
-}
-
-.nav-item img {
-    width: 26px;
-    opacity: 0.85;
+nav a {
+  text-align: center;
+  color: white;
+  font-size: 14px;
+  text-decoration: none;
 }
 </style>
 </head>
+
 <body>
 
-<!-- HEADER -->
-<header>
-    <img src="logo512.png" alt="Colestur Logo">
-    <h1>COLESTUR</h1>
-</header>
+<header>COLESTUR S.A.S.</header>
 
-<!-- SEARCH BAR STYLE UBER -->
-<div class="search-box">
-    ¿A dónde vas?
+<!-- BANNER -->
+<div class="banner">
+  <p>🔵 En COLESTUR estamos listos para rodar contigo.</p>
 </div>
 
-<!-- WELCOME CARD -->
-<div class="card">
-    <h2>En COLESTUR estamos listos para rodar contigo.</h2>
-    <p class="small">Elige un servicio para comenzar tu viaje.</p>
+<!-- SUGERENCIAS -->
+<div class="section-title">Servicios</div>
+
+<div class="cards">
+  <div class="card" onclick="location.href='reservar.html'">Escolar</div>
+  <div class="card" onclick="location.href='reservar.html'">Empresarial</div>
+  <div class="card" onclick="location.href='reservar.html'">Turismo</div>
+  <div class="card" onclick="location.href='reservar.html'">Transfer Aeropuerto</div>
 </div>
 
-<!-- SERVICES GRID -->
-<div class="services">
-    <div class="service-box" onclick="window.location='reservar.html'">
-        <img src="https://cdn-icons-png.flaticon.com/512/808/808439.png">
-        <p>Escolar</p>
-    </div>
+<!-- MAPA TIPO UBER -->
+<div class="section-title">A tu alrededor</div>
 
-    <div class="service-box" onclick="window.location='reservar.html'">
-        <img src="https://cdn-icons-png.flaticon.com/512/3203/3203071.png">
-        <p>Empresarial</p>
-    </div>
-
-    <div class="service-box" onclick="window.location='reservar.html'">
-        <img src="https://cdn-icons-png.flaticon.com/512/69/69906.png">
-        <p>Turismo</p>
-    </div>
-
-    <div class="service-box" onclick="window.location='reservar.html'">
-        <img src="https://cdn-icons-png.flaticon.com/512/744/744465.png">
-        <p>Especial</p>
-    </div>
-</div>
-
-<!-- CONTACT SECTION -->
-<div class="contact">
-    <h2>Contacto</h2>
-
-    <p><b>WhatsApp:</b>  
-        <a href="https://wa.me/573102869505?text=Hola%20quiero%20cotización%20de%20transporte.">310 286 9505</a>
-    </p>
-
-    <p><b>Correo:</b> dfms.87@outlook.com</p>
-    <p><b>Dirección:</b> Calle 77 # 81-83 Bogotá</p>
-    <p><b>Google Maps:</b> 
-        <a href="https://maps.google.com/?q=Calle+77+%23+81-83+Bogota">Ver ubicación</a>
-    </p>
+<div id="map-container" onclick="location.href='reservar.html'">
+  <div id="map"></div>
 </div>
 
 <!-- NAVBAR -->
-<div class="navbar">
-    <div class="nav-item" onclick="window.location='index.html'">
-        <img src="https://cdn-icons-png.flaticon.com/512/25/25694.png"><br>Inicio
-    </div>
-    <div class="nav-item" onclick="window.location='reservar.html'">
-        <img src="https://cdn-icons-png.flaticon.com/512/854/854996.png"><br>Reservar
-    </div>
-    <div class="nav-item" onclick="window.location='contacto.html'">
-        <img src="https://cdn-icons-png.flaticon.com/512/455/455705.png"><br>Contacto
-    </div>
-</div>
+<nav>
+  <a href="index.html">🏠<br>Inicio</a>
+  <a href="reservar.html">📅<br>Reservar</a>
+  <a href="contacto.html">📞<br>Contacto</a>
+</nav>
+
+<!-- GOOGLE MAPS -->
+<script>
+function initMap() {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(position => {
+      const userPos = {
+        lat: position.coords.latitude,
+        lng: position.coords.longitude
+      };
+
+      const map = new google.maps.Map(document.getElementById("map"), {
+        zoom: 15,
+        center: userPos,
+        styles: [{ "featureType": "poi", "stylers": [{ "visibility": "off" }]}],
+        disableDefaultUI: true
+      });
+
+      new google.maps.Marker({
+        position: userPos,
+        map: map
+      });
+
+    }, () => {
+      alert("No se pudo obtener tu ubicación.");
+    });
+  }
+}
+</script>
+
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD32zkRd46s5jKHkTjj2868WOMfv7m_V48&callback=initMap" async defer></script>
 
 </body>
 </html>
