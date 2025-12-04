@@ -23,7 +23,6 @@
     color: var(--text);
   }
 
-  /* HEADER */
   header {
     padding: 16px;
     display: flex;
@@ -31,6 +30,9 @@
     gap: 12px;
     background: rgba(10,10,14,0.6);
     border-bottom: 1px solid #0e1015;
+    position: sticky;
+    top: 0;
+    z-index: 50;
   }
 
   .logo-circle {
@@ -46,10 +48,10 @@
   }
 
   main {
-    padding: 20px 16px 110px;
+    padding: 20px 16px 120px;
     max-width: 780px;
     margin: auto;
-    overflow: visible !important;
+    overflow: visible;
   }
 
   .trip-card {
@@ -58,7 +60,7 @@
     border-radius: 18px;
     border: 1px solid var(--border);
     margin-bottom: 22px;
-    overflow: visible !important;
+    overflow: visible;
   }
 
   label {
@@ -75,13 +77,11 @@
     background: var(--card-soft);
     border: 1px solid var(--border);
     color: var(--text);
-    font-size: 15px;
   }
 
-  /* AUTOCOMPLETE FIX */
   #origen, #destino {
-    position: relative !important;
-    z-index: 99999 !important;
+    position: relative;
+    z-index: 9999; /* NECESARIO PARA GOOGLE AUTOCOMPLETE */
   }
 
   #map {
@@ -99,17 +99,21 @@
     border: 1px solid var(--border);
     margin-top: -8px;
     margin-bottom: 20px;
-    font-size: 15px;
   }
 
-  .info-item { margin-bottom: 6px; }
+  .info-item {
+    font-size: 15px;
+    margin-bottom: 6px;
+  }
 
-  /* CONFIRM BUTTON */
   .confirm-container {
     position: fixed;
     bottom: 70px;
-    left: 0; right: 0;
+    left: 0;
+    right: 0;
     padding: 0 18px;
+    display: flex;
+    justify-content: center;
     z-index: 9999;
   }
 
@@ -117,41 +121,40 @@
     width: 100%;
     background: var(--accent);
     padding: 15px;
+    border: none;
     border-radius: 999px;
     color: white;
     font-weight: 700;
     font-size: 16px;
-    border: none;
     box-shadow: 0 12px 28px rgba(58,124,233,.45);
   }
 
-  /* BOTTOM NAV */
   .bottom-nav {
     position: fixed;
     bottom: 0; left: 0; right: 0;
     background: #0d0e12;
     border-top: 1px solid #1f2027;
-    padding: 10px 0 14px;
+    padding: 10px 0;
     display: flex;
     justify-content: space-around;
-    z-index: 99999;
+    z-index: 9999;
   }
 
   .nav-item {
     text-align: center;
     font-size: 13px;
-    text-decoration: none;
     color: var(--muted);
+    text-decoration: none;
   }
 
   .nav-item span {
+    font-size: 20px;
     display: block;
-    font-size: 22px;
     margin-bottom: 2px;
   }
 
   .nav-active {
-    color: white !important;
+    color: white;
     font-weight: 600;
   }
 </style>
@@ -209,7 +212,6 @@
     <input type="number" id="pasajeros" value="1" min="1">
   </section>
 
-  <!-- COORDENADAS -->
   <input type="hidden" id="origen_lat">
   <input type="hidden" id="origen_lng">
   <input type="hidden" id="destino_lat">
@@ -217,19 +219,24 @@
 
 </main>
 
-<!-- BOTÓN CONFIRMAR -->
 <div class="confirm-container">
   <button id="btnReservar" class="btn-confirm">Confirmar reserva</button>
 </div>
 
-<!-- NAV INFERIOR -->
 <div class="bottom-nav">
-  <a href="index.html" class="nav-item"><span>🏠</span>Inicio</a>
-  <a href="reservar.html" class="nav-item nav-active"><span>🚌</span>Reservar</a>
-  <a href="contacto.html" class="nav-item"><span>📞</span>Contacto</a>
+  <a href="index.html" class="nav-item">
+    <span>🏠</span> Inicio
+  </a>
+  <a href="reservar.html" class="nav-item nav-active">
+    <span>🚌</span> Reservar
+  </a>
+  <a href="contacto.html" class="nav-item">
+    <span>📞</span> Contacto
+  </a>
 </div>
 
-<!-- =============== GOOGLE MAPS SCRIPT =============== -->
+
+<!-- ========== GOOGLE MAPS SCRIPT ========== -->
 <script>
 let map, originMarker, destMarker, directionsService, directionsRenderer;
 
@@ -251,7 +258,7 @@ function initMap() {
 
   const geocoder = new google.maps.Geocoder();
 
-  // ================= UBICACIÓN REAL AUTOMÁTICA =================
+  // ================= UBICACIÓN REAL =================
   navigator.geolocation.getCurrentPosition((pos)=>{
     const lat = pos.coords.latitude;
     const lng = pos.coords.longitude;
@@ -263,32 +270,36 @@ function initMap() {
     map.setCenter({lat, lng});
 
     geocoder.geocode({location:{lat,lng}}, (res,status)=>{
-      if(status==="OK" && res[0]){
+      if(status==="OK" && res[0]) {
         document.getElementById("origen").value = res[0].formatted_address;
       }
     });
   });
 
-  // ================= AUTOCOMPLETE OPCIONES =================
-  const autoOpts = {
-    fields:["formatted_address","geometry"],
-    types:["geocode"],
-    componentRestrictions:{country:"co"}
+  // ================= AUTOCOMPLETE =================
+  const autoOptions = {
+    fields: ["formatted_address","geometry"],
+    types: ["geocode"],
+    componentRestrictions: { country:"co" }
   };
 
   const acOrigen = new google.maps.places.Autocomplete(
-    document.getElementById("origen"), autoOpts
+    document.getElementById("origen"), autoOptions
   );
 
   const acDestino = new google.maps.places.Autocomplete(
-    document.getElementById("destino"), autoOpts
+    document.getElementById("destino"), autoOptions
   );
 
   acOrigen.addListener("place_changed",()=>{
     const p = acOrigen.getPlace();
     if(!p.geometry) return;
 
-    updateOrigin(p);
+    document.getElementById("origen").value = p.formatted_address;
+    document.getElementById("origen_lat").value = p.geometry.location.lat();
+    document.getElementById("origen_lng").value = p.geometry.location.lng();
+
+    placeOriginMarker(p.geometry.location.lat(), p.geometry.location.lng());
     calcularRuta();
   });
 
@@ -296,31 +307,14 @@ function initMap() {
     const p = acDestino.getPlace();
     if(!p.geometry) return;
 
-    updateDestino(p);
+    document.getElementById("destino").value = p.formatted_address;
+    document.getElementById("destino_lat").value = p.geometry.location.lat();
+    document.getElementById("destino_lng").value = p.geometry.location.lng();
+
+    placeDestinationMarker(p.geometry.location.lat(), p.geometry.location.lng());
     calcularRuta();
   });
-}
 
-function updateOrigin(place){
-  const lat = place.geometry.location.lat();
-  const lng = place.geometry.location.lng();
-
-  document.getElementById("origen").value = place.formatted_address;
-  document.getElementById("origen_lat").value = lat;
-  document.getElementById("origen_lng").value = lng;
-
-  placeOriginMarker(lat, lng);
-}
-
-function updateDestino(place){
-  const lat = place.geometry.location.lat();
-  const lng = place.geometry.location.lng();
-
-  document.getElementById("destino").value = place.formatted_address;
-  document.getElementById("destino_lat").value = lat;
-  document.getElementById("destino_lng").value = lng;
-
-  placeDestinationMarker(lat, lng);
 }
 
 function placeOriginMarker(lat,lng){
@@ -330,7 +324,7 @@ function placeOriginMarker(lat,lng){
       map,
       icon:{
         path:google.maps.SymbolPath.CIRCLE,
-        scale:8,
+        scale:9,
         fillColor:"#3a7ce9",
         fillOpacity:1,
         strokeColor:"#fff",
@@ -348,13 +342,15 @@ function placeDestinationMarker(lat,lng){
       icon:{
         path:"M 0 0 L 2 4 L 0 12 L -2 4 Z",
         fillColor:"#4bff8f",
-        fillOpacity:1
+        fillOpacity:1,
+        strokeColor:"#0c0d11",
+        strokeWeight:2
       }
     });
   } else destMarker.setPosition({lat,lng});
 }
 
-function calcularRuta(){
+function calcularRuta() {
   const oLat = parseFloat(document.getElementById("origen_lat").value);
   const oLng = parseFloat(document.getElementById("origen_lng").value);
   const dLat = parseFloat(document.getElementById("destino_lat").value);
@@ -362,26 +358,23 @@ function calcularRuta(){
 
   if(!oLat || !dLat) return;
 
-  directionsService.route(
-    {
-      origin:{lat:oLat, lng:oLng},
-      destination:{lat:dLat, lng:dLng},
-      travelMode:"DRIVING",
-      drivingOptions:{
-        departureTime:new Date(),
-        trafficModel:"best_guess"
-      }
-    },
-    (res,status)=>{
-      if(status==="OK"){
-        directionsRenderer.setDirections(res);
-
-        const leg = res.routes[0].legs[0];
-        document.getElementById("distancia").textContent = leg.distance.text;
-        document.getElementById("tiempo").textContent = leg.duration_in_traffic.text;
-      }
+  directionsService.route({
+    origin:{lat:oLat, lng:oLng},
+    destination:{lat:dLat, lng:dLng},
+    travelMode:"DRIVING",
+    drivingOptions:{
+      departureTime:new Date(),
+      trafficModel:"best_guess"
     }
-  );
+  },(res,status)=>{
+    if(status==="OK"){
+      directionsRenderer.setDirections(res);
+
+      const leg = res.routes[0].legs[0];
+      document.getElementById("distancia").textContent = leg.distance.text;
+      document.getElementById("tiempo").textContent = leg.duration_in_traffic.text;
+    }
+  });
 }
 
 window.initMap = initMap;
