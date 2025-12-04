@@ -1,0 +1,189 @@
+:root {
+  --bg: #050608;
+  --card: #111217;
+  --card-soft: #181920;
+  --accent: #3a7ce9;
+  --accent-soft: #28426e;
+  --text: #f5f5f7;
+  --muted: #9da3b0;
+  --border: #262833;
+  --radius: 18px;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+body {
+  background: radial-gradient(circle at top, #111217 0, #050608 55%);
+  color: var(--text);
+  padding-bottom: 70px;
+}
+
+/* HEADER */
+.header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 20px 16px 4px;
+}
+
+.logo-circle {
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  background: radial-gradient(circle at 30% 0, #ffeaa7, #f1c40f 55%, #b8860b 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #041021;
+  font-weight: 900;
+  font-size: 18px;
+}
+
+.brand-text span {
+  font-size: 12px;
+  letter-spacing: 0.07em;
+  color: var(--muted);
+}
+
+.brand-text h1 {
+  font-size: 20px;
+  margin-top: 2px;
+}
+
+/* CARDS */
+.welcome-card {
+  background: var(--card);
+  margin: 10px 16px 0;
+  padding: 16px;
+  border-radius: var(--radius);
+  border: 1px solid rgba(255,255,255,0.03);
+  display: flex;
+  gap: 10px;
+}
+
+.welcome-dot {
+  font-size: 20px;
+  margin-top: 2px;
+}
+
+.slogan {
+  font-size: 15px;
+  color: var(--text);
+}
+
+.services-card {
+  background: var(--card);
+  padding: 16px;
+  margin: 18px 16px;
+  border-radius: var(--radius);
+}
+
+.services-card h2 {
+  font-size: 17px;
+  margin-bottom: 12px;
+}
+
+.services-grid {
+  display: grid;
+  gap: 14px;
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.service-box {
+  background: var(--card-soft);
+  padding: 16px;
+  border-radius: var(--radius);
+  text-align: center;
+  border: 1px solid #20222e;
+}
+
+.service-box img {
+  width: 60px;
+  height: 60px;
+  margin-bottom: 10px;
+  border-radius: 14px;
+}
+
+.service-box span {
+  display: block;
+  font-size: 15px;
+  margin-top: 6px;
+}
+
+/* MAPA */
+#map {
+  margin: 12px 16px 0;
+  width: calc(100% - 32px);
+  height: 260px;
+  border-radius: var(--radius);
+  overflow: hidden;
+  border: 1px solid #20222e;
+}
+
+/* BOTTOM NAV */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #0c0d11;
+  border-top: 1px solid #1d1f26;
+  display: flex;
+  justify-content: space-around;
+  padding: 10px 0 14px;
+  z-index: 20;
+}
+
+.bottom-nav a {
+  color: var(--muted);
+  font-size: 14px;
+  text-decoration: none;
+  text-align: center;
+}
+
+.bottom-nav a:hover {
+  color: var(--text);
+}
+
+/* CONTACTO */
+.contact-card {
+  background: var(--card);
+  padding: 16px;
+  border-radius: var(--radius);
+  margin: 18px 16px;
+}
+
+.contact-card h2 {
+  margin-bottom: 14px;
+}
+
+.contact-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.contact-item {
+  background: var(--card-soft);
+  padding: 14px;
+  border-radius: var(--radius);
+  border: 1px solid #20222e;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-size: 15px;
+}
+
+.contact-item img {
+  width: 34px;
+  height: 34px;
+}
+
+.contact-item span {
+  flex: 1;
+}
