@@ -11,7 +11,6 @@
     --card: #0c0d11;
     --card-soft: #13141b;
     --accent: #3a7ce9;
-    --accent-glow: rgba(58,124,233,.45);
     --text: #f4f6f9;
     --muted: #9ca3b5;
     --border: #1c1d25;
@@ -20,38 +19,37 @@
   body {
     margin: 0;
     background: var(--bg);
-    font-family: system-ui, -apple-system, sans-serif;
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
     color: var(--text);
   }
 
+  /* HEADER */
   header {
     padding: 16px;
     display: flex;
     align-items: center;
     gap: 12px;
-    background: rgba(10,10,14,0.55);
+    background: rgba(10,10,14,0.6);
     border-bottom: 1px solid #0e1015;
-    position: sticky;
-    top: 0;
-    z-index: 50;
   }
 
   .logo-circle {
     width: 38px;
     height: 38px;
     border-radius: 999px;
-    background: linear-gradient(135deg,#ffeaa7,#f1c40f);
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    color:#111;
-    font-weight:800;
+    background: linear-gradient(135deg, #ffeaa7, #f1c40f);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #111;
+    font-weight: 800;
   }
 
   main {
-    padding: 20px 16px 140px;
+    padding: 20px 16px 110px;
     max-width: 780px;
     margin: auto;
+    overflow: visible !important;
   }
 
   .trip-card {
@@ -60,6 +58,7 @@
     border-radius: 18px;
     border: 1px solid var(--border);
     margin-bottom: 22px;
+    overflow: visible !important;
   }
 
   label {
@@ -76,37 +75,36 @@
     background: var(--card-soft);
     border: 1px solid var(--border);
     color: var(--text);
-    font-size:14px;
+    font-size: 15px;
+  }
+
+  /* AUTOCOMPLETE FIX */
+  #origen, #destino {
+    position: relative !important;
+    z-index: 99999 !important;
   }
 
   #map {
     width: 100%;
     height: 300px;
     border-radius: 18px;
+    margin-bottom: 18px;
     border: 1px solid var(--border);
-    margin-bottom: 8px;
   }
 
   .info-box {
     background: var(--card);
+    padding: 14px;
+    border-radius: 14px;
     border: 1px solid var(--border);
-    padding: 16px;
-    border-radius: 16px;
+    margin-top: -8px;
     margin-bottom: 20px;
-  }
-
-  .info-row {
-    display:flex;
-    justify-content:space-between;
-    padding:8px 0;
     font-size: 15px;
   }
 
-  .info-label {
-    color: var(--muted);
-  }
+  .info-item { margin-bottom: 6px; }
 
-  /* BOTÓN CONFIRMAR */
+  /* CONFIRM BUTTON */
   .confirm-container {
     position: fixed;
     bottom: 70px;
@@ -117,43 +115,44 @@
 
   .btn-confirm {
     width: 100%;
-    padding: 16px;
     background: var(--accent);
+    padding: 15px;
+    border-radius: 999px;
     color: white;
     font-weight: 700;
     font-size: 16px;
-    border-radius: 999px;
-    box-shadow: 0 12px 30px var(--accent-glow);
-    border:none;
+    border: none;
+    box-shadow: 0 12px 28px rgba(58,124,233,.45);
   }
 
-  /* NAV BAR */
+  /* BOTTOM NAV */
   .bottom-nav {
     position: fixed;
     bottom: 0; left: 0; right: 0;
-    background:#0d0e12;
+    background: #0d0e12;
     border-top: 1px solid #1f2027;
-    padding: 10px 0;
-    display:flex;
-    justify-content:space-around;
-    z-index:99999;
+    padding: 10px 0 14px;
+    display: flex;
+    justify-content: space-around;
+    z-index: 99999;
   }
 
   .nav-item {
-    text-align:center;
-    font-size:14px;
-    text-decoration:none;
-    color:var(--muted);
+    text-align: center;
+    font-size: 13px;
+    text-decoration: none;
+    color: var(--muted);
   }
 
   .nav-item span {
+    display: block;
     font-size: 22px;
-    display:block;
+    margin-bottom: 2px;
   }
 
   .nav-active {
-    color:white;
-    font-weight:600;
+    color: white !important;
+    font-weight: 600;
   }
 </style>
 </head>
@@ -170,70 +169,67 @@
 
 <main>
 
-<section class="trip-card">
-  <label>Punto de recogida</label>
-  <input id="origen" placeholder="Cargando ubicación…">
+  <section class="trip-card">
+    <label>Punto de recogida</label>
+    <input id="origen" placeholder="Cargando ubicación..." />
 
-  <label style="margin-top:14px">Destino</label>
-  <input id="destino" placeholder="¿A dónde vas?">
-</section>
+    <label style="margin-top:14px;">Destino</label>
+    <input id="destino" placeholder="¿A dónde vas?" />
+  </section>
 
-<div id="map"></div>
+  <div id="map"></div>
 
-<div class="info-box">
-  <div class="info-row">
-    <span class="info-label">📍 Distancia:</span>
-    <span id="distancia">—</span>
+  <div class="info-box">
+    <div class="info-item">📍 <b>Distancia:</b> <span id="distancia">—</span></div>
+    <div class="info-item">⏱ <b>Tiempo estimado:</b> <span id="tiempo">—</span></div>
   </div>
-  <div class="info-row">
-    <span class="info-label">⏱ Tiempo estimado:</span>
-    <span id="tiempo">—</span>
-  </div>
-</div>
 
-<section class="trip-card">
-  <label>Nombre completo</label>
-  <input id="nombre">
+  <section class="trip-card">
+    <label>Nombre completo</label>
+    <input id="nombre" />
 
-  <label style="margin-top:12px;">WhatsApp</label>
-  <input id="telefono" placeholder="57300…">
+    <label style="margin-top:12px;">WhatsApp</label>
+    <input id="telefono" type="tel" placeholder="57300..." />
 
-  <label style="margin-top:12px;">Servicio</label>
-  <select id="servicio">
-    <option>Escolar</option>
-    <option>Empresarial</option>
-    <option>Turismo</option>
-    <option>Aeropuerto</option>
-  </select>
+    <label style="margin-top:12px;">Servicio</label>
+    <select id="servicio">
+      <option>Escolar</option>
+      <option>Empresarial</option>
+      <option>Turismo</option>
+      <option>Aeropuerto</option>
+    </select>
 
-  <label style="margin-top:12px;">Fecha</label>
-  <input type="date" id="fecha">
+    <label style="margin-top:12px;">Fecha</label>
+    <input type="date" id="fecha">
 
-  <label style="margin-top:12px;">Hora</label>
-  <input type="time" id="hora">
+    <label style="margin-top:12px;">Hora</label>
+    <input type="time" id="hora">
 
-  <label style="margin-top:12px;">Pasajeros</label>
-  <input type="number" id="pasajeros" min="1" value="1">
-</section>
+    <label style="margin-top:12px;">Pasajeros</label>
+    <input type="number" id="pasajeros" value="1" min="1">
+  </section>
 
-<input type="hidden" id="origen_lat">
-<input type="hidden" id="origen_lng">
-<input type="hidden" id="destino_lat">
-<input type="hidden" id="destino_lng">
+  <!-- COORDENADAS -->
+  <input type="hidden" id="origen_lat">
+  <input type="hidden" id="origen_lng">
+  <input type="hidden" id="destino_lat">
+  <input type="hidden" id="destino_lng">
 
 </main>
 
+<!-- BOTÓN CONFIRMAR -->
 <div class="confirm-container">
   <button id="btnReservar" class="btn-confirm">Confirmar reserva</button>
 </div>
 
+<!-- NAV INFERIOR -->
 <div class="bottom-nav">
   <a href="index.html" class="nav-item"><span>🏠</span>Inicio</a>
   <a href="reservar.html" class="nav-item nav-active"><span>🚌</span>Reservar</a>
   <a href="contacto.html" class="nav-item"><span>📞</span>Contacto</a>
 </div>
 
-<!-- ==================== GOOGLE MAPS ==================== -->
+<!-- =============== GOOGLE MAPS SCRIPT =============== -->
 <script>
 let map, originMarker, destMarker, directionsService, directionsRenderer;
 
@@ -242,11 +238,11 @@ function initMap() {
   directionsService = new google.maps.DirectionsService();
   directionsRenderer = new google.maps.DirectionsRenderer({
     suppressMarkers: true,
-    polylineOptions:{ strokeColor:"#3a7ce9", strokeWeight:6 }
+    polylineOptions: { strokeColor:"#3a7ce9", strokeWeight:6 }
   });
 
   map = new google.maps.Map(document.getElementById("map"), {
-    center:{lat:4.711,lng:-74.0721},
+    center:{lat:4.71, lng:-74.07},
     zoom:14,
     disableDefaultUI:true
   });
@@ -255,16 +251,16 @@ function initMap() {
 
   const geocoder = new google.maps.Geocoder();
 
-  // ========= UBICACIÓN REAL =========
-  navigator.geolocation.getCurrentPosition(pos => {
+  // ================= UBICACIÓN REAL AUTOMÁTICA =================
+  navigator.geolocation.getCurrentPosition((pos)=>{
     const lat = pos.coords.latitude;
     const lng = pos.coords.longitude;
 
     document.getElementById("origen_lat").value = lat;
     document.getElementById("origen_lng").value = lng;
 
-    placeOriginMarker(lat,lng);
-    map.setCenter({lat,lng});
+    placeOriginMarker(lat, lng);
+    map.setCenter({lat, lng});
 
     geocoder.geocode({location:{lat,lng}}, (res,status)=>{
       if(status==="OK" && res[0]){
@@ -273,32 +269,26 @@ function initMap() {
     });
   });
 
-  // ========= AUTOCOMPLETE PRECISO =========
-  const acOptions = {
-    fields:["formatted_address","geometry","name"],
+  // ================= AUTOCOMPLETE OPCIONES =================
+  const autoOpts = {
+    fields:["formatted_address","geometry"],
     types:["geocode"],
-    componentRestrictions:{ country:"co" }
+    componentRestrictions:{country:"co"}
   };
 
   const acOrigen = new google.maps.places.Autocomplete(
-    document.getElementById("origen"),
-    acOptions
+    document.getElementById("origen"), autoOpts
   );
 
   const acDestino = new google.maps.places.Autocomplete(
-    document.getElementById("destino"),
-    acOptions
+    document.getElementById("destino"), autoOpts
   );
 
   acOrigen.addListener("place_changed",()=>{
     const p = acOrigen.getPlace();
     if(!p.geometry) return;
 
-    document.getElementById("origen").value = p.formatted_address || p.name;
-    document.getElementById("origen_lat").value = p.geometry.location.lat();
-    document.getElementById("origen_lng").value = p.geometry.location.lng();
-
-    placeOriginMarker(p.geometry.location.lat(), p.geometry.location.lng());
+    updateOrigin(p);
     calcularRuta();
   });
 
@@ -306,13 +296,31 @@ function initMap() {
     const p = acDestino.getPlace();
     if(!p.geometry) return;
 
-    document.getElementById("destino").value = p.formatted_address || p.name;
-    document.getElementById("destino_lat").value = p.geometry.location.lat();
-    document.getElementById("destino_lng").value = p.geometry.location.lng();
-
-    placeDestinationMarker(p.geometry.location.lat(), p.geometry.location.lng());
+    updateDestino(p);
     calcularRuta();
   });
+}
+
+function updateOrigin(place){
+  const lat = place.geometry.location.lat();
+  const lng = place.geometry.location.lng();
+
+  document.getElementById("origen").value = place.formatted_address;
+  document.getElementById("origen_lat").value = lat;
+  document.getElementById("origen_lng").value = lng;
+
+  placeOriginMarker(lat, lng);
+}
+
+function updateDestino(place){
+  const lat = place.geometry.location.lat();
+  const lng = place.geometry.location.lng();
+
+  document.getElementById("destino").value = place.formatted_address;
+  document.getElementById("destino_lat").value = lat;
+  document.getElementById("destino_lng").value = lng;
+
+  placeDestinationMarker(lat, lng);
 }
 
 function placeOriginMarker(lat,lng){
@@ -352,15 +360,15 @@ function calcularRuta(){
   const dLat = parseFloat(document.getElementById("destino_lat").value);
   const dLng = parseFloat(document.getElementById("destino_lng").value);
 
-  if(!oLat || !oLng || !dLat || !dLng) return;
+  if(!oLat || !dLat) return;
 
   directionsService.route(
     {
-      origin:{lat:oLat,lng:oLng},
-      destination:{lat:dLat,lng:dLng},
+      origin:{lat:oLat, lng:oLng},
+      destination:{lat:dLat, lng:dLng},
       travelMode:"DRIVING",
       drivingOptions:{
-        departureTime: new Date(),
+        departureTime:new Date(),
         trafficModel:"best_guess"
       }
     },
