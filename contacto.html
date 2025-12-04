@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Contacto - COLESTUR S.A.S.</title>
+
+<style>
+    body {
+        margin: 0;
+        background: #0a0d12;
+        color: #f5f5f7;
+        font-family: system-ui, sans-serif;
+    }
+
+    h2 {
+        text-align: center;
+        margin-top: 25px;
+        font-size: 24px;
+        font-weight: 700;
+    }
+
+    p.subtitle {
+        text-align: center;
+        margin: 5px 30px 20px;
+        font-size: 14px;
+        color: #b5b5b5;
+    }
+
+    /* Contenedor principal */
+    .content {
+        padding: 0 20px 90px;
+    }
+
+    .card {
+        background: #11141b;
+        border-radius: 14px;
+        padding: 15px;
+        margin-bottom: 15px;
+        border: 1px solid #1f232e;
+    }
+
+    .card strong {
+        font-size: 16px;
+    }
+
+    .btn {
+        display: block;
+        width: 100%;
+        padding: 14px;
+        margin-top: 10px;
+        background: #2f69ff;
+        border-radius: 12px;
+        color: white;
+        font-size: 15px;
+        text-align: center;
+        text-decoration: none;
+        font-weight: 600;
+    }
+
+    .btn-secondary {
+        background: #1c1f26;
+        border: 1px solid #333842;
+    }
+
+    /* Mapa */
+    .map-container {
+        width: 100%;
+        height: 260px;
+        border-radius: 14px;
+        overflow: hidden;
+        margin-top: 10px;
+        border: 1px solid #1f232e;
+    }
+
+    iframe {
+        width: 100%;
+        height: 100%;
+        border: 0;
+    }
+
+    /* Navbar inferior */
+    .nav-bar {
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: #0d1016;
+        border-top: 1px solid #1c1f26;
+        padding: 10px 0;
+        display: flex;
+        justify-content: space-around;
+    }
+
+    .nav-item {
+        text-align: center;
+        font-size: 13px;
+        color: #c9c9c9;
+        text-decoration: none;
+    }
+
+    .nav-item span {
+        display: block;
+        font-size: 20px;
+        margin-bottom: 3px;
+    }
+</style>
+</head>
+
+<body>
+
+<h2>Contáctanos</h2>
+<p class="subtitle">
+    Estamos disponibles para resolver tus dudas, enviar cotizaciones y ofrecerte la mejor experiencia en transporte especial.
+</p>
+
+<div class="content">
+
+    <!-- WhatsApp -->
+    <div class="card">
+        <strong>WhatsApp</strong>
+        <p>Escríbenos directamente por mensaje.</p>
+        <a class="btn" href="https://wa.me/573102869505?text=Hola%2C%20quiero%20más%20información%20sobre%20los%20servicios%20de%20COLESTUR." target="_blank">Enviar mensaje</a>
+    </div>
+
+    <!-- Correo -->
+    <div class="card">
+        <strong>Correo electrónico</strong>
+        <p>dfms.87@outlook.com</p>
+        <a class="btn-secondary btn" href="mailto:dfms.87@outlook.com">Enviar correo</a>
+    </div>
+
+    <!-- Teléfono -->
+    <div class="card">
+        <strong>Teléfono</strong>
+        <p>310 286 9505</p>
+        <a class="btn-secondary btn" href="tel:+573102869505">Llamar ahora</a>
+    </div>
+
+    <!-- Dirección -->
+    <div class="card">
+        <strong>Dirección</strong>
+        <p>Calle 77 #81-83, Bogotá, Colombia</p>
+
+        <a class="btn-secondary btn" href="https://www.google.com/maps/search/?api=1&query=Calle+77+%2381-83+Bogota" target="_blank">
+            Abrir en Google Maps
+        </a>
+
+        <!-- Mapa embebido -->
+        <div class="map-container">
+            <iframe 
+                loading="lazy"
+                allowfullscreen
+                referrerpolicy="no-referrer-when-downgrade"
+                src="https://www.google.com/maps/embed/v1/place?key=AIzaSyD32zkRd46s5jKHkTjj2868WOMfv7m_V48&q=Calle+77+%2381-83+Bogota">
+            </iframe>
+        </div>
+    </div>
+
+</div>
+
+<!-- Navegación inferior -->
+<div class="nav-bar">
+    <a class="nav-item" href="index.html">
+        <span>🏠</span>Inicio
+    </a>
+    <a class="nav-item" href="reservar.html">
+        <span>🚌</span>Reservar
+    </a>
+    <a class="nav-item" href="contacto.html">
+        <span>📞</span>Contacto
+    </a>
+</div>
+
+</body>
+</html>
