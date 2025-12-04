@@ -16,10 +16,6 @@
     --border: #1c1d25;
   }
 
-  * {
-    box-sizing: border-box;
-  }
-
   body {
     margin: 0;
     background: var(--bg);
@@ -27,13 +23,13 @@
     color: var(--text);
   }
 
-  /* HEADER */
+  /* HEADER – corregido para que no salga blanco */
   header {
     padding: 16px;
     display: flex;
     align-items: center;
     gap: 12px;
-    background: rgba(10,10,14,0.6);
+    background: #050508 !important;
     border-bottom: 1px solid #0e1015;
     position: sticky;
     top: 0;
@@ -53,7 +49,7 @@
   }
 
   main {
-    padding: 20px 16px 140px;
+    padding: 20px 16px 110px;
     max-width: 780px;
     margin: auto;
   }
@@ -80,11 +76,14 @@
     background: var(--card-soft);
     border: 1px solid var(--border);
     color: var(--text);
-    font-size: 14px;
   }
 
-  input::placeholder {
-    color: #6b6f7a;
+  /* FIX: Safari iPhone – evitar que fecha y hora se salgan del cuadro */
+  input[type="date"],
+  input[type="time"] {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
   }
 
   #map {
@@ -102,14 +101,11 @@
     border: 1px solid var(--border);
     margin-top: -8px;
     margin-bottom: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    font-size: 14px;
   }
 
-  .info-label {
-    font-weight: 600;
+  .info-item {
+    font-size: 15px;
+    margin-bottom: 6px;
   }
 
   /* BOTTOM NAV */
@@ -118,7 +114,7 @@
     bottom: 0; left: 0; right: 0;
     background: #0d0e12;
     border-top: 1px solid #1f2027;
-    padding: 10px 0 8px;
+    padding: 10px 0;
     display: flex;
     justify-content: space-around;
     z-index: 9999;
@@ -142,7 +138,6 @@
     font-weight: 600;
   }
 
-  /* BOTÓN CONFIRMAR */
   .confirm-container {
     position: fixed;
     bottom: 70px;
@@ -156,7 +151,6 @@
 
   .btn-confirm {
     width: 100%;
-    max-width: 780px;
     background: var(--accent);
     padding: 15px;
     border: none;
@@ -165,33 +159,8 @@
     font-weight: 700;
     font-size: 16px;
     box-shadow: 0 12px 28px rgba(58,124,233,.45);
-    cursor: pointer;
   }
 
-  /* Mensaje de confirmación / error */
-  #mensajeReserva {
-    margin-top: 12px;
-    font-size: 14px;
-    min-height: 20px;
-  }
-
-  /* Autocomplete por encima de todo */
-  .pac-container {
-    z-index: 10000 !important;
-  }
-
-  html, body {
-    background: #050508 !important;
-}/* Evitar que los inputs de fecha y hora se salgan del cuadro en iOS */
-input[type="date"],
-input[type="time"] {
-    height: 48px !important;
-    padding-left: 14px !important;
-    padding-right: 14px !important;
-    appearance: none;
-    -webkit-appearance: none;
-    line-height: normal !important;
-}
 </style>
 </head>
 
@@ -218,8 +187,8 @@ input[type="time"] {
   <div id="map"></div>
 
   <div class="info-box">
-    <div>📍 <span class="info-label">Distancia:</span> <span id="distancia">—</span></div>
-    <div>⏱ <span class="info-label">Tiempo estimado:</span> <span id="tiempo">—</span></div>
+    <div class="info-item">📍 <b>Distancia:</b> <span id="distancia">—</span></div>
+    <div class="info-item">⏱ <b>Tiempo estimado:</b> <span id="tiempo">—</span></div>
   </div>
 
   <section class="trip-card">
@@ -245,11 +214,8 @@ input[type="time"] {
 
     <label style="margin-top:12px;">Pasajeros</label>
     <input type="number" id="pasajeros" value="1" min="1">
-
-    <p id="mensajeReserva"></p>
   </section>
 
-  <!-- COORDENADAS -->
   <input type="hidden" id="origen_lat">
   <input type="hidden" id="origen_lng">
   <input type="hidden" id="destino_lat">
@@ -277,118 +243,9 @@ input[type="time"] {
   </a>
 </div>
 
-<!-- ===================== EMAILJS ===================== -->
-<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<!-- Google Maps Scripts -->
 <script>
-  (function () {
-    emailjs.init("BBBTYChL9Rq9ynJgJ"); // TU PUBLIC KEY DE EMAILJS
-  })();
-</script>
-
-<!-- ===================== FIREBASE + GUARDAR RESERVA ===================== -->
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-  import {
-    getFirestore,
-    collection,
-    addDoc,
-    serverTimestamp
-  } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-
-  const firebaseConfig = {
-    apiKey: "AIzaSyCpuX28qe2YFhX2rSzH01AIPP9EQDIsP94",
-    authDomain: "colestur-reservas.firebaseapp.com",
-    projectId: "colestur-reservas",
-    storageBucket: "colestur-reservas.firebasestorage.app",
-    messagingSenderId: "123689903908",
-    appId: "1:123689903908:web:d4d710d7165e64a369f5b1",
-  };
-
-  const app = initializeApp(firebaseConfig);
-  const db = getFirestore(app);
-
-  const btn = document.getElementById("btnReservar");
-  const msg = document.getElementById("mensajeReserva");
-
-  const nombre = document.getElementById("nombre");
-  const telefono = document.getElementById("telefono");
-  const servicio = document.getElementById("servicio");
-  const origen = document.getElementById("origen");
-  const destino = document.getElementById("destino");
-  const fecha = document.getElementById("fecha");
-  const hora = document.getElementById("hora");
-  const pasajeros = document.getElementById("pasajeros");
-
-  btn.addEventListener("click", async () => {
-    msg.style.color = "#f4f6f9";
-    msg.textContent = "Enviando reserva...";
-
-    if (!origen.value.trim() || !destino.value.trim() ||
-        !nombre.value.trim() || !telefono.value.trim() ||
-        !fecha.value || !hora.value) {
-      msg.style.color = "#ff5a5f";
-      msg.textContent = "Por favor completa todos los campos obligatorios.";
-      return;
-    }
-
-    const reserva = {
-      nombre: nombre.value.trim(),
-      telefono: telefono.value.trim(),
-      servicio: servicio.value,
-      origen: origen.value.trim(),
-      destino: destino.value.trim(),
-      fecha: fecha.value,
-      hora: hora.value,
-      pasajeros: Number(pasajeros.value || 1),
-      origen_lat: parseFloat(document.getElementById("origen_lat").value) || null,
-      origen_lng: parseFloat(document.getElementById("origen_lng").value) || null,
-      destino_lat: parseFloat(document.getElementById("destino_lat").value) || null,
-      destino_lng: parseFloat(document.getElementById("destino_lng").value) || null,
-      distancia: document.getElementById("distancia").textContent,
-      tiempo_estimado: document.getElementById("tiempo").textContent,
-      estado: "Pendiente",
-      creadaEn: serverTimestamp(),
-      fuente: "PWA COLESTUR"
-    };
-
-    try {
-      // 1) Guardar en Firestore
-      await addDoc(collection(db, "reservas"), reserva);
-
-      // 2) Enviar correo con EmailJS
-      await emailjs.send("service_bsdpr26", "template_fmqabdi", {
-        to_email: "santibg13@gmail.com",
-        nombre: reserva.nombre,
-        telefono: reserva.telefono,
-        servicio: reserva.servicio,
-        origen: reserva.origen,
-        destino: reserva.destino,
-        fecha: reserva.fecha,
-        hora: reserva.hora,
-        pasajeros: reserva.pasajeros,
-        distancia: reserva.distancia,
-        tiempo_estimado: reserva.tiempo_estimado
-      });
-
-      msg.style.color = "#42ba96";
-      msg.textContent = "✔ Tu reserva fue registrada con éxito. Un asesor de COLESTUR te contactará pronto.";
-
-      destino.value = "";
-      fecha.value = "";
-      hora.value = "";
-      pasajeros.value = "1";
-
-    } catch (err) {
-      console.error(err);
-      msg.style.color = "#ff5a5f";
-      msg.textContent = "❌ Ocurrió un error al registrar la reserva. Intenta de nuevo.";
-    }
-  });
-</script>
-
-<!-- ===================== MAPAS / RUTA / TIEMPO ===================== -->
-<script>
-let map, originMarker, destMarker, directionsService, directionsRenderer, distanceMatrix;
+let map, originMarker, destMarker, directionsService, directionsRenderer;
 
 function initMap() {
   directionsService = new google.maps.DirectionsService();
@@ -396,7 +253,6 @@ function initMap() {
     suppressMarkers: true,
     polylineOptions:{ strokeColor:"#3a7ce9", strokeWeight:6 }
   });
-  distanceMatrix = new google.maps.DistanceMatrixService();
 
   map = new google.maps.Map(document.getElementById("map"), {
     center:{ lat:4.71, lng:-74.07 },
@@ -408,60 +264,44 @@ function initMap() {
 
   const geocoder = new google.maps.Geocoder();
 
-  // GEOLOCALIZACIÓN: origen real
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(
-      (pos) => {
-        const lat = pos.coords.latitude;
-        const lng = pos.coords.longitude;
+  navigator.geolocation.getCurrentPosition((pos)=>{
+    const lat = pos.coords.latitude;
+    const lng = pos.coords.longitude;
 
-        document.getElementById("origen_lat").value = lat;
-        document.getElementById("origen_lng").value = lng;
+    document.getElementById("origen_lat").value = lat;
+    document.getElementById("origen_lng").value = lng;
 
-        placeOriginMarker(lat, lng);
-        map.setCenter({lat, lng});
+    placeOriginMarker(lat, lng);
+    map.setCenter({lat, lng});
 
-        geocoder.geocode({ location:{lat, lng} }, (res, status) => {
-          if (status === "OK" && res[0]) {
-            document.getElementById("origen").value = res[0].formatted_address;
-          } else {
-            document.getElementById("origen").value = "Mi ubicación actual";
-          }
-        });
-      },
-      () => {
-        console.log("No se pudo obtener la ubicación.");
+    geocoder.geocode({ location:{lat, lng}}, (res, status)=>{
+      if(status==="OK" && res[0]){
+        document.getElementById("origen").value = res[0].formatted_address;
       }
-    );
-  }
+    });
 
-  // AUTOCOMPLETE
+  });
+
   const acOrigen = new google.maps.places.Autocomplete(
     document.getElementById("origen"),
-    {
-      fields:["formatted_address","geometry","name"],
-      componentRestrictions:{ country:"co" }
-    }
+    { fields:["formatted_address","geometry"] }
   );
 
   const acDestino = new google.maps.places.Autocomplete(
     document.getElementById("destino"),
-    {
-      fields:["formatted_address","geometry","name"],
-      componentRestrictions:{ country:"co" }
-    }
+    { fields:["formatted_address","geometry"] }
   );
 
-  acOrigen.addListener("place_changed", () => {
+  acOrigen.addListener("place_changed",()=>{
     const p = acOrigen.getPlace();
-    if (!p.geometry) return;
+    if(!p.geometry) return;
     updateOrigin(p);
     calcularRuta();
   });
 
-  acDestino.addListener("place_changed", () => {
+  acDestino.addListener("place_changed",()=>{
     const p = acDestino.getPlace();
-    if (!p.geometry) return;
+    if(!p.geometry) return;
     updateDestino(p);
     calcularRuta();
   });
@@ -473,11 +313,9 @@ function updateOrigin(place){
 
   document.getElementById("origen_lat").value = lat;
   document.getElementById("origen_lng").value = lng;
+  document.getElementById("origen").value = place.formatted_address;
 
-  const texto = place.name || place.formatted_address || "";
-  document.getElementById("origen").value = texto;
-
-  placeOriginMarker(lat, lng);
+  placeOriginMarker(lat,lng);
 }
 
 function updateDestino(place){
@@ -486,18 +324,15 @@ function updateDestino(place){
 
   document.getElementById("destino_lat").value = lat;
   document.getElementById("destino_lng").value = lng;
+  document.getElementById("destino").value = place.formatted_address;
 
-  const texto = place.name || place.formatted_address || "";
-  document.getElementById("destino").value = texto;
-
-  placeDestinationMarker(lat, lng);
+  placeDestinationMarker(lat,lng);
 }
 
 function placeOriginMarker(lat,lng){
-  const pos = {lat,lng};
-  if (!originMarker) {
+  if(!originMarker){
     originMarker = new google.maps.Marker({
-      position: pos,
+      position:{lat,lng},
       map,
       icon:{
         path:google.maps.SymbolPath.CIRCLE,
@@ -509,82 +344,49 @@ function placeOriginMarker(lat,lng){
       }
     });
   } else {
-    originMarker.setPosition(pos);
+    originMarker.setPosition({lat,lng});
   }
 }
 
 function placeDestinationMarker(lat,lng){
-  const pos = {lat,lng};
-  if (!destMarker) {
+  if(!destMarker){
     destMarker = new google.maps.Marker({
-      position: pos,
+      position:{lat,lng},
       map,
       icon:{
         path:"M 0 0 L 2 4 L 0 12 L -2 4 Z",
         fillColor:"#4bff8f",
-        fillOpacity:1,
-        strokeColor:"#111217",
-        strokeWeight:2
+        fillOpacity:1
       }
     });
   } else {
-    destMarker.setPosition(pos);
+    destMarker.setPosition({lat,lng});
   }
 }
 
-function calcularRuta() {
-  const oLat = parseFloat(document.getElementById("origen_lat").value);
-  const oLng = parseFloat(document.getElementById("origen_lng").value);
-  const dLat = parseFloat(document.getElementById("destino_lat").value);
-  const dLng = parseFloat(document.getElementById("destino_lng").value);
+function calcularRuta(){
+  let origen = document.getElementById("origen").value;
+  let destino = document.getElementById("destino").value;
 
-  if (isNaN(oLat) || isNaN(oLng) || isNaN(dLat) || isNaN(dLng)) return;
+  if(!origen || !destino) return;
 
-  const origenCoord = { lat:oLat, lng:oLng };
-  const destinoCoord = { lat:dLat, lng:dLng };
-
-  directionsService.route(
-    {
-      origin: origenCoord,
-      destination: destinoCoord,
-      travelMode: google.maps.TravelMode.DRIVING
-    },
-    (res, status) => {
-      if (status === "OK") {
-        directionsRenderer.setDirections(res);
-
-        const bounds = new google.maps.LatLngBounds();
-        bounds.extend(origenCoord);
-        bounds.extend(destinoCoord);
-        map.fitBounds(bounds);
-
-        distanceMatrix.getDistanceMatrix(
-          {
-            origins:[origenCoord],
-            destinations:[destinoCoord],
-            travelMode: google.maps.TravelMode.DRIVING,
-            drivingOptions:{
-              departureTime: new Date(),
-              trafficModel: google.maps.TrafficModel.BEST_GUESS
-            }
-          },
-          (dmRes, dmStatus) => {
-            if (dmStatus === "OK") {
-              const elem = dmRes.rows[0].elements[0];
-              const distText = elem.distance ? elem.distance.text : "—";
-              const timeText =
-                (elem.duration_in_traffic && elem.duration_in_traffic.text) ||
-                (elem.duration && elem.duration.text) ||
-                "—";
-
-              document.getElementById("distancia").textContent = distText;
-              document.getElementById("tiempo").textContent = timeText;
-            }
-          }
-        );
-      }
+  directionsService.route({
+    origin: origen,
+    destination: destino,
+    travelMode: "DRIVING",
+    drivingOptions: {
+      departureTime: new Date(),
+      trafficModel: "bestguess"
     }
-  );
+  }, (res, status)=>{
+    if(status==="OK"){
+      directionsRenderer.setDirections(res);
+
+      const leg = res.routes[0].legs[0];
+      document.getElementById("distancia").innerText = leg.distance.text;
+      document.getElementById("tiempo").innerText = leg.duration_in_traffic.text;
+    }
+  });
 }
 
 window.initMap = initMap;
