@@ -1,212 +1,249 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>COLESTUR S.A.S.</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>COLESTUR S.A.S.</title>
 
-<style>
+  <style>
+    :root {
+      --bg: #050608;
+      --card: #111217;
+      --card-soft: #181920;
+      --accent: #3a7ce9;
+      --text: #f5f5f7;
+      --muted: #9da3b0;
+      --border: #20222e;
+    }
+
     body {
-        margin: 0;
-        background: #0a0d12;
-        font-family: system-ui, sans-serif;
-        color: #f5f5f7;
-        padding-bottom: 90px; /* espacio para navbar */
+      margin: 0;
+      background: radial-gradient(circle at top, #111217 0, #050608 55%);
+      color: var(--text);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI";
     }
 
-    /* Logo */
-    .logo-container {
-        text-align: center;
-        padding-top: 35px;
+    /* HEADER */
+    header {
+      padding: 14px 18px 6px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
     }
 
-    .logo-container img {
-        width: 120px;
+    .logo-circle {
+      width: 32px;
+      height: 32px;
+      border-radius: 999px;
+      background: radial-gradient(circle at 30% 0, #ffeaa7, #f1c40f 55%, #b8860b 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 17px;
+      font-weight: 800;
+      color: #041021;
     }
 
-    /* Título y slogan */
-    h1 {
-        text-align: center;
-        margin: 8px 0 2px;
-        font-size: 22px;
-        font-weight: 700;
+    .brand-text {
+      display: flex;
+      flex-direction: column;
+      line-height: 1.1;
     }
 
+    .brand-text span:first-child {
+      font-size: 13px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .08em;
+    }
+
+    .brand-text span:last-child {
+      font-size: 19px;
+      font-weight: 700;
+    }
+
+    main {
+      padding: 0 16px 100px;
+      max-width: 640px;
+      margin: 0 auto;
+    }
+
+    /* SLOGAN */
     .slogan {
-        text-align: center;
-        margin-top: 0;
-        font-size: 13px;
-        color: #b5b5b5;
+      margin-top: 6px;
+      padding: 12px 16px;
+      background: var(--card);
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.03);
+      box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+      font-size: 14px;
+      text-align: center;
     }
 
-    /* Subtítulo del mapa */
-    .around-you {
-        text-align: center;
-        font-size: 14px;
-        color: #b5b5b5;
-        margin-top: 20px;
-        margin-bottom: 6px;
-    }
-
-    /* Mapa */
-    #map {
-        width: 90%;
-        height: 260px;
-        margin: 0 auto 28px;
-        border-radius: 18px;
-        overflow: hidden;
-        border: 1px solid #1c1f26;
-    }
-
-    /* Servicios */
-    .services-title {
-        text-align: center;
-        margin-bottom: 10px;
-        font-size: 17px;
-        font-weight: 600;
+    /* SERVICIOS */
+    .services-card {
+      margin-top: 16px;
+      background: var(--card);
+      border-radius: 18px;
+      padding: 18px;
+      border: 1px solid rgba(255,255,255,0.03);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.6);
     }
 
     .services-grid {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 12px;
-        padding: 0 20px;
-        margin-bottom: 40px;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
     }
 
-    .service-box {
-        background: #11141b;
-        border-radius: 14px;
-        padding: 14px;
-        text-align: center;
-        border: 1px solid #1f232e;
-        font-size: 14px;
+    .service-btn {
+      background: var(--card-soft);
+      border-radius: 14px;
+      padding: 16px 10px;
+      text-align: center;
+      border: 1px solid var(--border);
+      cursor: pointer;
+      font-size: 15px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      transition: 0.2s;
     }
 
-    .service-box span {
-        display: block;
-        font-size: 22px;
-        margin-bottom: 4px;
+    .service-btn:hover {
+      border-color: var(--accent);
     }
 
-    /* Navbar */
-    .nav-bar {
-        position: fixed;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: #0d1016;
-        border-top: 1px solid #1c1f26;
-        padding: 10px 0 6px;
-        display: flex;
-        justify-content: space-around;
-        z-index: 9999;
+    .service-icon {
+      font-size: 22px;
     }
 
-    .nav-item {
-        text-align: center;
-        font-size: 13px;
-        color: #c9c9c9;
-        text-decoration: none;
+    /* MAPA */
+    #map {
+      margin-top: 20px;
+      width: 100%;
+      height: 260px;
+      border-radius: 18px;
+      overflow: hidden;
+      border: 1px solid #20232e;
+      box-shadow: 0 18px 35px rgba(0,0,0,0.65);
+      cursor: pointer;
     }
 
-    .nav-item span {
-        display: block;
-        font-size: 21px;
-        margin-bottom: 3px;
+    /* BARRA INFERIOR */
+    .bottom-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 12px 16px;
+      display: flex;
+      justify-content: space-around;
+      background: linear-gradient(to top, rgba(5,6,8,0.98), rgba(5,6,8,0.95), transparent);
+      border-top: 1px solid rgba(255,255,255,0.05);
+      z-index: 200;
     }
-</style>
+
+    .nav-btn {
+      color: var(--text);
+      font-size: 14px;
+      text-decoration: none;
+      opacity: 0.85;
+    }
+
+    .nav-btn:hover {
+      opacity: 1;
+    }
+  </style>
 </head>
 
 <body>
 
-<!-- Logo -->
-<div class="logo-container">
-    <img src="LogoColestur.png" alt="Logo COLESTUR">
+<header>
+  <div class="logo-circle">CR</div>
+  <div class="brand-text">
+    <span>Transporte especial</span>
+    <span>COLESTUR S.A.S.</span>
+  </div>
+</header>
+
+<main>
+
+  <div class="slogan">
+    🔵 En COLESTUR estamos listos para rodar contigo.
+  </div>
+
+  <!-- SERVICIOS -->
+  <div class="services-card">
+    <h3 style="margin:0 0 12px; font-size:16px;">Nuestros servicios</h3>
+
+    <div class="services-grid">
+      <div class="service-btn" onclick="window.location.href='reservar.html'">
+        <div class="service-icon">🚌</div>
+        Escolar
+      </div>
+
+      <div class="service-btn" onclick="window.location.href='reservar.html'">
+        <div class="service-icon">🏢</div>
+        Empresarial
+      </div>
+
+      <div class="service-btn" onclick="window.location.href='reservar.html'">
+        <div class="service-icon">🗺</div>
+        Turismo
+      </div>
+
+      <div class="service-btn" onclick="window.location.href='reservar.html'">
+        <div class="service-icon">✈</div>
+        Aeropuerto
+      </div>
+    </div>
+  </div>
+
+  <!-- MAPA -->
+  <h3 style="margin-top:22px; font-size:16px;">A tu alrededor</h3>
+  <div id="map" onclick="window.location.href='reservar.html'"></div>
+
+</main>
+
+<!-- BARRA INFERIOR -->
+<div class="bottom-bar">
+  <a class="nav-btn" href="index.html">Inicio</a>
+  <a class="nav-btn" href="reservar.html">Reserva</a>
+  <a class="nav-btn" href="contacto.html">Contacto</a>
 </div>
 
-<h1>COLESTUR S.A.S.</h1>
-<p class="slogan">En COLESTUR estamos listos para rodar contigo.</p>
-
-
-<!-- Servicios -->
-<p class="services-title">Nuestros Servicios</p>
-
-<div class="services-grid">
-    <div class="service-box"><span>🚐</span>Transporte Escolar</div>
-    <div class="service-box"><span>👔</span>Transporte Empresarial</div>
-    <div class="service-box"><span>🗺</span>City Tour y Turismo</div>
-    <div class="service-box"><span>✈</span>Transfer Aeropuerto</div>
-</div>
-<!-- Título del mapa -->
-<p class="around-you">Alrededor tuyo</p>
-
-<!-- MAPA INTERACTIVO REAL -->
-<div id="map"></div>
-<!-- Navbar -->
-<div class="nav-bar">
-    <a class="nav-item" href="index.html"><span>🏠</span>Inicio</a>
-    <a class="nav-item" href="reservar.html"><span>🚌</span>Reservar</a>
-    <a class="nav-item" href="contacto.html"><span>📞</span>Contacto</a>
-</div>
-
-<!-- GOOGLE MAPS SCRIPT -->
+<!-- GOOGLE MAPS -->
 <script>
-let map;
-
-function initMap() {
-    // Si el usuario permite ubicación:
+  function initMap() {
     navigator.geolocation.getCurrentPosition(
-        (pos) => {
-            const userLoc = {
-                lat: pos.coords.latitude,
-                lng: pos.coords.longitude
-            };
+      pos => {
+        const loc = { lat: pos.coords.latitude, lng: pos.coords.longitude };
 
-            crearMapa(userLoc);
-            agregarPuntoUsuario(userLoc);
-        },
-        () => {
-            // Si el usuario NO permite ubicación → Bogotá centro
-            const fallback = { lat: 4.65, lng: -74.1 };
-            crearMapa(fallback);
-        }
+        const map = new google.maps.Map(document.getElementById("map"), {
+          zoom: 15,
+          center: loc,
+          disableDefaultUI: true,
+          styles: [
+            { elementType: "geometry", stylers: [{ color: "#1e1f26" }] },
+            { elementType: "labels.text.fill", stylers: [{ color: "#f5f5f7" }] }
+          ]
+        });
+
+        new google.maps.Marker({
+          position: loc,
+          map,
+          title: "Tu ubicación"
+        });
+      },
+      () => {}
     );
-}
+  }
 
-function crearMapa(center) {
-    map = new google.maps.Map(document.getElementById("map"), {
-        center,
-        zoom: 15,
-        disableDefaultUI: true,
-        gestureHandling: "greedy",
-        styles: [
-            { elementType: "geometry", stylers: [{ color: "#1d1d1d" }] },
-            { elementType: "labels.text.stroke", stylers: [{ color: "#1d1d1d" }] },
-            { elementType: "labels.text.fill", stylers: [{ color: "#8e8e8e" }] }
-        ]
-    });
-
-    // Click → ir a reservar
-    map.addListener("click", () => {
-        window.location.href = "reservar.html";
-    });
-}
-
-function agregarPuntoUsuario(loc) {
-    new google.maps.Marker({
-        position: loc,
-        map,
-        title: "Tu ubicación",
-        icon: {
-            url: "https://maps.google.com/mapfiles/ms/icons/blue-dot.png"
-        }
-    });
-}
+  window.initMap = initMap;
 </script>
 
-<script async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD32zkRd46s5jKHkTjj2868WOMfv7m_V48&callback=initMap"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD32zkRd46s5jKHkTjj2868WOMfv7m_V48&callback=initMap" async defer></script>
 
 </body>
 </html>
-
