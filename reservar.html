@@ -179,6 +179,19 @@
   .pac-container {
     z-index: 10000 !important;
   }
+
+  html, body {
+    background: #050508 !important;
+}/* Evitar que los inputs de fecha y hora se salgan del cuadro en iOS */
+input[type="date"],
+input[type="time"] {
+    height: 48px !important;
+    padding-left: 14px !important;
+    padding-right: 14px !important;
+    appearance: none;
+    -webkit-appearance: none;
+    line-height: normal !important;
+}
 </style>
 </head>
 
