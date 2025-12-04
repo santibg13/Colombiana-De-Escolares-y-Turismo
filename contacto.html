@@ -3,195 +3,166 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Contacto - COLESTUR</title>
+<title>Contacto • COLESTUR S.A.S.</title>
 
 <style>
     body {
         margin: 0;
-        background: #0a0d12;
-        font-family: system-ui, sans-serif;
-        color: #f5f5f7;
-        padding-bottom: 90px;
+        font-family: "Segoe UI", sans-serif;
+        background: #0f172a;
+        color: #e2e8f0;
     }
 
-    h1 {
+    h2 {
         text-align: center;
-        margin-top: 30px;
-        font-size: 24px;
+        padding: 20px 10px 5px;
+        font-size: 22px;
+        color: #38bdf8;
         font-weight: 700;
     }
 
-    p.subtitle {
+    .subtitle {
         text-align: center;
-        margin: 0 25px 30px;
-        color: #b5b5b5;
         font-size: 14px;
+        color: #94a3b8;
+        margin-bottom: 20px;
     }
 
-    .contact-list {
-        width: 90%;
-        margin: 0 auto;
-        display: flex;
-        flex-direction: column;
+    /* Tarjetas */
+    .card {
+        background: #1e293b;
+        padding: 20px;
+        margin: 15px;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    }
+
+    /* Íconos */
+    .icon-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
         gap: 18px;
+        margin-top: 10px;
     }
 
-    .contact-item {
-        background: #11141b;
-        padding: 16px 18px;
-        border-radius: 14px;
-        display: flex;
-        align-items: center;
-        gap: 14px;
-        border: 1px solid #1e2129;
-        cursor: pointer;
+    .icon-btn {
+        background: #334155;
+        text-align: center;
+        padding: 18px;
+        border-radius: 12px;
+        color: white;
+        font-size: 14px;
+        text-decoration: none;
         transition: 0.2s;
     }
 
-    .contact-item:hover {
-        background: #161a22;
-        transform: translateY(-2px);
+    .icon-btn:hover {
+        background: #475569;
+        transform: scale(1.03);
     }
 
-    .icon {
+    .icon-btn span {
         font-size: 28px;
-    }
-
-    .text {
-        font-size: 15px;
-        font-weight: 500;
-        color: #e8e8e8;
-    }
-
-    .sub {
-        font-size: 12px;
-        color: #a9a9a9;
+        display: block;
+        margin-bottom: 8px;
     }
 
     /* Mapa */
     #map {
-        width: 90%;
-        height: 240px;
-        margin: 30px auto 20px;
-        border-radius: 16px;
-        overflow: hidden;
-        border: 1px solid #1c1f26;
+        width: 100%;
+        height: 300px;
+        border-radius: 12px;
+        margin-top: 10px;
     }
 
-    .label {
-        text-align: center;
-        font-size: 15px;
-        color: #b5b5b5;
-        margin-bottom: 10px;
-        margin-top: 20px;
-    }
-
-    /* Navbar */
-    .nav-bar {
+    /* Barra inferior */
+    .bottom-bar {
         position: fixed;
+        bottom: 0;
         left: 0;
         right: 0;
-        bottom: 0;
-        background: #0d1016;
-        border-top: 1px solid #1c1f26;
-        padding: 10px 0 6px;
+        height: 60px;
+        background: #0f172a;
+        border-top: 1px solid #1e293b;
         display: flex;
         justify-content: space-around;
-        z-index: 9999;
+        align-items: center;
+        z-index: 999;
     }
 
-    .nav-item {
+    .bottom-bar a {
         text-align: center;
-        font-size: 13px;
-        color: #c9c9c9;
+        color: #94a3b8;
+        font-size: 12px;
         text-decoration: none;
-    }
-
-    .nav-item span {
-        display: block;
-        font-size: 21px;
-        margin-bottom: 3px;
     }
 </style>
 </head>
-
 <body>
 
-<h1>Contáctanos</h1>
-<p class="subtitle">Estamos disponibles para resolver tus dudas, enviar cotizaciones y ayudarte con tu servicio de transporte.</p>
+<h2>Contacto</h2>
+<p class="subtitle">Estamos listos para ayudarte</p>
 
-<div class="contact-list">
+<div class="card">
+    <h3>Medios de contacto</h3>
 
-    <!-- WhatsApp -->
-    <a class="contact-item" href="https://wa.me/573102869505?text=Hola%20COLESTUR%2C%20quiero%20más%20información" target="_blank">
-        <div class="icon">💬</div>
-        <div>
-            <div class="text">WhatsApp</div>
-            <div class="sub">Escríbenos de inmediato</div>
-        </div>
-    </a>
+    <div class="icon-grid">
+        <a class="icon-btn" href="https://wa.me/573102869505?text=Hola%2C+quiero+información+sobre+transporte+COLESTUR" target="_blank">
+            <span>🟢</span> WhatsApp
+        </a>
 
-    <!-- Teléfono -->
-    <a class="contact-item" href="tel:3102869505">
-        <div class="icon">📞</div>
-        <div>
-            <div class="text">Llamar</div>
-            <div class="sub">310 286 9505</div>
-        </div>
-    </a>
+        <a class="icon-btn" href="tel:3102869505">
+            <span>📞</span> Llamar
+        </a>
 
-    <!-- Correo -->
-    <a class="contact-item" href="mailto:dfms.87@outlook.com">
-        <div class="icon">📧</div>
-        <div>
-            <div class="text">Correo</div>
-            <div class="sub">dfms.87@outlook.com</div>
-        </div>
-    </a>
+        <a class="icon-btn" href="mailto:dfms.87@outlook.com">
+            <span>✉</span> Email
+        </a>
 
-    <!-- Dirección -->
-    <a class="contact-item" href="https://www.google.com/maps/search/?api=1&query=Calle+77+%2381-83,+Bogotá" target="_blank">
-        <div class="icon">📍</div>
-        <div>
-            <div class="text">¿Dónde encontrarnos?</div>
-            <div class="sub">Calle 77 #81-83, Bogotá</div>
-        </div>
-    </a>
+        <a class="icon-btn" href="https://maps.google.com/?q=Calle+77+%23+81-83+Bogota" target="_blank">
+            <span>📍</span> Google Maps
+        </a>
 
+        <a class="icon-btn" href="https://waze.com/ul?ll=4.678657,-74.058980&navigate=yes" target="_blank">
+            <span>🟦</span> Waze
+        </a>
+    </div>
 </div>
 
-<!-- Mapa de la oficina -->
-<p class="label">Ubicación de nuestras oficinas</p>
-<div id="map"></div>
-
-<!-- Navbar -->
-<div class="nav-bar">
-    <a class="nav-item" href="index.html"><span>🏠</span>Inicio</a>
-    <a class="nav-item" href="reservar.html"><span>🚌</span>Reservar</a>
-    <a class="nav-item" href="contacto.html"><span>📞</span>Contacto</a>
+<div class="card">
+    <h3>¿Dónde encontrarnos?</h3>
+    <p>Calle 77 #81-83, Bogotá, Colombia</p>
+    <div id="map"></div>
 </div>
 
-<!-- MAPA -->
+<!-- Barra inferior -->
+<div class="bottom-bar">
+    <a href="index.html">🏠<br>Inicio</a>
+    <a href="reservar.html">🚐<br>Reservar</a>
+    <a href="contacto.html">📞<br>Contacto</a>
+</div>
+
 <script>
 function initMap() {
-    const oficina = { lat: 4.678141, lng: -74.058282 }; // Calle 77 #81-83 Bogotá
+    const office = { lat: 4.678657, lng: -74.058980 }; // dirección corregida
 
     const map = new google.maps.Map(document.getElementById("map"), {
-        center: oficina,
+        center: office,
         zoom: 16,
-        disableDefaultUI: true,
-        gestureHandling: "greedy",
+        mapId: "8d193001f94a8f25"
     });
 
     new google.maps.Marker({
-        position: oficina,
-        map,
-        title: "COLESTUR Oficina",
+        position: office,
+        map: map,
+        title: "COLESTUR S.A.S."
     });
 }
 </script>
 
-<script async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD32zkRd46s5jKHkTjj2868WOMfv7m_V48&callback=initMap"></script>
+<script async 
+src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD32zkRd46s5jKHkTjj2868WOMfv7m_V48&callback=initMap">
+</script>
 
 </body>
 </html>
