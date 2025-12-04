@@ -1,222 +1,589 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Reservar • COLESTUR S.A.S.</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Reservar servicio - COLESTUR</title>
 
-<style>
+  <style>
+    :root {
+      --bg: #050608;
+      --card: #111217;
+      --card-soft: #181920;
+      --accent: #3a7ce9;
+      --accent-soft: #28426e;
+      --text: #f5f5f7;
+      --muted: #9da3b0;
+      --danger: #ff5a5f;
+      --border: #262833;
+      --success: #42ba96;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
     body {
-        margin: 0;
-        font-family: 'Segoe UI', sans-serif;
-        background: #0f172a;
-        color: #e2e8f0;
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #111217 0, #050608 55%);
+      color: var(--text);
+      padding-bottom: 90px; /* Para que la barra no tape nada */
     }
 
-    h2 {
-        margin: 0;
-        padding: 15px;
-        font-size: 17px;
-        color: #38bdf8;
+    header {
+      padding: 14px 18px 6px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
     }
 
-    .card {
-        background: #1e293b;
-        padding: 15px;
-        margin: 15px;
-        border-radius: 12px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    .logo-circle {
+      width: 32px;
+      height: 32px;
+      border-radius: 999px;
+      background: radial-gradient(circle at 30% 0, #ffeaa7, #f1c40f 55%, #b8860b 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      color: #041021;
+      font-size: 18px;
     }
 
-    input, select {
-        width: 100%;
-        padding: 12px;
-        margin-top: 6px;
-        margin-bottom: 12px;
-        border-radius: 10px;
-        border: none;
-        background: #334155;
-        color: white;
-        font-size: 14px;
+    .brand-text {
+      display: flex;
+      flex-direction: column;
+      line-height: 1.1;
     }
 
-    button {
-        width: 100%;
-        padding: 15px;
-        background: #3b82f6;
-        border: none;
-        border-radius: 10px;
-        font-size: 16px;
-        color: white;
-        cursor: pointer;
-        margin-top: 10px;
-    }
-    button:hover {
-        background: #2563eb;
+    .brand-text span:first-child {
+      font-size: 13px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .08em;
     }
 
-    /* MAPA */
+    .brand-text span:last-child {
+      font-size: 19px;
+      font-weight: 700;
+    }
+
+    main {
+      padding: 0 16px 20px;
+      max-width: 640px;
+      margin: 0 auto;
+    }
+
+    .welcome-card {
+      margin-top: 10px;
+      background: linear-gradient(135deg, #1b1c23, #111217);
+      border-radius: 18px;
+      padding: 16px 16px 14px;
+      border: 1px solid rgba(255,255,255,0.03);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+      display: flex;
+      gap: 12px;
+    }
+
+    .welcome-dot {
+      font-size: 18px;
+      margin-top: 2px;
+    }
+
+    .welcome-card h1 {
+      margin: 0 0 4px;
+      font-size: 18px;
+    }
+
+    .welcome-card p {
+      margin: 0;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    /* Tarjeta estilo Uber */
+    .trip-card {
+      margin-top: 18px;
+      background: var(--card);
+      border-radius: 18px;
+      padding: 14px 14px 10px;
+      border: 1px solid rgba(255,255,255,0.02);
+      box-shadow: 0 18px 32px rgba(0,0,0,0.55);
+    }
+
+    .trip-title {
+      font-size: 15px;
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+
+    .fields-stack {
+      background: var(--card-soft);
+      border-radius: 14px;
+      padding: 10px 10px 6px;
+      border: 1px solid #20222e;
+    }
+
+    .field-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 6px 2px;
+    }
+
+    .field-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: #52e0ff;
+      box-shadow: 0 0 0 3px rgba(82,224,255,0.25);
+    }
+
+    .field-dot.dest {
+      background: #4bff8f;
+      box-shadow: 0 0 0 3px rgba(75,255,143,0.22);
+    }
+
+    .field-content {
+      flex: 1;
+    }
+
+    label {
+      display: block;
+      font-size: 11px;
+      color: var(--muted);
+      margin-bottom: 2px;
+    }
+
+    input[type="text"],
+    input[type="tel"],
+    input[type="date"],
+    input[type="time"],
+    input[type="number"],
+    select {
+      width: 100%;
+      border-radius: 999px;
+      border: none;
+      padding: 8px 12px;
+      font-size: 13px;
+      background: #101119;
+      color: var(--text);
+      outline: none;
+    }
+
+    input::placeholder {
+      color: #565a68;
+    }
+
+    .suggestions {
+      margin-top: 8px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      font-size: 12px;
+    }
+
+    .chip {
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: #171924;
+      border: 1px solid #26293a;
+      cursor: pointer;
+      color: var(--muted);
+    }
+
     #map {
-        width: 100%;
-        height: 320px;
-        border-radius: 12px;
-        margin-top: 10px;
+      margin-top: 16px;
+      width: 100%;
+      height: 260px;
+      border-radius: 18px;
+      overflow: hidden;
+      border: 1px solid #20232e;
+      box-shadow: 0 18px 35px rgba(0,0,0,0.65);
     }
 
-    /* SERVICIOS RÁPIDOS */
-    .quick-buttons {
-        display: flex;
-        gap: 8px;
-        flex-wrap: wrap;
+    .details-card {
+      margin-top: 18px;
+      background: var(--card);
+      border-radius: 18px;
+      padding: 14px 14px 10px;
+      border: 1px solid rgba(255,255,255,0.02);
     }
 
-    .quick-buttons button {
-        flex: 1;
-        background: #475569;
-        padding: 8px;
-        border-radius: 8px;
-        font-size: 14px;
+    .details-grid {
+      display: grid;
+      gap: 8px 10px;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
     }
 
-    /* BARRA INFERIOR */
-    .bottom-bar {
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        height: 60px;
-        background: #0f172a;
-        border-top: 1px solid #1e293b;
-        display: flex;
-        justify-content: space-around;
-        align-items: center;
-        z-index: 9999;
+    .msg {
+      margin-top: 10px;
+      font-size: 13px;
+      min-height: 18px;
     }
 
-    .bottom-bar a {
-        text-align: center;
-        font-size: 12px;
-        color: #94a3b8;
-        text-decoration: none;
+    /* Botón fijo arriba de la barra */
+    .primary-btn {
+      width: 100%;
+      border: none;
+      border-radius: 999px;
+      background: var(--accent);
+      color: white;
+      font-size: 15px;
+      padding: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 16px 32px rgba(58,124,233,0.45);
+      margin-top: 12px;
     }
 
-</style>
+    /* 🔥 BARRA INFERIOR (SIEMPRE FIJA) */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 68px;
+      background: #0c0d11;
+      border-top: 1px solid #1a1b20;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      z-index: 9999;
+    }
+
+    .nav-item {
+      text-align: center;
+      font-size: 12px;
+      color: #bfc4cf;
+      text-decoration: none;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .nav-item .emoji {
+      font-size: 20px;
+    }
+
+    .nav-item:hover {
+      color: white;
+    }
+  </style>
 </head>
+
 <body>
 
-<!-- ENCABEZADO -->
-<h2>TRANSPORTE ESPECIAL<br>COLESTUR S.A.S.</h2>
+<header>
+  <div class="logo-circle">CR</div>
+  <div class="brand-text">
+    <span>Transporte especial</span>
+    <span>COLESTUR S.A.S.</span>
+  </div>
+</header>
 
-<!-- FRASE -->
-<div class="card">
-    <b>🔵 En COLESTUR estamos listos para rodar contigo.</b>
-</div>
+<main>
+  <!-- Bienvenida -->
+  <section class="welcome-card">
+    <div class="welcome-dot">🔵</div>
+    <div>
+      <h1>En COLESTUR estamos listos para rodar contigo.</h1>
+      <p>Programa aquí tu servicio de transporte especial, empresarial, escolar, turístico o aeropuerto.</p>
+    </div>
+  </section>
 
-<!-- FORMULARIO PRINCIPAL -->
-<div class="card">
-    <h3>Planifica tu servicio</h3>
+  <!-- Tarjeta estilo Uber -->
+  <section class="trip-card">
+    <div class="trip-title">Planifica tu servicio</div>
 
-    <label>Punto de recogida</label>
-    <input id="input-pickup" placeholder="Tu ubicación actual">
+    <div class="fields-stack">
+      <div class="field-row">
+        <div class="field-dot"></div>
+        <div class="field-content">
+          <label for="origen">Punto de recogida</label>
+          <input id="origen" type="text" placeholder="Buscando tu ubicación..." />
+        </div>
+      </div>
 
-    <label>¿A dónde vas?</label>
-    <input id="input-destino" placeholder="Escribe tu destino">
-
-    <div class="quick-buttons">
-        <button onclick="setService('Escolar')">Escolar</button>
-        <button onclick="setService('Empresarial')">Empresarial</button>
-        <button onclick="setService('Turismo')">Turismo</button>
-        <button onclick="setService('Aeropuerto')">Aeropuerto</button>
+      <div class="field-row">
+        <div class="field-dot dest"></div>
+        <div class="field-content">
+          <label for="destino">¿A dónde vas?</label>
+          <input id="destino" type="text" placeholder="Escribe tu destino" />
+        </div>
+      </div>
     </div>
 
-    <div id="map"></div>
-</div>
+    <div class="suggestions">
+      <span class="chip" data-serv="Escolar">Escolar</span>
+      <span class="chip" data-serv="Empresarial">Empresarial</span>
+      <span class="chip" data-serv="Turismo">Turismo</span>
+      <span class="chip" data-serv="Aeropuerto">Aeropuerto</span>
+    </div>
+  </section>
 
-<!-- DETALLES -->
-<div class="card">
-    <h3>Detalles de la reserva</h3>
+  <!-- Mapa -->
+  <div id="map"></div>
 
-    <input id="nombre" placeholder="Nombre completo">
-    <input id="telefono" placeholder="WhatsApp Ej: 573001234567">
-    <select id="servicio">
-        <option value="Escolar">Escolar</option>
-        <option value="Empresarial">Empresarial</option>
-        <option value="Turismo">Turismo</option>
-        <option value="Aeropuerto">Aeropuerto</option>
-    </select>
-    <input id="fecha" type="date">
-    <input id="hora" type="time">
-    <input id="pasajeros" type="number" min="1" value="1">
+  <!-- Detalles -->
+  <section class="details-card">
+    <div class="details-grid">
 
-    <button onclick="confirmarReserva()">Confirmar reserva COLESTUR</button>
-</div>
+      <div>
+        <label>Nombre completo</label>
+        <input id="nombre" type="text" placeholder="Tu nombre" />
+      </div>
 
-<!-- BARRA INFERIOR -->
-<div class="bottom-bar">
-    <a href="index.html">🏠<br>Inicio</a>
-    <a href="reservar.html">🚐<br>Reservar</a>
-    <a href="contacto.html">📞<br>Contacto</a>
-</div>
+      <div>
+        <label>WhatsApp</label>
+        <input id="telefono" type="tel" placeholder="Ej: 573001234567" />
+      </div>
 
+      <div>
+        <label>Tipo de servicio</label>
+        <select id="servicio">
+          <option value="Escolar">Escolar</option>
+          <option value="Empresarial">Empresarial</option>
+          <option value="Turismo">Turismo</option>
+          <option value="Aeropuerto">Transfer Aeropuerto</option>
+        </select>
+      </div>
+
+      <div>
+        <label>Fecha</label>
+        <input id="fecha" type="date" />
+      </div>
+
+      <div>
+        <label>Hora</label>
+        <input id="hora" type="time" />
+      </div>
+
+      <div>
+        <label>Pasajeros</label>
+        <input id="pasajeros" type="number" min="1" value="1" />
+      </div>
+
+    </div>
+
+    <p id="mensajeReserva" class="msg"></p>
+
+    <button id="btnReservar" class="primary-btn">Confirmar reserva COLESTUR</button>
+  </section>
+
+  <!-- Campos ocultos -->
+  <input type="hidden" id="origen_lat">
+  <input type="hidden" id="origen_lng">
+  <input type="hidden" id="destino_lat">
+  <input type="hidden" id="destino_lng">
+
+</main>
+
+<!-- 🔥 BARRA INFERIOR SIEMPRE FIJA -->
+<nav class="bottom-nav">
+  <a href="index.html" class="nav-item">
+    <span class="emoji">🏠</span>
+    <span>Inicio</span>
+  </a>
+
+  <a href="reservar.html" class="nav-item">
+    <span class="emoji">🚌</span>
+    <span>Reservar</span>
+  </a>
+
+  <a href="contacto.html" class="nav-item">
+    <span class="emoji">📞</span>
+    <span>Contacto</span>
+  </a>
+</nav>
+
+<!-- EMAILJS -->
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <script>
-/* =============== MAPA GOOGLE =============== */
-let map;
-let userMarker;
+  emailjs.init("BBBTYChL9Rq9ynJgJ");
+</script>
 
-function initMap() {
+<!-- FIREBASE -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+  import {
+    getFirestore,
+    collection,
+    addDoc,
+    serverTimestamp
+  } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyCpuX28qe2YFhX2rSzH01AIPP9EQDIsP94",
+    authDomain: "colestur-reservas.firebaseapp.com",
+    projectId: "colestur-reservas",
+    storageBucket: "colestur-reservas.firebasestorage.app",
+    messagingSenderId: "123689903908",
+    appId: "1:123689903908:web:d4d710d7165e64a369f5b1",
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  const msg = document.getElementById("mensajeReserva");
+  const btn = document.getElementById("btnReservar");
+
+  btn.addEventListener("click", async () => {
+    msg.textContent = "Enviando reserva...";
+
+    const data = {
+      nombre: nombre.value,
+      telefono: telefono.value,
+      servicio: servicio.value,
+      origen: origen.value,
+      destino: destino.value,
+      fecha: fecha.value,
+      hora: hora.value,
+      pasajeros: pasajeros.value,
+      origen_lat: origen_lat.value,
+      origen_lng: origen_lng.value,
+      destino_lat: destino_lat.value,
+      destino_lng: destino_lng.value,
+      estado: "Pendiente",
+      creadaEn: serverTimestamp()
+    };
+
+    try {
+      await addDoc(collection(db, "reservas"), data);
+
+      await emailjs.send("service_bsdpr26", "template_fmqabdi", {
+        to_email: "santibg13@gmail.com",
+        nombre: data.nombre,
+        telefono: data.telefono,
+        servicio: data.servicio,
+        origen: data.origen,
+        destino: data.destino,
+        fecha: data.fecha,
+        hora: data.hora,
+        pasajeros: data.pasajeros,
+      });
+
+      msg.style.color = "#42ba96";
+      msg.textContent = "✔ Reserva enviada con éxito.";
+    } catch (err) {
+      msg.style.color = "#ff5a5f";
+      msg.textContent = "❌ Error al enviar reserva.";
+    }
+  });
+</script>
+
+<!-- MAPA -->
+<script>
+  let map, directionsService, directionsRenderer;
+  let originMarker, destMarker;
+
+  function initMap() {
+    const defaultCenter = { lat: 4.711, lng: -74.0721 }; // Bogotá
+
     map = new google.maps.Map(document.getElementById("map"), {
-        center: { lat: 4.65, lng: -74.1 },
-        zoom: 15,
-        mapId: "8d193001f94a8f25"
+      center: defaultCenter,
+      zoom: 13,
+      disableDefaultUI: true,
     });
 
-    userMarker = new google.maps.Marker({
-        map,
-        title: "Tu ubicación",
-        animation: google.maps.Animation.DROP
+    directionsService = new google.maps.DirectionsService();
+    directionsRenderer = new google.maps.DirectionsRenderer({
+      suppressMarkers: true
+    });
+    directionsRenderer.setMap(map);
+
+    // Autocomplete
+    const autoO = new google.maps.places.Autocomplete(origen, { componentRestrictions: { country: "co" }});
+    const autoD = new google.maps.places.Autocomplete(destino, { componentRestrictions: { country: "co" }});
+
+    autoO.addListener("place_changed", () => {
+      const place = autoO.getPlace();
+      if (!place.geometry) return;
+      origen_lat.value = place.geometry.location.lat();
+      origen_lng.value = place.geometry.location.lng();
+      setOrigin(place.geometry.location);
     });
 
-    setPickupToCurrentLocation();
-}
+    autoD.addListener("place_changed", () => {
+      const place = autoD.getPlace();
+      if (!place.geometry) return;
+      destino_lat.value = place.geometry.location.lat();
+      destino_lng.value = place.geometry.location.lng();
+      setDestination(place.geometry.location);
+      calcularRuta();
+    });
 
-/* =============== AUTOCOMPLETAR UBICACIÓN REAL =============== */
-function setPickupToCurrentLocation() {
-    if (!navigator.geolocation) return;
+    // Ubicación automática
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition((pos) => {
+        const loc = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+        origen_lat.value = loc.lat;
+        origen_lng.value = loc.lng;
+        origen.value = "Tu ubicación actual";
 
-    navigator.geolocation.getCurrentPosition(async position => {
-        const lat = position.coords.latitude;
-        const lng = position.coords.longitude;
+        setOrigin(loc);
+        map.setCenter(loc);
+      });
+    }
 
-        map.setCenter({ lat, lng });
-        userMarker.setPosition({ lat, lng });
+    function setOrigin(latLng) {
+      if (!originMarker) {
+        originMarker = new google.maps.Marker({
+          position: latLng,
+          map,
+          icon: {
+            path: google.maps.SymbolPath.CIRCLE,
+            scale: 7,
+            fillColor: "#52e0ff",
+            fillOpacity: 1,
+            strokeColor: "#ffffff",
+            strokeWeight: 2,
+          },
+        });
+      } else {
+        originMarker.setPosition(latLng);
+      }
+    }
 
-        const apiKey = "AIzaSyD32zkRd46s5jKHkTjj2868WOMfv7m_V48";
-        const url = https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${apiKey};
+    function setDestination(latLng) {
+      if (!destMarker) {
+        destMarker = new google.maps.Marker({
+          position: latLng,
+          map,
+          icon: {
+            path: "M 0 0 L 2 4 L 0 12 L -2 4 Z",
+            fillColor: "#4bff8f",
+            fillOpacity: 1,
+            strokeColor: "#111217",
+            strokeWeight: 2,
+          },
+        });
+      } else {
+        destMarker.setPosition(latLng);
+      }
+    }
 
-        const res = await fetch(url);
-        const data = await res.json();
+    function calcularRuta() {
+      if (!origen.value || !destino.value) return;
 
-        if (data.results && data.results[0]) {
-            document.getElementById("input-pickup").value =
-                data.results[0].formatted_address;
+      directionsService.route(
+        {
+          origin: origen.value,
+          destination: destino.value,
+          travelMode: "DRIVING"
+        },
+        (result, status) => {
+          if (status === "OK") directionsRenderer.setDirections(result);
         }
-    });
-}
+      );
+    }
+  }
 
-/* QUICK SERVICE BUTTONS */
-function setService(tipo) {
-    document.getElementById("servicio").value = tipo;
-}
-
-/* GUARDAR RESERVA */
-function confirmarReserva() {
-    alert("✔ Reserva registrada (demo). Falta conectar a Firebase.");
-}
+  window.initMap = initMap;
 </script>
 
-<script async
-src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD32zkRd46s5jKHkTjj2868WOMfv7m_V48&callback=initMap">
-</script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD32zkRd46s5jKHkTjj2868WOMfv7m_V48&libraries=places&callback=initMap" async defer></script>
 
 </body>
 </html>
