@@ -5,225 +5,70 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Contacto - COLESTUR</title>
 
-  <style>
-    :root {
-      --bg: #050608;
-      --card: #111217;
-      --card-soft: #181920;
-      --accent: #3a7ce9;
-      --text: #f5f5f7;
-      --muted: #9da3b0;
-      --border: #20222e;
-    }
-
-    body {
-      margin: 0;
-      background: radial-gradient(circle at top, #111217 0, #050608 55%);
-      color: var(--text);
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI";
-    }
-
-    /* HEADER */
-    header {
-      padding: 14px 18px 6px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .logo-circle {
-      width: 32px;
-      height: 32px;
-      border-radius: 999px;
-      background: radial-gradient(circle at 30% 0, #ffeaa7, #f1c40f 55%, #b8860b 100%);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 17px;
-      font-weight: 800;
-      color: #041021;
-    }
-
-    .brand-text {
-      display: flex;
-      flex-direction: column;
-      line-height: 1.1;
-    }
-
-    .brand-text span:first-child {
-      font-size: 13px;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: .08em;
-    }
-
-    .brand-text span:last-child {
-      font-size: 19px;
-      font-weight: 700;
-    }
-
-    main {
-      padding: 0 16px 110px;
-      max-width: 640px;
-      margin: 0 auto;
-    }
-
-    /* CARD */
-    .contact-card {
-      background: var(--card);
-      margin-top: 16px;
-      padding: 20px;
-      border-radius: 18px;
-      border: 1px solid rgba(255,255,255,0.05);
-      box-shadow: 0 20px 35px rgba(0,0,0,0.6);
-    }
-
-    h2 {
-      margin-top: 0;
-      margin-bottom: 12px;
-      font-size: 20px;
-      font-weight: 700;
-      text-align: center;
-    }
-
-    .address {
-      margin-top: 8px;
-      text-align: center;
-      font-size: 14px;
-      color: var(--muted);
-    }
-
-    /* BOTONES */
-    .contact-list {
-      margin-top: 20px;
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-    }
-
-    .contact-btn {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 14px 16px;
-      border-radius: 14px;
-      background: var(--card-soft);
-      border: 1px solid var(--border);
-      color: var(--text);
-      text-decoration: none;
-      font-size: 16px;
-      transition: .2s;
-    }
-
-    .contact-btn:hover {
-      border-color: var(--accent);
-    }
-
-    .contact-btn img {
-      width: 28px;
-      height: 28px;
-    }
-
-    /* BOTTOM NAV */
-    .bottom-bar {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      padding: 10px 16px;
-      display: flex;
-      justify-content: space-around;
-      background: linear-gradient(to top, rgba(5,6,8,0.98), rgba(5,6,8,0.95), transparent);
-      border-top: 1px solid rgba(255,255,255,0.05);
-      z-index: 300;
-    }
-
-    .nav-btn {
-      text-align: center;
-      text-decoration: none;
-      color: var(--text);
-      font-size: 14px;
-      opacity: 0.85;
-    }
-
-    .nav-btn:hover {
-      opacity: 1;
-    }
-
-    .nav-icon {
-      font-size: 20px;
-      display: block;
-      margin-bottom: 2px;
-    }
-  </style>
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="css/style.css">
 </head>
-
 <body>
 
-<header>
+<header class="header">
   <div class="logo-circle">CR</div>
   <div class="brand-text">
-    <span>Transporte especial</span>
-    <span>COLESTUR S.A.S.</span>
+    <span>TRANSPORTE ESPECIAL</span>
+    <h1>COLESTUR S.A.S.</h1>
   </div>
 </header>
 
 <main>
 
-  <div class="contact-card">
-    <h2>Contáctanos</h2>
+<section class="contact-card">
+  <h2>¿Dónde encontrarnos?</h2>
 
-    <p class="address">
-      📍 <b>Calle 77 # 81-83, Bogotá, Colombia</b>
-    </p>
+  <div class="contact-list">
 
-    <div class="contact-list">
+    <a class="contact-item" href="https://wa.me/573001234567" target="_blank">
+      <img src="img/whatsapp.png">
+      <span>WhatsApp</span>
+    </a>
 
-      <a class="contact-btn" href="https://wa.me/573102869505" target="_blank">
-        <img src="https://cdn-icons-png.flaticon.com/512/124/124034.png">
-        WhatsApp
-      </a>
+    <a class="contact-item" href="tel:+573001234567">
+      <img src="img/phone.png">
+      <span>Llamar</span>
+    </a>
 
-      <a class="contact-btn" href="tel:3102869505">
-        <img src="https://cdn-icons-png.flaticon.com/512/724/724664.png">
-        Llamar
-      </a>
+    <a class="contact-item" href="mailto:contacto@colestur.com">
+      <img src="img/mail.png">
+      <span>Correo electrónico</span>
+    </a>
 
-      <a class="contact-btn" href="mailto:dfms.87@outlook.com">
-        <img src="https://cdn-icons-png.flaticon.com/512/732/732200.png">
-        Gmail
-      </a>
+    <a class="contact-item" href="https://maps.apple.com/?q=Cra+12+%23+12-34+Ch%C3%ADa" target="_blank">
+      <img src="img/apple-maps.png">
+      <span>Apple Maps</span>
+    </a>
 
-      <a class="contact-btn" href="https://maps.app.goo.gl/p2iPbbHcA7yoP6vJ8" target="_blank">
-        <img src="https://cdn-icons-png.flaticon.com/512/2991/2991231.png">
-        Google Maps
-      </a>
+    <a class="contact-item" href="https://www.google.com/maps?q=Cra+12+%2312-34+Ch%C3%ADa" target="_blank">
+      <img src="img/google-maps.png">
+      <span>Google Maps</span>
+    </a>
 
-      <a class="contact-btn" href="https://waze.com/ul?q=Colestur%20Bogotá" target="_blank">
-        <img src="https://cdn-icons-png.flaticon.com/512/732/732244.png">
-        Waze
-      </a>
-
-    </div>
+    <a class="contact-item" href="https://waze.com/ul?q=Cra+12+%23+12-34+Ch%C3%ADa" target="_blank">
+      <img src="img/waze.png">
+      <span>Waze</span>
+    </a>
 
   </div>
+</section>
 
 </main>
 
-<!-- BARRA INFERIOR -->
-<div class="bottom-bar">
-  <a class="nav-btn" href="index.html">
-    <span class="nav-icon">🏠</span>Inicio
-  </a>
+<nav class="bottom-nav">
+  <a href="index.html">🏠 Inicio</a>
+  <a href="reservar.html">🚌 Reservar</a>
+  <a href="contacto.html">📞 Contacto</a>
+</nav>
 
-  <a class="nav-btn" href="reservar.html">
-    <span class="nav-icon">📅</span>Reservar
-  </a>
-
-  <a class="nav-btn" href="contacto.html">
-    <span class="nav-icon">📞</span>Contacto
-  </a>
-</div>
+<script>
+navigator.serviceWorker.register("service-worker.js");
+</script>
 
 </body>
 </html>
