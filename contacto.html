@@ -9,6 +9,25 @@
 <link rel="manifest" href="manifest.json">
 
 <style>
+  /* LOGO NUEVO */
+  .logo-circle {
+    width: 38px;
+    height: 38px;
+    border-radius: 999px;
+    background: linear-gradient(135deg, #ffeaa7, #f1c40f);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  .logo-circle img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+  }
+
   main {
     padding: 20px;
     padding-bottom: 90px;
@@ -57,19 +76,15 @@
     width: 32px;
     text-align: center;
   }
-
-  .section-title {
-    margin-top: 30px;
-    font-size: 18px;
-    color: var(--muted);
-  }
 </style>
 </head>
 
 <body>
 
 <header class="header">
-  <div class="logo-circle">CR</div>
+  <div class="logo-circle">
+    <img src="Logo.png" alt="Logo COLESTUR">
+  </div>
   <div class="brand-text">
     <span>TRANSPORTE ESPECIAL</span>
     <h1>COLESTUR S.A.S.</h1>
@@ -106,14 +121,14 @@
         Correo electrónico
       </a>
 
-      <!-- GOOGLE MAPS -->
-      <a class="contact-btn" href="https://maps.google.com/?q=Calle+77+%2381-83,+Bogotá" target="_blank">
+      <!-- GOOGLE MAPS – COLESTUR SAS -->
+      <a class="contact-btn" href="https://www.google.com/maps/search/?api=1&query=COLESTUR+SAS" target="_blank">
         <span class="icon">📍</span>
         Google Maps
       </a>
 
-      <!-- WAZE -->
-      <a class="contact-btn" href="https://waze.com/ul?ll=4.675800,-74.058900&navigate=yes" target="_blank">
+      <!-- WAZE – COLESTUR SAS -->
+      <a class="contact-btn" href="https://waze.com/ul?q=COLESTUR%20SAS&navigate=yes" target="_blank">
         <span class="icon">🧭</span>
         Waze
       </a>
@@ -135,7 +150,7 @@
     Reservar
   </a>
 
-  <a href="contacto.html" class="nav-item">
+  <a href="contacto.html" class="nav-item nav-active">
     <span>📞</span>
     Contacto
   </a>
@@ -173,7 +188,6 @@
   font-weight: 600;
 }
 </style>
-
 
 </body>
 </html>
