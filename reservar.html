@@ -503,35 +503,6 @@
         }
         return;
       }
-<!-- ==================== SCRIPTS ===================== -->
-
-<!-- Firebase -->
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyCq3TY2xt3MZHPUWEcFJhCEWfaWplAf1es",
-  authDomain: "colestur-reservas.firebaseapp.com",
-  projectId: "colestur-reservas",
-  storageBucket: "colestur-reservas.appspot.com",
-  messagingSenderId: "73404287419",
-  appId: "1:73404287419:web:1dd4fe4a1692a4e28f271f"
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-
-window.guardarReserva = async function (data) {
-  await addDoc(collection(db, "reservas"), data);
-};
-</script>
-
-<!-- EmailJS -->
-<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-<script>
-emailjs.init("oQlbFJ4zYcGqzOqYx");
-</script>
 
       // Aquí SO-LO preparamos los datos.
       // Tu lógica de Firebase + EmailJS que YA FUNCIONABA la puedes pegar aquí dentro:
