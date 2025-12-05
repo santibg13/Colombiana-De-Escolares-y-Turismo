@@ -6,6 +6,12 @@
 <meta name="theme-color" content="#050508">
 <title>Reservar – COLESTUR</title>
 
+<!-- EMAILJS CONFIG REAL -->
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script>
+  emailjs.init("BBBTYChL9Rq9ynJgJ"); /* ← TU PUBLIC KEY REAL */
+</script>
+
 <style>
   :root {
     --bg: #050508;
@@ -18,137 +24,83 @@
   }
 
   body {
-    margin: 0;
-    background: var(--bg);
-    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    margin: 0; background: var(--bg);
+    font-family: system-ui;
     color: var(--text);
   }
 
   header {
-    padding: 16px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    background: rgba(10,10,14,0.6);
+    padding: 16px; display: flex; align-items: center;
+    gap: 12px; background: rgba(10,10,14,0.6);
     border-bottom: 1px solid #0e1015;
-    position: sticky;
-    top: 0;
-    z-index: 50;
+    position: sticky; top: 0; z-index: 50;
   }
 
   .logo-circle {
-    width: 38px;
-    height: 38px;
-    border-radius: 999px;
-    background: linear-gradient(135deg, #ffeaa7, #f1c40f);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #111;
-    font-weight: 800;
+    width: 38px; height: 38px;
+    background: linear-gradient(135deg,#ffeaa7,#f1c40f);
+    border-radius: 999px; display: flex;
+    justify-content: center; align-items: center;
+    font-weight: 800; color:#111;
   }
 
   main {
     padding: 20px 16px 140px !important;
-    max-width: 780px;
-    margin: auto;
+    max-width: 780px; margin: auto;
   }
 
   .trip-card {
     background: var(--card);
-    padding: 18px;
-    border-radius: 18px;
+    padding: 18px; border-radius: 18px;
     border: 1px solid var(--border);
     margin-bottom: 22px;
   }
 
-  label {
-    font-size: 12px;
-    color: var(--muted);
-    margin-bottom: 6px;
-    display: block;
-  }
-
   input, select {
-    width: 100%;
-    padding: 12px;
+    width: 100%; padding: 12px;
     border-radius: 14px;
     background: var(--card-soft);
     border: 1px solid var(--border);
     color: var(--text);
   }
 
-  #map {
-    width: 100%;
-    height: 300px;
-    border-radius: 18px;
-    margin-bottom: 18px;
-    border: 1px solid var(--border);
+  #map { width:100%; height:300px;
+    border-radius:18px; margin-bottom:18px;
+    border:1px solid var(--border);
   }
 
   .info-box {
-    background: var(--card);
-    padding: 14px;
-    border-radius: 14px;
-    border: 1px solid var(--border);
-    margin-top: -8px;
-    margin-bottom: 20px;
-  }
-
-  .info-item {
-    font-size: 15px;
-    margin-bottom: 6px;
+    background: var(--card); padding: 14px;
+    border-radius:14px; border:1px solid var(--border);
+    margin-bottom:20px;
   }
 
   .bottom-nav {
-    position: fixed;
-    bottom: 0; left: 0; right: 0;
-    height: 65px;
-    background: #0d0e12;
-    border-top: 1px solid #1f2027;
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    z-index: 99999;
+    position: fixed; bottom:0; left:0; right:0;
+    height:65px; background:#0d0e12;
+    border-top:1px solid #1f2027;
+    display:flex; justify-content:space-around; align-items:center;
+    z-index:99999;
   }
 
-  .nav-item {
-    text-align: center;
-    font-size: 13px;
-    color: var(--muted);
-    text-decoration: none;
-  }
-
-  .nav-item span {
-    font-size: 20px;
-    display: block;
-    margin-bottom: 2px;
-  }
-
-  .nav-active { color: white; font-weight: 600; }
+  .nav-item { color:#9ca3b5; text-decoration:none; text-align:center; }
+  .nav-active { color:white!important; }
+  .nav-item span { display:block; font-size:22px; }
 
   .confirm-container {
-    position: fixed;
-    bottom: 75px;
-    left: 0; right: 0;
-    padding: 0 18px;
-    display: flex;
-    justify-content: center;
-    z-index: 9999;
+    position: fixed; bottom:75px;
+    left:0; right:0; padding:0 18px;
+    z-index:9999;
   }
 
   .btn-confirm {
-    width: 100%;
-    background: var(--accent);
-    padding: 15px;
-    border: none;
-    border-radius: 999px;
-    color: white;
-    font-weight: 700;
-    font-size: 16px;
-    box-shadow: 0 12px 28px rgba(58,124,233,.45);
+    width:100%; padding:15px;
+    background:var(--accent); border:none;
+    border-radius:999px; color:white;
+    font-size:16px; font-weight:700;
   }
 </style>
+
 </head>
 
 <body>
@@ -174,16 +126,16 @@
   <div id="map"></div>
 
   <div class="info-box">
-    <div class="info-item">📍 <b>Distancia:</b> <span id="distancia">—</span></div>
-    <div class="info-item">⏱ <b>Tiempo estimado:</b> <span id="tiempo">—</span></div>
+    <div>📍 <b>Distancia:</b> <span id="distancia">—</span></div>
+    <div>⏱ <b>Tiempo estimado:</b> <span id="tiempo">—</span></div>
   </div>
 
   <section class="trip-card">
     <label>Nombre completo</label>
-    <input id="nombre" />
+    <input id="nombre"/>
 
     <label style="margin-top:12px;">WhatsApp</label>
-    <input id="telefono" type="tel" placeholder="57300..." />
+    <input id="telefono" type="tel"/>
 
     <label style="margin-top:12px;">Servicio</label>
     <select id="servicio">
@@ -194,13 +146,13 @@
     </select>
 
     <label style="margin-top:12px;">Fecha</label>
-    <input type="date" id="fecha">
+    <input type="date" id="fecha"/>
 
     <label style="margin-top:12px;">Hora</label>
-    <input type="time" id="hora">
+    <input type="time" id="hora"/>
 
     <label style="margin-top:12px;">Pasajeros</label>
-    <input type="number" id="pasajeros" value="1" min="1">
+    <input type="number" id="pasajeros" value="1" min="1"/>
   </section>
 
 </main>
@@ -210,132 +162,127 @@
 </div>
 
 <div class="bottom-nav">
-  <a href="index.html" class="nav-item">
-    <span>🏠</span> Inicio
-  </a>
-  <a href="reservar.html" class="nav-item nav-active">
-    <span>🚌</span> Reservar
-  </a>
-  <a href="contacto.html" class="nav-item">
-    <span>📞</span> Contacto
-  </a>
+  <a href="index.html" class="nav-item"><span>🏠</span>Inicio</a>
+  <a href="reservar.html" class="nav-item nav-active"><span>🚌</span>Reservar</a>
+  <a href="contacto.html" class="nav-item"><span>📞</span>Contacto</a>
 </div>
 
+<!-- =========== MAPA + RUTAS + ENVÍO =========== -->
 <script>
-let map, directionsService, directionsRenderer, originMarker, destMarker;
-let originLatLng = null;
-let destLatLng   = null;
+let map, directionsService, directionsRenderer;
+let originLatLng = null, destLatLng = null;
+let originMarker, destMarker;
 
 function initMap() {
+
   directionsService = new google.maps.DirectionsService();
   directionsRenderer = new google.maps.DirectionsRenderer({
-    suppressMarkers: true,
-    polylineOptions: { strokeColor: "#3a7ce9", strokeWeight: 6 }
+    suppressMarkers:true,
+    polylineOptions:{ strokeColor:"#3a7ce9", strokeWeight:6 }
   });
 
   map = new google.maps.Map(document.getElementById("map"), {
-    center: { lat: 4.7, lng: -74.05 },
-    zoom: 14,
-    disableDefaultUI: true
+    center:{lat:4.7, lng:-74.05},
+    zoom:14,
+    disableDefaultUI:true
   });
 
   directionsRenderer.setMap(map);
 
   navigator.geolocation.getCurrentPosition(pos => {
-    const lat = pos.coords.latitude;
-    const lng = pos.coords.longitude;
 
-    originLatLng = new google.maps.LatLng(lat, lng);
+    originLatLng = new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude);
     map.setCenter(originLatLng);
+
+    const geo = new google.maps.Geocoder();
+    geo.geocode({ location: originLatLng }, (res, status) => {
+      if(status === "OK" && res[0]) {
+        document.getElementById("origen").value = res[0].formatted_address;
+      }
+    });
 
     originMarker = new google.maps.Marker({
       position: originLatLng,
       map,
-      icon: {
-        path: google.maps.SymbolPath.CIRCLE,
-        scale: 8,
-        fillColor: "#3a7ce9",
-        fillOpacity: 1,
-        strokeColor: "#fff",
-        strokeWeight: 2
+      icon:{
+        path:google.maps.SymbolPath.CIRCLE,
+        scale:8, fillColor:"#3a7ce9",
+        fillOpacity:1, strokeColor:"#fff", strokeWeight:2
       }
     });
+
   });
 
-  // Autocomplete con texto intacto
-  const acOrigen = new google.maps.places.Autocomplete(
-    document.getElementById("origen"),
-    { fields:["geometry"], componentRestrictions:{ country:"co" } }
-  );
+  const acOptions = { fields:["geometry"], componentRestrictions:{ country:"co" }};
 
-  const acDestino = new google.maps.places.Autocomplete(
-    document.getElementById("destino"),
-    { fields:["geometry"], componentRestrictions:{ country:"co" } }
-  );
+  const acOrigen = new google.maps.places.Autocomplete(origen, acOptions);
+  const acDestino = new google.maps.places.Autocomplete(destino, acOptions);
 
-  acOrigen.addListener("place_changed", () => {
+  acOrigen.addListener("place_changed", ()=>{
     const p = acOrigen.getPlace();
-    if (!p.geometry) return;
+    if(!p.geometry) return;
+
     originLatLng = p.geometry.location;
-    if (!originMarker) {
-      originMarker = new google.maps.Marker({ position: originLatLng, map });
-    } else originMarker.setPosition(originLatLng);
+
+    if (!originMarker) originMarker = new google.maps.Marker({position:originLatLng,map});
+    else originMarker.setPosition(originLatLng);
+
     calcularRuta();
   });
 
-  acDestino.addListener("place_changed", () => {
+  acDestino.addListener("place_changed", ()=>{
     const p = acDestino.getPlace();
-    if (!p.geometry) return;
+    if(!p.geometry) return;
+
     destLatLng = p.geometry.location;
-    if (!destMarker) {
-      destMarker = new google.maps.Marker({ position: destLatLng, map });
-    } else destMarker.setPosition(destLatLng);
+
+    if (!destMarker) destMarker = new google.maps.Marker({position:destLatLng,map});
+    else destMarker.setPosition(destLatLng);
+
     calcularRuta();
   });
 
-  // Evento del botón de reserva
-  document.getElementById("btnReservar").addEventListener("click", () => {
-    const data = {
-      origen: document.getElementById("origen").value,
-      destino: document.getElementById("destino").value,
-      nombre: document.getElementById("nombre").value,
-      telefono: document.getElementById("telefono").value,
-      servicio: document.getElementById("servicio").value,
-      fecha: document.getElementById("fecha").value,
-      hora: document.getElementById("hora").value,
-      pasajeros: document.getElementById("pasajeros").value
+  document.getElementById("btnReservar").addEventListener("click", ()=>{
+
+    let data = {
+      nombre: nombre.value,
+      telefono: telefono.value,
+      servicio: servicio.value,
+      origen: origen.value,
+      destino: destino.value,
+      fecha: fecha.value,
+      hora: hora.value,
+      pasajeros: pasajeros.value
     };
 
-    alert("Tu reserva ha sido enviada.\n\n" +
-      "Origen: " + data.origen + "\n" +
-      "Destino: " + data.destino + "\n" +
-      "Servicio: " + data.servicio);
+    emailjs.send("service_bsdpr26", "template_fmqabdi", data)
+      .then(()=>{ alert("Reserva enviada con éxito 🚀"); })
+      .catch(()=>{ alert("Error enviando reserva"); });
   });
+
 }
 
-function calcularRuta() {
-  if (!originLatLng || !destLatLng) return;
+function calcularRuta(){
+  if(!originLatLng || !destLatLng) return;
 
-  directionsService.route(
-    {
-      origin: originLatLng,
-      destination: destLatLng,
-      travelMode: "DRIVING",
-      drivingOptions: {
-        departureTime: new Date(),
-        trafficModel: "pessimistic"
-      }
-    },
-    (res, status) => {
-      if (status === "OK") {
-        directionsRenderer.setDirections(res);
-        const leg = res.routes[0].legs[0];
-        document.getElementById("distancia").textContent = leg.distance.text;
-        document.getElementById("tiempo").textContent =
-          leg.duration_in_traffic ? leg.duration_in_traffic.text : leg.duration.text;
-      }
+  directionsService.route({
+    origin: originLatLng,
+    destination: destLatLng,
+    travelMode:"DRIVING",
+    drivingOptions:{
+      departureTime: new Date(),
+      trafficModel:"pessimistic"
     }
-  );
+  }, (res,status)=>{
+    if(status==="OK"){
+      directionsRenderer.setDirections(res);
+      const leg = res.routes[0].legs[0];
+
+      distancia.textContent = leg.distance.text;
+      tiempo.textContent =
+        leg.duration_in_traffic ? leg.duration_in_traffic.text : leg.duration.text;
+    }
+  });
 }
 
 window.initMap = initMap;
