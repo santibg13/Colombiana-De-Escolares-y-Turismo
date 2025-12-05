@@ -51,13 +51,13 @@
     }
 
     .logo-circle img{
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  border-radius: 50%;     
-  background: transparent; 
-  padding: 4px;           
-}
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      border-radius: 50%;
+      background: transparent;
+      padding: 4px;
+    }
 
     .brand-label {
       font-size: 12px;
@@ -207,8 +207,8 @@
 
 <header>
   <div class="logo-circle">
-  <img src="Logo.png" alt="COLESTUR">
-</div>
+    <img src="Logo.png" alt="COLESTUR">
+  </div>
   <div>
     <div class="brand-label">TRANSPORTE ESPECIAL</div>
     <div class="brand-name">COLESTUR S.A.S.</div>
@@ -487,7 +487,7 @@
 
     window._calcularRutaColestur = calcularRuta;
 
-    // ----- BOTÓN CONFIRMAR (solo validación, el envío real está en el otro script) -----
+    // Validación básica al hacer clic en Confirmar (no envía nada aún)
     const btnReservar    = document.getElementById("btnReservar");
     const mensajeReserva = document.getElementById("mensajeReserva");
 
@@ -506,9 +506,7 @@
         }
         return;
       }
-
-      // Aquí no mandamos correo; solo dejamos que el otro script (EmailJS) lo haga.
-      // Este bloque se mantiene para que no cambie tu UX.
+      // El envío real lo haremos en el script de EmailJS + WhatsApp
     });
   }
 
@@ -518,64 +516,115 @@
 <!-- Google Maps -->
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD32zkRd46s5jKHkTjj2868WOMfv7m_V48&libraries=places&callback=initMap" async defer></script>
 
-<!-- ========== EMAILJS ========== -->
+<!-- ========== EMAILJS + WHATSAPP ========== -->
+<!-- EmailJS -->
 <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+
 <script>
-  // ⚠ PON AQUÍ TUS DATOS REALES DE EMAILJS
-  const EMAILJS_PUBLIC_KEY = "BBBTYChL9Rq9ynJgJ";
-  const EMAILJS_SERVICE_ID = "service_bsdpr26";
+  /* ================================
+       CONFIG EMAILJS
+     ================================ */
+
+  const EMAILJS_PUBLIC_KEY  = "BBBTYChL9Rq9ynJgJ";
+  const EMAILJS_SERVICE_ID  = "service_bsdpr26";
   const EMAILJS_TEMPLATE_ID = "template_fmqabdi";
 
   emailjs.init(EMAILJS_PUBLIC_KEY);
 
+  /* ================================
+       CONFIG WHATSAPP AUTOMÁTICO
+     ================================ */
+
+  const WHATSAPP_NUMBER = "573028541648";   // ← Número al que quieres que llegue el mensaje
+  const WHATSAPP_APIKEY = "4977169";        // ← API KEY CallMeBot
+
+  async function enviarWhatsApp(msg) {
+    const url =
+      "https://api.callmebot.com/whatsapp.php?phone=" +
+      WHATSAPP_NUMBER +
+      "&text=" +
+      encodeURIComponent(msg) +
+      "&apikey=" +
+      WHATSAPP_APIKEY;
+
+    try {
+      await fetch(url);
+      console.log("WhatsApp enviado correctamente");
+    } catch (err) {
+      console.error("Error enviando WhatsApp:", err);
+    }
+  }
+
+  /* ================================
+       ENVÍO FINAL: EMAIL + WHATSAPP
+     ================================ */
+
   const btnReservar = document.getElementById("btnReservar");
   const mensajeReserva = document.getElementById("mensajeReserva");
 
-  btnReservar.addEventListener("click", function () {
-    const origen   = document.getElementById("origen");
-    const destino  = document.getElementById("destino");
-    const nombre   = document.getElementById("nombre");
-    const telefono = document.getElementById("telefono");
-    const servicio = document.getElementById("servicio");
-    const fecha    = document.getElementById("fecha");
-    const hora     = document.getElementById("hora");
-    const pasajeros= document.getElementById("pasajeros");
-    const distancia= document.getElementById("distancia");
-    const tiempo   = document.getElementById("tiempo");
+  btnReservar.addEventListener("click", () => {
 
-    if (
-      !origen.value.trim()   ||
-      !destino.value.trim()  ||
-      !nombre.value.trim()   ||
-      !telefono.value.trim() ||
-      !fecha.value           ||
-      !hora.value
-    ) {
-      return; // ya mostramos el error en el otro listener
-    }
+    // Datos
+    const origen    = document.getElementById("origen").value;
+    const destino   = document.getElementById("destino").value;
+    const nombre    = document.getElementById("nombre").value;
+    const telefono  = document.getElementById("telefono").value;
+    const servicio  = document.getElementById("servicio").value;
+    const fecha     = document.getElementById("fecha").value;
+    const hora      = document.getElementById("hora").value;
+    const pasajeros = document.getElementById("pasajeros").value;
+    const distancia = document.getElementById("distancia").textContent;
+    const tiempo    = document.getElementById("tiempo").textContent;
+
+    // Validación (ya existía en tu código)
+    if (!origen || !destino || !nombre || !telefono || !fecha || !hora) return;
+
+    /* ================================
+          1) ENVIAR EMAIL
+       ================================ */
 
     const templateParams = {
-      origen:    origen.value,
-      destino:   destino.value,
-      nombre:    nombre.value,
-      telefono:  telefono.value,
-      servicio:  servicio.value,
-      fecha:     fecha.value,
-      hora:      hora.value,
-      pasajeros: pasajeros.value,
-      distancia: distancia.textContent,
-      tiempo:    tiempo.textContent
+      origen,
+      destino,
+      nombre,
+      telefono,
+      servicio,
+      fecha,
+      hora,
+      pasajeros,
+      distancia,
+      tiempo
     };
 
     emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams)
-      .then(function () {
+      .then(() => {
         mensajeReserva.style.color = "#42ba96";
-        mensajeReserva.textContent = "Reserva enviada. Revisaremos tu solicitud y te contactaremos por WhatsApp.";
+        mensajeReserva.textContent = "Reserva enviada correctamente.";
+
+        /* ================================
+              2) MENSAJE WHATSAPP AUTOMÁTICO
+           ================================ */
+
+        const message =
+          "📩 Nueva reserva COLESTUR\n\n" +
+          "👤 Nombre: " + nombre + "\n" +
+          "📱 Teléfono: " + telefono + "\n" +
+          "🚌 Servicio: " + servicio + "\n" +
+          "📍 Origen: " + origen + "\n" +
+          "🎯 Destino: " + destino + "\n" +
+          "🗓 Fecha: " + fecha + "\n" +
+          "⏰ Hora: " + hora + "\n" +
+          "👥 Pasajeros: " + pasajeros + "\n" +
+          "📏 Distancia: " + distancia + "\n" +
+          "⏱ Tiempo estimado: " + tiempo;
+
+        enviarWhatsApp(message);
+
       })
-      .catch(function (error) {
-        console.error("Error EmailJS:", error);
+      .catch((error) => {
         mensajeReserva.style.color = "#ff5a5f";
-        mensajeReserva.textContent = "Hubo un error al enviar la reserva. Intenta de nuevo más tarde.";
+        mensajeReserva.textContent = "Error al enviar reserva.";
+        console.error("EmailJS Error:", error);
       });
   });
 </script>
