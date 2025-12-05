@@ -24,6 +24,7 @@
     color: var(--text);
   }
 
+  /* HEADER */
   header {
     padding: 16px;
     display: flex;
@@ -99,6 +100,31 @@
     margin-bottom: 6px;
   }
 
+  /* BOTÓN CONFIRMAR */
+  .confirm-container {
+    position: fixed;
+    bottom: 75px;
+    left: 0;
+    right: 0;
+    padding: 0 18px;
+    display: flex;
+    justify-content: center;
+    z-index: 9999;
+  }
+
+  .btn-confirm {
+    width: 100%;
+    background: var(--accent);
+    padding: 15px;
+    border: none;
+    border-radius: 999px;
+    color: white;
+    font-weight: 700;
+    font-size: 16px;
+    box-shadow: 0 12px 28px rgba(58,124,233,.45);
+  }
+
+  /* BOTTOM NAV */
   .bottom-nav {
     position: fixed;
     bottom: 0; left: 0; right: 0;
@@ -124,28 +150,10 @@
     margin-bottom: 2px;
   }
 
-  .confirm-container {
-    position: fixed;
-    bottom: 75px;
-    left: 0;
-    right: 0;
-    padding: 0 18px;
-    display: flex;
-    justify-content: center;
-    z-index: 9999;
-  }
-
-  .btn-confirm {
-    width: 100%;
-    background: var(--accent);
-    padding: 15px;
-    border: none;
-    border-radius: 999px;
+  .nav-active {
     color: white;
-    font-weight: 700;
-    font-size: 16px;
+    font-weight: 600;
   }
-
 </style>
 </head>
 
@@ -180,10 +188,10 @@
     <label>Nombre completo</label>
     <input id="nombre" />
 
-    <label>WhatsApp</label>
+    <label style="margin-top:12px;">WhatsApp</label>
     <input id="telefono" type="tel" placeholder="57300..." />
 
-    <label>Servicio</label>
+    <label style="margin-top:12px;">Servicio</label>
     <select id="servicio">
       <option>Escolar</option>
       <option>Empresarial</option>
@@ -191,44 +199,56 @@
       <option>Aeropuerto</option>
     </select>
 
-    <label>Fecha</label>
+    <label style="margin-top:12px;">Fecha</label>
     <input type="date" id="fecha">
 
-    <label>Hora</label>
+    <label style="margin-top:12px;">Hora</label>
     <input type="time" id="hora">
 
-    <label>Pasajeros</label>
+    <label style="margin-top:12px;">Pasajeros</label>
     <input type="number" id="pasajeros" value="1" min="1">
   </section>
 
 </main>
 
+<!-- BOTÓN CONFIRMAR (por ahora solo hace console.log, luego lo conectamos a Firebase/Email) -->
 <div class="confirm-container">
   <button id="btnReservar" class="btn-confirm">Confirmar reserva</button>
 </div>
 
+<!-- BOTTOM NAV -->
 <div class="bottom-nav">
-  <a href="index.html" class="nav-item"><span>🏠</span> Inicio</a>
-  <a href="reservar.html" class="nav-item"><span>🚌</span> Reservar</a>
-  <a href="contacto.html" class="nav-item"><span>📞</span> Contacto</a>
+  <a href="index.html" class="nav-item">
+    <span>🏠</span> Inicio
+  </a>
+  <a href="reservar.html" class="nav-item nav-active">
+    <span>🚌</span> Reservar
+  </a>
+  <a href="contacto.html" class="nav-item">
+    <span>📞</span> Contacto
+  </a>
 </div>
 
+<!-- ========== MAPAS + AUTOCOMPLETE + RUTA AZUL ========== -->
 <script>
 let map, originMarker, destMarker;
 let directionsService, directionsRenderer;
+let acOrigen, acDestino;
 
-/* ========================================================
-   INICIALIZAR MAPA
-======================================================== */
+// Se llama automáticamente por el script de Google
 function initMap() {
-  directionsService = new google.maps.DirectionsService();
+  directionsService  = new google.maps.DirectionsService();
   directionsRenderer = new google.maps.DirectionsRenderer({
     suppressMarkers: true,
-    polylineOptions: { strokeColor: "#3a7ce9", strokeWeight: 6 }
+    polylineOptions: {
+      strokeColor: "#3a7ce9",
+      strokeWeight: 6
+    }
   });
 
+  // Mapa base, centrado en Bogotá mientras tanto
   map = new google.maps.Map(document.getElementById("map"), {
-    center: { lat: 4.71, lng: -74.07 },
+    center: { lat: 4.711, lng: -74.0721 },
     zoom: 14,
     disableDefaultUI: true
   });
@@ -237,47 +257,99 @@ function initMap() {
 
   const geocoder = new google.maps.Geocoder();
 
+  // Intento de geolocalización
   navigator.geolocation.getCurrentPosition(
-    pos => {
+    (pos) => {
       const loc = { lat: pos.coords.latitude, lng: pos.coords.longitude };
-
       setOrigin(loc);
+      map.setCenter(loc);
+
+      // Sesgo de autocompletado alrededor de tu zona (~30 km)
+      const bounds = new google.maps.Circle({
+        center: loc,
+        radius: 30000
+      }).getBounds();
+
+      setupAutocomplete(bounds);
+
+      // Convertir coordenadas a dirección para el input de origen
       geocoder.geocode({ location: loc }, (res, status) => {
         if (status === "OK" && res[0]) {
           document.getElementById("origen").value = res[0].formatted_address;
         }
       });
-    }
+    },
+    (err) => {
+      console.warn("Error geolocalización:", err);
+
+      // Si falla la ubicación, usar centro Bogotá
+      const fallback = { lat: 4.711, lng: -74.0721 };
+      setOrigin(fallback);
+      map.setCenter(fallback);
+
+      const bounds = new google.maps.Circle({
+        center: fallback,
+        radius: 30000
+      }).getBounds();
+
+      setupAutocomplete(bounds);
+    },
+    { enableHighAccuracy: true, timeout: 10000 }
   );
 
-  const options = {
-    fields: ["formatted_address", "geometry", "name"],
-    componentRestrictions: { country: "co" }
-  };
+  // Por si el usuario escribe y da Enter sin seleccionar sugerencia:
+  document.getElementById("origen").addEventListener("change", calcularRuta);
+  document.getElementById("destino").addEventListener("change", calcularRuta);
 
-  const acOrigen = new google.maps.places.Autocomplete(document.getElementById("origen"), options);
-  const acDestino = new google.maps.places.Autocomplete(document.getElementById("destino"), options);
-
-  acOrigen.addListener("place_changed", () => {
-    const p = acOrigen.getPlace();
-    if (p.geometry) {
-      setOrigin(p.geometry.location);
-      calcularRuta();
-    }
-  });
-
-  acDestino.addListener("place_changed", () => {
-    const p = acDestino.getPlace();
-    if (p.geometry) {
-      setDestino(p.geometry.location);
-      calcularRuta();
-    }
+  // Botón confirmar (de momento solo console.log)
+  document.getElementById("btnReservar").addEventListener("click", () => {
+    console.log("Confirmar reserva (luego conectamos Firebase/Email).");
+    alert("Tu ruta está lista. Luego conectamos esta acción a la base de datos y al correo. 😉");
   });
 }
 
-/* ========================================================
-   MARCADORES
-======================================================== */
+// Configura Autocomplete de origen y destino
+function setupAutocomplete(bounds) {
+  const opts = {
+    fields: ["formatted_address", "geometry", "name"],
+    componentRestrictions: { country: "co" },
+    bounds: bounds,
+    strictBounds: false
+  };
+
+  acOrigen = new google.maps.places.Autocomplete(
+    document.getElementById("origen"),
+    opts
+  );
+  acDestino = new google.maps.places.Autocomplete(
+    document.getElementById("destino"),
+    opts
+  );
+
+  acOrigen.addListener("place_changed", () => {
+    const place = acOrigen.getPlace();
+    if (!place || !place.geometry) return;
+
+    document.getElementById("origen").value =
+      place.formatted_address || place.name || document.getElementById("origen").value;
+
+    setOrigin(place.geometry.location);
+    calcularRuta();
+  });
+
+  acDestino.addListener("place_changed", () => {
+    const place = acDestino.getPlace();
+    if (!place || !place.geometry) return;
+
+    document.getElementById("destino").value =
+      place.formatted_address || place.name || document.getElementById("destino").value;
+
+    setDestino(place.geometry.location);
+    calcularRuta();
+  });
+}
+
+/* ========= MARCADORES ========== */
 function setOrigin(latLng) {
   if (!originMarker) {
     originMarker = new google.maps.Marker({
@@ -292,7 +364,9 @@ function setOrigin(latLng) {
         strokeWeight: 2
       }
     });
-  } else originMarker.setPosition(latLng);
+  } else {
+    originMarker.setPosition(latLng);
+  }
 }
 
 function setDestino(latLng) {
@@ -306,15 +380,15 @@ function setDestino(latLng) {
         fillOpacity: 1
       }
     });
-  } else destMarker.setPosition(latLng);
+  } else {
+    destMarker.setPosition(latLng);
+  }
 }
 
-/* ========================================================
-   CALCULAR RUTA
-======================================================== */
+/* ========= RUTA, DISTANCIA Y TIEMPO ========== */
 function calcularRuta() {
-  const origen = document.getElementById("origen").value;
-  const destino = document.getElementById("destino").value;
+  const origen  = document.getElementById("origen").value.trim();
+  const destino = document.getElementById("destino").value.trim();
 
   if (!origen || !destino) return;
 
@@ -322,28 +396,42 @@ function calcularRuta() {
     {
       origin: origen,
       destination: destino,
-      travelMode: "DRIVING",
+      travelMode: google.maps.TravelMode.DRIVING,
       drivingOptions: {
         departureTime: new Date(),
-        trafficModel: "best_guess"
+        trafficModel: google.maps.TrafficModel.BEST_GUESS
       }
     },
     (res, status) => {
-      if (status === "OK") {
+      if (status === "OK" && res.routes && res.routes.length) {
         directionsRenderer.setDirections(res);
 
         const leg = res.routes[0].legs[0];
-        document.getElementById("distancia").textContent = leg.distance.text;
-        document.getElementById("tiempo").textContent = leg.duration_in_traffic.text;
+        document.getElementById("distancia").textContent =
+          leg.distance ? leg.distance.text : "—";
+        document.getElementById("tiempo").textContent =
+          leg.duration_in_traffic
+            ? leg.duration_in_traffic.text
+            : (leg.duration ? leg.duration.text : "—");
+      } else {
+        console.error("Error al calcular ruta:", status, res);
+        document.getElementById("distancia").textContent = "—";
+        document.getElementById("tiempo").textContent   = "—";
       }
     }
   );
 }
 
+// Hacemos visible initMap al script de Google
 window.initMap = initMap;
 </script>
 
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD32zkRd46s5jKHkTjj2868WOMfv7m_V48&libraries=places&callback=initMap" async defer></script>
+<!-- SCRIPT GOOGLE MAPS (con PLACES para Autocomplete) -->
+<script
+  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD32zkRd46s5jKHkTjj2868WOMfv7m_V48&libraries=places&callback=initMap"
+  async
+  defer
+></script>
 
 </body>
 </html>
