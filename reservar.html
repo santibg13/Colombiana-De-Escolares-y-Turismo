@@ -26,7 +26,6 @@
       color: var(--text);
     }
 
-    /* HEADER igual que index */
     header {
       padding: 16px;
       display: flex;
@@ -61,7 +60,6 @@
       font-weight: 700;
     }
 
-    /* MAIN con espacio extra para barra inferior */
     main {
       padding: 20px 16px 140px;
       max-width: 780px;
@@ -125,7 +123,6 @@
       opacity: .85;
     }
 
-    /* BOTÓN CONFIRMAR (flotante sobre la barra) */
     .confirm-container {
       position: fixed;
       bottom: 75px;
@@ -150,7 +147,6 @@
       cursor: pointer;
     }
 
-    /* BOTTOM NAV igual en todas las páginas */
     .bottom-nav {
       position: fixed;
       bottom: 0;
@@ -185,7 +181,6 @@
       font-weight: 600;
     }
 
-    /* Mensaje reserva (si lo usas) */
     #mensajeReserva {
       margin-top: 10px;
       font-size: 13px;
@@ -206,7 +201,6 @@
 
 <main>
 
-  <!-- Origen / Destino -->
   <section class="trip-card">
     <label>Punto de recogida</label>
     <input id="origen" placeholder="Cargando ubicación..." />
@@ -215,10 +209,8 @@
     <input id="destino" placeholder="¿A dónde vas?" />
   </section>
 
-  <!-- Mapa -->
   <div id="map"></div>
 
-  <!-- Distancia / Tiempo -->
   <div class="info-box">
     <div>
       <span class="info-label">📍 Distancia:</span>
@@ -230,7 +222,6 @@
     </div>
   </div>
 
-  <!-- Datos del pasajero -->
   <section class="trip-card">
     <label>Nombre completo</label>
     <input id="nombre" />
@@ -258,7 +249,6 @@
     <p id="mensajeReserva"></p>
   </section>
 
-  <!-- Coords ocultas -->
   <input type="hidden" id="origen_lat">
   <input type="hidden" id="origen_lng">
   <input type="hidden" id="destino_lat">
@@ -266,12 +256,10 @@
 
 </main>
 
-<!-- Botón Confirmar -->
 <div class="confirm-container">
   <button id="btnReservar" class="btn-confirm">Confirmar reserva</button>
 </div>
 
-<!-- Bottom nav -->
 <nav class="bottom-nav">
   <a href="index.html" class="nav-item">
     <span>🏠</span>
@@ -287,250 +275,202 @@
   </a>
 </nav>
 
-<!-- ========== LÓGICA DE MAPA / RUTA / DISTANCIA / TIEMPO ========== -->
-<script>
-  let map, originMarker, destMarker, directionsService, directionsRenderer;
+<!-- FIREBASE + EMAILJS (TUS DATOS EXACTOS) -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+  import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-  function initMap() {
-    const origenInput   = document.getElementById("origen");
-    const destinoInput  = document.getElementById("destino");
-    const distSpan      = document.getElementById("distancia");
-    const timeSpan      = document.getElementById("tiempo");
-    const oLatInput     = document.getElementById("origen_lat");
-    const oLngInput     = document.getElementById("origen_lng");
-    const dLatInput     = document.getElementById("destino_lat");
-    const dLngInput     = document.getElementById("destino_lng");
+  const firebaseConfig = {
+    apiKey: "AIzaSyCq3TY2xt3MZHPUWEcFJhCEWfaWplAf1es",
+    authDomain: "colestur-reservas.firebaseapp.com",
+    projectId: "colestur-reservas",
+    storageBucket: "colestur-reservas.appspot.com",
+    messagingSenderId: "73404287419",
+    appId: "1:73404287419:web:1dd4fe4a1692a4e28f271f"
+  };
 
-    directionsService = new google.maps.DirectionsService();
-    directionsRenderer = new google.maps.DirectionsRenderer({
-      suppressMarkers: true,
-      polylineOptions: {
-        strokeColor: "#3a7ce9",
-        strokeWeight: 6
-      }
-    });
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
 
-    map = new google.maps.Map(document.getElementById("map"), {
-      center: { lat: 4.711, lng: -74.0721 }, // Bogotá
-      zoom: 13,
-      disableDefaultUI: true
-    });
-
-    directionsRenderer.setMap(map);
-
-    const geocoder = new google.maps.Geocoder();
-
-    // 1) GEOLOCALIZACIÓN: centro del mapa y punto de recogida
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (pos) => {
-          const loc = {
-            lat: pos.coords.latitude,
-            lng: pos.coords.longitude
-          };
-
-          map.setCenter(loc);
-          map.setZoom(15);
-
-          setOriginLoc(loc);
-
-          // Convertir coords a dirección, pero sin borrar lo que el usuario escriba luego
-          geocoder.geocode({ location: loc }, (res, status) => {
-            if (status === "OK" && res[0] && !origenInput.value) {
-              origenInput.value = res[0].formatted_address;
-            }
-          });
-        },
-        (err) => {
-          console.log("No se pudo obtener la ubicación:", err);
-        },
-        { enableHighAccuracy: true }
-      );
-    }
-
-    // 2) AUTOCOMPLETE (solo Colombia, sesgado a la zona del usuario)
-    const options = {
-      componentRestrictions: { country: "co" },
-      fields: ["formatted_address", "geometry", "name"]
-    };
-
-    const acOrigen  = new google.maps.places.Autocomplete(origenInput, options);
-    const acDestino = new google.maps.places.Autocomplete(destinoInput, options);
-
-    // Sesgar por cercanía según el centro actual del mapa
-    google.maps.event.addListenerOnce(map, "idle", () => {
-      const bounds = map.getBounds();
-      if (bounds) {
-        acOrigen.setBounds(bounds);
-        acDestino.setBounds(bounds);
-      }
-    });
-
-    acOrigen.addListener("place_changed", () => {
-      const place = acOrigen.getPlace();
-      if (!place.geometry) return;
-
-      // NO sobreescribo el texto que tú escribiste (dejamos "Centro Comercial Fontanar", etc.)
-      const loc = {
-        lat: place.geometry.location.lat(),
-        lng: place.geometry.location.lng()
-      };
-      setOriginLoc(loc);
-      calcularRuta();
-    });
-
-    acDestino.addListener("place_changed", () => {
-      const place = acDestino.getPlace();
-      if (!place.geometry) return;
-
-      // Igual: NO cambio el texto, solo uso coords para la ruta
-      const loc = {
-        lat: place.geometry.location.lat(),
-        lng: place.geometry.location.lng()
-      };
-      setDestinoLoc(loc);
-      calcularRuta();
-    });
-
-    // Helpers para marcar origen/destino
-    function setOriginLoc(loc) {
-      oLatInput.value = loc.lat;
-      oLngInput.value = loc.lng;
-
-      if (!originMarker) {
-        originMarker = new google.maps.Marker({
-          map,
-          position: loc,
-          icon: {
-            path: google.maps.SymbolPath.CIRCLE,
-            scale: 8,
-            fillColor: "#3a7ce9",
-            fillOpacity: 1,
-            strokeColor: "#ffffff",
-            strokeWeight: 2
-          }
-        });
-      } else {
-        originMarker.setPosition(loc);
-      }
-    }
-
-    function setDestinoLoc(loc) {
-      dLatInput.value = loc.lat;
-      dLngInput.value = loc.lng;
-
-      if (!destMarker) {
-        destMarker = new google.maps.Marker({
-          map,
-          position: loc,
-          icon: {
-            path: "M 0 0 L 3 6 L 0 14 L -3 6 Z",
-            fillColor: "#4bff8f",
-            fillOpacity: 1,
-            strokeColor: "#111217",
-            strokeWeight: 2
-          }
-        });
-      } else {
-        destMarker.setPosition(loc);
-      }
-    }
-
-    // Calcula y dibuja la ruta + distancia/tiempo
-    function calcularRuta() {
-      const oLat = parseFloat(oLatInput.value);
-      const oLng = parseFloat(oLngInput.value);
-      const dLat = parseFloat(dLatInput.value);
-      const dLng = parseFloat(dLngInput.value);
-
-      if (isNaN(oLat) || isNaN(oLng) || isNaN(dLat) || isNaN(dLng)) {
-        return;
-      }
-
-      const origin      = new google.maps.LatLng(oLat, oLng);
-      const destination = new google.maps.LatLng(dLat, dLng);
-
-      directionsService.route(
-        {
-          origin,
-          destination,
-          travelMode: google.maps.TravelMode.DRIVING,
-          drivingOptions: {
-            departureTime: new Date(),  // ahora
-            trafficModel: google.maps.TrafficModel.BEST_GUESS
-          }
-        },
-        (result, status) => {
-          if (status === "OK") {
-            directionsRenderer.setDirections(result);
-
-            const leg = result.routes[0].legs[0];
-            distSpan.textContent = leg.distance ? leg.distance.text : "—";
-            if (leg.duration_in_traffic) {
-              timeSpan.textContent = leg.duration_in_traffic.text;
-            } else if (leg.duration) {
-              timeSpan.textContent = leg.duration.text;
-            } else {
-              timeSpan.textContent = "—";
-            }
-          } else {
-            console.log("Error al calcular ruta:", status);
-          }
-        }
-      );
-    }
-
-    // Exponemos calcularRuta por si quisieras llamarla desde fuera
-    window._calcularRutaColestur = calcularRuta;
-
-    // ----- BOTÓN CONFIRMAR -----
-    const btnReservar  = document.getElementById("btnReservar");
-    const mensajeReserva = document.getElementById("mensajeReserva");
-
-    btnReservar.addEventListener("click", () => {
-      // Validaciones básicas
-      if (
-        !origenInput.value.trim() ||
-        !destinoInput.value.trim() ||
-        !document.getElementById("nombre").value.trim() ||
-        !document.getElementById("telefono").value.trim() ||
-        !document.getElementById("fecha").value ||
-        !document.getElementById("hora").value
-      ) {
-        if (mensajeReserva) {
-          mensajeReserva.style.color = "#ff5a5f";
-          mensajeReserva.textContent = "Por favor completa todos los campos.";
-        }
-        return;
-      }
-
-      // Aquí SO-LO preparamos los datos.
-      // Tu lógica de Firebase + EmailJS que YA FUNCIONABA la puedes pegar aquí dentro:
-      // -----------------------------------------------------------------
-      // Ejemplo (NO obligatorio si ya lo tienes en un <script type='module'> aparte):
-      // guardar en Firestore + enviar correo...
-      // -----------------------------------------------------------------
-
-      if (mensajeReserva) {
-        mensajeReserva.style.color = "#42ba96";
-        mensajeReserva.textContent = "Reserva registrada. Un asesor de COLESTUR te contactará pronto.";
-      }
-    });
-  }
-
-  // Hacer accesible la función de callback al script de Google
-  window.initMap = initMap;
+  window.saveReservation = async function (data) {
+    await addDoc(collection(db, "reservas"), data);
+  };
 </script>
 
-<!-- Script de Google Maps: OJO que sea HTTPS y con 'places' -->
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script>
+  emailjs.init("oQlbFJ4zYcGqzOqYx");
+</script>
+
+<!-- GOOGLE MAPS -->
+<script>
+let map, originMarker, destMarker, directionsService, directionsRenderer;
+
+function initMap() {
+  directionsService = new google.maps.DirectionsService();
+  directionsRenderer = new google.maps.DirectionsRenderer({
+    suppressMarkers: true,
+    polylineOptions: { strokeColor:"#3a7ce9", strokeWeight:6 }
+  });
+
+  map = new google.maps.Map(document.getElementById("map"), {
+    center:{ lat:4.711, lng:-74.0721 },
+    zoom:13,
+    disableDefaultUI:true
+  });
+
+  directionsRenderer.setMap(map);
+
+  const geocoder = new google.maps.Geocoder();
+
+  navigator.geolocation.getCurrentPosition(pos=>{
+
+    const loc = { lat:pos.coords.latitude, lng:pos.coords.longitude };
+
+    setOrigin(loc);
+
+    map.setCenter(loc);
+    map.setZoom(15);
+
+    geocoder.geocode({ location:loc }, (res,status)=>{
+      if(status==="OK" && res[0]){
+        document.getElementById("origen").value = res[0].formatted_address;
+      }
+    });
+  });
+
+  const options = {
+    componentRestrictions:{ country:"co" },
+    fields:["formatted_address","geometry","name"]
+  };
+
+  const acO = new google.maps.places.Autocomplete(document.getElementById("origen"), options);
+  const acD = new google.maps.places.Autocomplete(document.getElementById("destino"), options);
+
+  acO.addListener("place_changed", ()=>{
+    const p = acO.getPlace();
+    if(!p.geometry) return;
+    setOrigin({ lat:p.geometry.location.lat(), lng:p.geometry.location.lng() });
+    calcRoute();
+  });
+
+  acD.addListener("place_changed", ()=>{
+    const p = acD.getPlace();
+    if(!p.geometry) return;
+    setDest({ lat:p.geometry.location.lat(), lng:p.geometry.location.lng() });
+    calcRoute();
+  });
+}
+
+function setOrigin(loc){
+  document.getElementById("origen_lat").value = loc.lat;
+  document.getElementById("origen_lng").value = loc.lng;
+
+  if(!originMarker){
+    originMarker = new google.maps.Marker({
+      map,
+      position:loc,
+      icon:{
+        path:google.maps.SymbolPath.CIRCLE,
+        scale:8,
+        fillColor:"#3a7ce9",
+        fillOpacity:1,
+        strokeColor:"#fff",
+        strokeWeight:2
+      }
+    });
+  } else originMarker.setPosition(loc);
+}
+
+function setDest(loc){
+  document.getElementById("destino_lat").value = loc.lat;
+  document.getElementById("destino_lng").value = loc.lng;
+
+  if(!destMarker){
+    destMarker = new google.maps.Marker({
+      map,
+      position:loc,
+      icon:{
+        path:"M 0 0 L 2 6 L 0 12 L -2 6 Z",
+        fillColor:"#4bff8f",
+        fillOpacity:1
+      }
+    });
+  } else destMarker.setPosition(loc);
+}
+
+function calcRoute(){
+  const oLat = parseFloat(document.getElementById("origen_lat").value);
+  const oLng = parseFloat(document.getElementById("origen_lng").value);
+  const dLat = parseFloat(document.getElementById("destino_lat").value);
+  const dLng = parseFloat(document.getElementById("destino_lng").value);
+
+  if(isNaN(oLat)||isNaN(oLng)||isNaN(dLat)||isNaN(dLng)) return;
+
+  directionsService.route(
+    {
+      origin:{ lat:oLat, lng:oLng },
+      destination:{ lat:dLat, lng:dLng },
+      travelMode:"DRIVING",
+      drivingOptions:{
+        departureTime:new Date(),
+        trafficModel:"best_guess"
+      }
+    },
+    (res,status)=>{
+      if(status==="OK"){
+        directionsRenderer.setDirections(res);
+
+        const leg = res.routes[0].legs[0];
+        document.getElementById("distancia").textContent = leg.distance.text;
+        document.getElementById("tiempo").textContent =
+          leg.duration_in_traffic?.text || leg.duration.text;
+      }
+    }
+  );
+}
+
+window.initMap = initMap;
+</script>
+
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD32zkRd46s5jKHkTjj2868WOMfv7m_V48&libraries=places&callback=initMap" async defer></script>
 
-<!-- Si ya tenías tu script type="module" con Firebase + EmailJS, ponlo aquí debajo sin cambiarlo -->
-<!--
-<script type="module">
-  // ...TU CÓDIGO FIREBASE + EMAILJS QUE YA FUNCIONABA...
+<!-- BOTÓN RESERVAR -->
+<script>
+document.getElementById("btnReservar").addEventListener("click", async ()=>{
+  const data = {
+    origen:   document.getElementById("origen").value,
+    destino:  document.getElementById("destino").value,
+    nombre:   document.getElementById("nombre").value,
+    telefono: document.getElementById("telefono").value,
+    servicio: document.getElementById("servicio").value,
+    fecha:    document.getElementById("fecha").value,
+    hora:     document.getElementById("hora").value,
+    pasajeros:document.getElementById("pasajeros").value,
+    timestamp: new Date().toISOString()
+  };
+
+  // Validación
+  if(!data.origen || !data.destino || !data.nombre || !data.telefono || !data.fecha || !data.hora){
+    document.getElementById("mensajeReserva").style.color="#ff5a5f";
+    document.getElementById("mensajeReserva").textContent="Por favor completa todos los campos.";
+    return;
+  }
+
+  // ---- GUARDAR EN FIRESTORE ----
+  await saveReservation(data);
+
+  // ---- ENVIAR EMAIL ----
+  emailjs.send(
+    "BBYChL9Rq9ynJgJ",
+    "template_fmqabdi",
+    data
+  );
+
+  document.getElementById("mensajeReserva").style.color="#42ba96";
+  document.getElementById("mensajeReserva").textContent="Reserva registrada. Te contactaremos pronto.";
+});
 </script>
--->
 
 </body>
 </html>
