@@ -223,7 +223,6 @@
 
 <script>
 let map, directionsService, directionsRenderer, originMarker, destMarker;
-// 🔹 NUEVO: guardamos las coords exactas que eliges
 let originLatLng = null;
 let destLatLng   = null;
 
@@ -242,13 +241,11 @@ function initMap() {
 
   directionsRenderer.setMap(map);
 
-  // GEOLOCALIZACIÓN → origenLatLng exacto
   navigator.geolocation.getCurrentPosition(pos => {
     const lat = pos.coords.latitude;
     const lng = pos.coords.longitude;
 
     originLatLng = new google.maps.LatLng(lat, lng);
-
     map.setCenter(originLatLng);
 
     originMarker = new google.maps.Marker({
@@ -263,95 +260,65 @@ function initMap() {
         strokeWeight: 2
       }
     });
-
-    new google.maps.Geocoder().geocode(
-      { location: originLatLng },
-      (res, status) => {
-        if (status === "OK" && res[0]) {
-          document.getElementById("origen").value = res[0].formatted_address;
-        }
-      }
-    );
   });
 
-  // AUTOCOMPLETE (solo Colombia)
+  // Autocomplete con texto intacto
   const acOrigen = new google.maps.places.Autocomplete(
     document.getElementById("origen"),
-    { fields:["formatted_address","geometry"], componentRestrictions:{ country:"co" } }
+    { fields:["geometry"], componentRestrictions:{ country:"co" } }
   );
 
   const acDestino = new google.maps.places.Autocomplete(
     document.getElementById("destino"),
-    { fields:["formatted_address","geometry"], componentRestrictions:{ country:"co" } }
+    { fields:["geometry"], componentRestrictions:{ country:"co" } }
   );
 
   acOrigen.addListener("place_changed", () => {
     const p = acOrigen.getPlace();
-    setOrigin(p);
+    if (!p.geometry) return;
+    originLatLng = p.geometry.location;
+    if (!originMarker) {
+      originMarker = new google.maps.Marker({ position: originLatLng, map });
+    } else originMarker.setPosition(originLatLng);
+    calcularRuta();
   });
 
   acDestino.addListener("place_changed", () => {
     const p = acDestino.getPlace();
-    setDestino(p);
+    if (!p.geometry) return;
+    destLatLng = p.geometry.location;
+    if (!destMarker) {
+      destMarker = new google.maps.Marker({ position: destLatLng, map });
+    } else destMarker.setPosition(destLatLng);
+    calcularRuta();
+  });
+
+  // Evento del botón de reserva
+  document.getElementById("btnReservar").addEventListener("click", () => {
+    const data = {
+      origen: document.getElementById("origen").value,
+      destino: document.getElementById("destino").value,
+      nombre: document.getElementById("nombre").value,
+      telefono: document.getElementById("telefono").value,
+      servicio: document.getElementById("servicio").value,
+      fecha: document.getElementById("fecha").value,
+      hora: document.getElementById("hora").value,
+      pasajeros: document.getElementById("pasajeros").value
+    };
+
+    alert("Tu reserva ha sido enviada.\n\n" +
+      "Origen: " + data.origen + "\n" +
+      "Destino: " + data.destino + "\n" +
+      "Servicio: " + data.servicio);
   });
 }
 
-function setOrigin(place) {
-  if (!place.geometry) return;
-
-  originLatLng = place.geometry.location; // 🔹 guardamos LAS coords reales
-
-  if (!originMarker) {
-    originMarker = new google.maps.Marker({
-      position: originLatLng,
-      map,
-      icon: {
-        path: google.maps.SymbolPath.CIRCLE,
-        scale: 8,
-        fillColor: "#3a7ce9",
-        fillOpacity: 1,
-        strokeColor: "#fff",
-        strokeWeight: 2
-      }
-    });
-  } else {
-    originMarker.setPosition(originLatLng);
-  }
-
-  document.getElementById("origen").value = place.formatted_address;
-  calcularRuta();
-}
-
-function setDestino(place) {
-  if (!place.geometry) return;
-
-  destLatLng = place.geometry.location; // 🔹 coords del destino
-
-  if (!destMarker) {
-    destMarker = new google.maps.Marker({
-      position: destLatLng,
-      map,
-      icon: {
-        path: "M0 0 L2 4 L0 12 L-2 4 Z",
-        fillColor: "#4bff8f",
-        fillOpacity: 1
-      }
-    });
-  } else {
-    destMarker.setPosition(destLatLng);
-  }
-
-  document.getElementById("destino").value = place.formatted_address;
-  calcularRuta();
-}
-
 function calcularRuta() {
-  // 🔹 Usamos SIEMPRE las coords, no el texto
   if (!originLatLng || !destLatLng) return;
 
   directionsService.route(
     {
-      origin:      originLatLng,
+      origin: originLatLng,
       destination: destLatLng,
       travelMode: "DRIVING",
       drivingOptions: {
@@ -362,7 +329,6 @@ function calcularRuta() {
     (res, status) => {
       if (status === "OK") {
         directionsRenderer.setDirections(res);
-
         const leg = res.routes[0].legs[0];
         document.getElementById("distancia").textContent = leg.distance.text;
         document.getElementById("tiempo").textContent =
