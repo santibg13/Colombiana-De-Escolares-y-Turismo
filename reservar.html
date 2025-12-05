@@ -223,6 +223,9 @@
 
 <script>
 let map, directionsService, directionsRenderer, originMarker, destMarker;
+// 🔹 NUEVO: guardamos las coords exactas que eliges
+let originLatLng = null;
+let destLatLng   = null;
 
 function initMap() {
   directionsService = new google.maps.DirectionsService();
@@ -239,15 +242,17 @@ function initMap() {
 
   directionsRenderer.setMap(map);
 
+  // GEOLOCALIZACIÓN → origenLatLng exacto
   navigator.geolocation.getCurrentPosition(pos => {
     const lat = pos.coords.latitude;
     const lng = pos.coords.longitude;
 
-    const userPos = { lat, lng };
-    map.setCenter(userPos);
+    originLatLng = new google.maps.LatLng(lat, lng);
+
+    map.setCenter(originLatLng);
 
     originMarker = new google.maps.Marker({
-      position: userPos,
+      position: originLatLng,
       map,
       icon: {
         path: google.maps.SymbolPath.CIRCLE,
@@ -259,13 +264,17 @@ function initMap() {
       }
     });
 
-    new google.maps.Geocoder().geocode({ location: userPos }, (res, status) => {
-      if (status === "OK" && res[0]) {
-        document.getElementById("origen").value = res[0].formatted_address;
+    new google.maps.Geocoder().geocode(
+      { location: originLatLng },
+      (res, status) => {
+        if (status === "OK" && res[0]) {
+          document.getElementById("origen").value = res[0].formatted_address;
+        }
       }
-    });
+    );
   });
 
+  // AUTOCOMPLETE (solo Colombia)
   const acOrigen = new google.maps.places.Autocomplete(
     document.getElementById("origen"),
     { fields:["formatted_address","geometry"], componentRestrictions:{ country:"co" } }
@@ -289,45 +298,61 @@ function initMap() {
 
 function setOrigin(place) {
   if (!place.geometry) return;
-  const lat = place.geometry.location.lat();
-  const lng = place.geometry.location.lng();
 
-  originMarker.setPosition({lat, lng});
+  originLatLng = place.geometry.location; // 🔹 guardamos LAS coords reales
+
+  if (!originMarker) {
+    originMarker = new google.maps.Marker({
+      position: originLatLng,
+      map,
+      icon: {
+        path: google.maps.SymbolPath.CIRCLE,
+        scale: 8,
+        fillColor: "#3a7ce9",
+        fillOpacity: 1,
+        strokeColor: "#fff",
+        strokeWeight: 2
+      }
+    });
+  } else {
+    originMarker.setPosition(originLatLng);
+  }
+
   document.getElementById("origen").value = place.formatted_address;
-
   calcularRuta();
 }
 
 function setDestino(place) {
   if (!place.geometry) return;
-  const lat = place.geometry.location.lat();
-  const lng = place.geometry.location.lng();
+
+  destLatLng = place.geometry.location; // 🔹 coords del destino
 
   if (!destMarker) {
     destMarker = new google.maps.Marker({
-      position:{lat, lng},
+      position: destLatLng,
       map,
-      icon: { path:"M0 0 L2 4 L0 12 L-2 4 Z", fillColor:"#4bff8f", fillOpacity:1 }
+      icon: {
+        path: "M0 0 L2 4 L0 12 L-2 4 Z",
+        fillColor: "#4bff8f",
+        fillOpacity: 1
+      }
     });
   } else {
-    destMarker.setPosition({lat, lng});
+    destMarker.setPosition(destLatLng);
   }
 
   document.getElementById("destino").value = place.formatted_address;
-
   calcularRuta();
 }
 
 function calcularRuta() {
-  let origen = document.getElementById("origen").value;
-  let destino = document.getElementById("destino").value;
-
-  if (!origen || !destino) return;
+  // 🔹 Usamos SIEMPRE las coords, no el texto
+  if (!originLatLng || !destLatLng) return;
 
   directionsService.route(
     {
-      origin: origen,
-      destination: destino,
+      origin:      originLatLng,
+      destination: destLatLng,
       travelMode: "DRIVING",
       drivingOptions: {
         departureTime: new Date(),
