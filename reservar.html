@@ -24,12 +24,13 @@
     color: var(--text);
   }
 
+  /* HEADER */
   header {
     padding: 16px;
     display: flex;
     align-items: center;
     gap: 12px;
-    background: rgba(10,10,14,0.85);
+    background: rgba(10,10,14,0.6);
     border-bottom: 1px solid #0e1015;
     position: sticky;
     top: 0;
@@ -91,6 +92,7 @@
     padding: 14px;
     border-radius: 14px;
     border: 1px solid var(--border);
+    margin-top: -8px;
     margin-bottom: 20px;
   }
 
@@ -99,33 +101,7 @@
     margin-bottom: 6px;
   }
 
-  /* LISTA DE SUGERENCIAS */
-  .suggestions {
-    background: #0d0e12;
-    border: 1px solid #1f2027;
-    margin-top: 2px;
-    border-radius: 12px;
-    position: absolute;
-    width: calc(100% - 34px);
-    z-index: 9999;
-  }
-
-  .suggestion-item {
-    padding: 12px;
-    font-size: 14px;
-    border-bottom: 1px solid #1f2027;
-    cursor: pointer;
-  }
-
-  .suggestion-item:last-child {
-    border-bottom: none;
-  }
-
-  .suggestion-item:hover {
-    background: #13141b;
-  }
-
-  /* BARRA INFERIOR */
+  /* BOTTOM NAV */
   .bottom-nav {
     position: fixed;
     bottom: 0; left: 0; right: 0;
@@ -148,6 +124,7 @@
   .nav-item span {
     font-size: 20px;
     display: block;
+    margin-bottom: 2px;
   }
 
   .nav-active {
@@ -155,6 +132,7 @@
     font-weight: 600;
   }
 
+  /* BOTÓN CONFIRMAR */
   .confirm-container {
     position: fixed;
     bottom: 75px;
@@ -177,6 +155,7 @@
     font-size: 16px;
     box-shadow: 0 12px 28px rgba(58,124,233,.45);
   }
+
 </style>
 </head>
 
@@ -194,14 +173,10 @@
 
   <section class="trip-card">
     <label>Punto de recogida</label>
-    <input id="origen" placeholder="Cargando ubicación..." autocomplete="off">
-
-    <div id="sug-origen" class="suggestions" style="display:none;"></div>
+    <input id="origen" placeholder="Cargando ubicación..." />
 
     <label style="margin-top:14px;">Destino</label>
-    <input id="destino" placeholder="¿A dónde vas?" autocomplete="off">
-
-    <div id="sug-destino" class="suggestions" style="display:none;"></div>
+    <input id="destino" placeholder="¿A dónde vas?" />
   </section>
 
   <div id="map"></div>
@@ -238,152 +213,149 @@
 
 </main>
 
+<!-- BOTÓN CONFIRMAR -->
 <div class="confirm-container">
   <button id="btnReservar" class="btn-confirm">Confirmar reserva</button>
 </div>
 
-<nav class="bottom-nav">
+<!-- NAV INFERIOR -->
+<div class="bottom-nav">
   <a href="index.html" class="nav-item"><span>🏠</span>Inicio</a>
   <a href="reservar.html" class="nav-item nav-active"><span>🚌</span>Reservar</a>
   <a href="contacto.html" class="nav-item"><span>📞</span>Contacto</a>
-</nav>
+</div>
 
-<!-- ========================== GOOGLE MAPS Y LÓGICA =============================== -->
+<!-- ===================== MAPS SCRIPT ===================== -->
 <script>
-let map, directionsService, directionsRenderer;
-let userLocation = null;
-let autoService;
-let sessionToken;
+let map, originMarker, destMarker, directionsService, directionsRenderer, geocoder;
+let userBounds;
 
-// ----------- INIT MAP -------------
+// ---------- CREAR BOUNDS PARA LUGARES CERCANOS ----------
+function setUserBounds(lat, lng) {
+  userBounds = new google.maps.LatLngBounds(
+    new google.maps.LatLng(lat - 0.09, lng - 0.09),
+    new google.maps.LatLng(lat + 0.09, lng + 0.09)
+  );
+}
+
+// ================== INIT MAP ==================
 function initMap() {
+  geocoder = new google.maps.Geocoder();
   directionsService = new google.maps.DirectionsService();
   directionsRenderer = new google.maps.DirectionsRenderer({
     suppressMarkers: true,
-    polylineOptions: { strokeColor:"#3a7ce9", strokeWeight:6 }
+    polylineOptions:{ strokeColor:"#3a7ce9", strokeWeight:6 }
   });
 
   map = new google.maps.Map(document.getElementById("map"), {
-    center: { lat: 4.71, lng: -74.07 },
-    zoom: 14,
-    disableDefaultUI: true
+    center:{ lat:4.71, lng:-74.07 },
+    zoom:14,
+    disableDefaultUI:true
   });
 
   directionsRenderer.setMap(map);
 
-  autoService = new google.maps.places.AutocompleteService();
-  sessionToken = new google.maps.places.AutocompleteSessionToken();
+  // GEOLOCALIZACIÓN REAL
+  navigator.geolocation.getCurrentPosition(pos => {
+    const lat = pos.coords.latitude;
+    const lng = pos.coords.longitude;
 
-  // Ubicación real del usuario
-  navigator.geolocation.getCurrentPosition(
-    (pos) => {
-      const lat = pos.coords.latitude;
-      const lng = pos.coords.longitude;
+    setUserBounds(lat, lng);
+    placeOrigin(lat, lng);
 
-      userLocation = new google.maps.LatLng(lat, lng);
+    map.setCenter({lat, lng});
 
-      const geocoder = new google.maps.Geocoder();
-      geocoder.geocode({ location: userLocation }, (res, status) => {
-        if (status === "OK" && res[0]) {
-          document.getElementById("origen").value = res[0].formatted_address;
-        }
-      });
+    geocoder.geocode({ location:{lat, lng} }, (res) => {
+      if(res[0]) document.getElementById("origen").value = res[0].formatted_address;
+    });
+  });
 
-      new google.maps.Marker({
-        position: userLocation,
-        map,
-        icon: {
-          path: google.maps.SymbolPath.CIRCLE,
-          scale: 8,
-          fillColor: "#3a7ce9",
-          fillOpacity: 1,
-          strokeColor: "#fff",
-          strokeWeight: 2
-        }
-      });
+  // AUTOCOMPLETE CONFIGURADO CORRECTAMENTE
+  const acOptions = {
+    bounds: userBounds,
+    strictBounds: false,
+    componentRestrictions: { country: "co" },
+    fields: ["formatted_address","geometry","name"],
+    types: ["establishment","geocode"]
+  };
 
-      map.setCenter(userLocation);
-    }
+  const acOrigen = new google.maps.places.Autocomplete(
+    document.getElementById("origen"),
+    acOptions
   );
 
-  setupSmartAutocomplete("origen", true);
-  setupSmartAutocomplete("destino", false);
-}
+  const acDestino = new google.maps.places.Autocomplete(
+    document.getElementById("destino"),
+    acOptions
+  );
 
-function setupSmartAutocomplete(inputId, isOrigin) {
-  const input = document.getElementById(inputId);
-  const sugBox = document.getElementById(isOrigin ? "sug-origen" : "sug-destino");
+  acOrigen.addListener("place_changed", () => {
+    const p = acOrigen.getPlace();
+    if (!p.geometry) return;
+    placeOrigin(p.geometry.location.lat(), p.geometry.location.lng(), p.formatted_address);
+    calculateRoute();
+  });
 
-  input.addEventListener("input", () => {
-    const value = input.value.trim();
-    if (!value || !userLocation) return sugBox.style.display="none";
-
-    autoService.getPlacePredictions(
-      {
-        input: value,
-        sessionToken,
-        componentRestrictions: { country: "co" },
-        location: userLocation,
-        radius: 40000,
-        types: ["address"]
-      },
-      (preds) => {
-        if (!preds || preds.length === 0) {
-          return sugBox.style.display = "none";
-        }
-
-        sugBox.innerHTML = "";
-        preds.forEach(p => {
-          const item = document.createElement("div");
-          item.className = "suggestion-item";
-          item.textContent = p.description;
-
-          item.onclick = () => {
-            input.value = p.description;
-            sugBox.style.display = "none";
-            loadAddress(p.place_id, isOrigin);
-          };
-
-          sugBox.appendChild(item);
-        });
-
-        sugBox.style.display = "block";
-      }
-    );
+  acDestino.addListener("place_changed", () => {
+    const p = acDestino.getPlace();
+    if (!p.geometry) return;
+    placeDestination(p.geometry.location.lat(), p.geometry.location.lng(), p.formatted_address);
+    calculateRoute();
   });
 }
 
-function loadAddress(placeId, isOrigin) {
-  const details = new google.maps.places.PlacesService(map);
+// MARCADORES
+function placeOrigin(lat, lng, text=null){
+  if(!originMarker){
+    originMarker = new google.maps.Marker({
+      position:{lat,lng},
+      map,
+      icon:{
+        path:google.maps.SymbolPath.CIRCLE,
+        scale:8,
+        fillColor:"#3a7ce9",
+        fillOpacity:1,
+        strokeColor:"#fff",
+        strokeWeight:2
+      }
+    });
+  } else originMarker.setPosition({lat,lng});
 
-  details.getDetails(
-    { placeId },
-    (place) => {
-      if (!place || !place.geometry) return;
-
-      const pos = place.geometry.location;
-
-      if (isOrigin) calculateRoute(place.formatted_address, document.getElementById("destino").value);
-      else calculateRoute(document.getElementById("origen").value, place.formatted_address);
-    }
-  );
+  if(text) document.getElementById("origen").value = text;
 }
 
-function calculateRoute(origen, destino) {
-  if (!origen || !destino) return;
+function placeDestination(lat, lng, text=null){
+  if(!destMarker){
+    destMarker = new google.maps.Marker({
+      position:{lat,lng},
+      map,
+      icon:{
+        path:"M 0 0 L 2 4 L 0 12 L -2 4 Z",
+        fillColor:"#4bff8f",
+        fillOpacity:1
+      }
+    });
+  } else destMarker.setPosition({lat,lng});
+
+  if(text) document.getElementById("destino").value = text;
+}
+
+// RUTA
+function calculateRoute(){
+  if(!originMarker || !destMarker) return;
 
   directionsService.route(
     {
-      origin: origen,
-      destination: destino,
+      origin: originMarker.getPosition(),
+      destination: destMarker.getPosition(),
       travelMode: "DRIVING",
-      drivingOptions: {
+      drivingOptions:{
         departureTime: new Date(),
         trafficModel: "best_guess"
       }
     },
-    (res, status) => {
-      if (status === "OK") {
+    (res, status)=>{
+      if(status === "OK"){
         directionsRenderer.setDirections(res);
 
         const leg = res.routes[0].legs[0];
