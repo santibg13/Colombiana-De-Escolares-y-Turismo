@@ -29,7 +29,7 @@
     display: flex;
     align-items: center;
     gap: 12px;
-    background: rgba(10,10,14,0.9);
+    background: rgba(10,10,14,0.85);
     border-bottom: 1px solid #0e1015;
     position: sticky;
     top: 0;
@@ -44,8 +44,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    font-weight: 800;
     color: #111;
+    font-weight: 800;
   }
 
   main {
@@ -82,14 +82,14 @@
     width: 100%;
     height: 300px;
     border-radius: 18px;
-    border: 1px solid var(--border);
     margin-bottom: 18px;
+    border: 1px solid var(--border);
   }
 
   .info-box {
     background: var(--card);
     padding: 14px;
-    border-radius: 12px;
+    border-radius: 14px;
     border: 1px solid var(--border);
     margin-bottom: 20px;
   }
@@ -99,77 +99,83 @@
     margin-bottom: 6px;
   }
 
-  /* SUGERENCIAS */
-  .auto-list {
-    position: absolute;
-    background: #111;
-    color: white;
+  /* LISTA DE SUGERENCIAS */
+  .suggestions {
+    background: #0d0e12;
+    border: 1px solid #1f2027;
+    margin-top: 2px;
     border-radius: 12px;
-    overflow: hidden;
-    border: 1px solid #333;
+    position: absolute;
+    width: calc(100% - 34px);
+    z-index: 9999;
+  }
+
+  .suggestion-item {
+    padding: 12px;
+    font-size: 14px;
+    border-bottom: 1px solid #1f2027;
+    cursor: pointer;
+  }
+
+  .suggestion-item:last-child {
+    border-bottom: none;
+  }
+
+  .suggestion-item:hover {
+    background: #13141b;
+  }
+
+  /* BARRA INFERIOR */
+  .bottom-nav {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    height: 65px;
+    background: #0d0e12;
+    border-top: 1px solid #1f2027;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
     z-index: 99999;
   }
 
-  .auto-item {
-    padding: 12px;
-    border-bottom: 1px solid #222;
-    cursor: pointer;
-    font-size: 14px;
-  }
-  .auto-item:hover {
-    background: #222;
+  .nav-item {
+    text-align: center;
+    font-size: 13px;
+    color: var(--muted);
+    text-decoration: none;
   }
 
-  /* BOTÓN CONFIRMAR */
+  .nav-item span {
+    font-size: 20px;
+    display: block;
+  }
+
+  .nav-active {
+    color: white;
+    font-weight: 600;
+  }
+
   .confirm-container {
     position: fixed;
     bottom: 75px;
     left: 0;
     right: 0;
     padding: 0 18px;
+    display: flex;
+    justify-content: center;
     z-index: 9999;
   }
 
   .btn-confirm {
     width: 100%;
-    padding: 15px;
     background: var(--accent);
+    padding: 15px;
     border: none;
     border-radius: 999px;
     color: white;
     font-weight: 700;
     font-size: 16px;
     box-shadow: 0 12px 28px rgba(58,124,233,.45);
-  }
-
-  /* NAV INFERIOR */
-  .bottom-nav {
-    position: fixed;
-    bottom: 0; left: 0; right: 0;
-    background: #0d0e12;
-    border-top: 1px solid #1f2027;
-    padding: 10px 0 8px;
-    display: flex;
-    justify-content: space-around;
-    z-index: 99999;
-  }
-
-  .nav-item {
-    text-align: center;
-    color: #9ca3b5;
-    font-size: 13px;
-    text-decoration: none;
-  }
-
-  .nav-item span {
-    font-size: 22px;
-    display: block;
-    margin-bottom: 2px;
-  }
-
-  .nav-active {
-    color: white !important;
-    font-weight: 600;
   }
 </style>
 </head>
@@ -188,10 +194,14 @@
 
   <section class="trip-card">
     <label>Punto de recogida</label>
-    <input id="origen" placeholder="Cargando ubicación..." autocomplete="off"/>
+    <input id="origen" placeholder="Cargando ubicación..." autocomplete="off">
+
+    <div id="sug-origen" class="suggestions" style="display:none;"></div>
 
     <label style="margin-top:14px;">Destino</label>
-    <input id="destino" placeholder="¿A dónde vas?" autocomplete="off"/>
+    <input id="destino" placeholder="¿A dónde vas?" autocomplete="off">
+
+    <div id="sug-destino" class="suggestions" style="display:none;"></div>
   </section>
 
   <div id="map"></div>
@@ -226,40 +236,31 @@
     <input type="number" id="pasajeros" value="1" min="1">
   </section>
 
-  <input type="hidden" id="origen_lat">
-  <input type="hidden" id="origen_lng">
-  <input type="hidden" id="destino_lat">
-  <input type="hidden" id="destino_lng">
-
 </main>
 
-<!-- BOTÓN -->
 <div class="confirm-container">
   <button id="btnReservar" class="btn-confirm">Confirmar reserva</button>
 </div>
 
-<!-- NAV -->
-<div class="bottom-nav">
+<nav class="bottom-nav">
   <a href="index.html" class="nav-item"><span>🏠</span>Inicio</a>
   <a href="reservar.html" class="nav-item nav-active"><span>🚌</span>Reservar</a>
   <a href="contacto.html" class="nav-item"><span>📞</span>Contacto</a>
-</div>
+</nav>
 
-<!-- ==========================
-        SCRIPT MAPS
-========================== -->
+<!-- ========================== GOOGLE MAPS Y LÓGICA =============================== -->
 <script>
-let map, originMarker, destMarker;
-let directionsService, directionsRenderer;
+let map, directionsService, directionsRenderer;
 let userLocation = null;
-let autoService, placeService;
+let autoService;
 let sessionToken;
 
+// ----------- INIT MAP -------------
 function initMap() {
   directionsService = new google.maps.DirectionsService();
   directionsRenderer = new google.maps.DirectionsRenderer({
     suppressMarkers: true,
-    polylineOptions: { strokeColor: "#3a7ce9", strokeWeight: 6 }
+    polylineOptions: { strokeColor:"#3a7ce9", strokeWeight:6 }
   });
 
   map = new google.maps.Map(document.getElementById("map"), {
@@ -271,29 +272,37 @@ function initMap() {
   directionsRenderer.setMap(map);
 
   autoService = new google.maps.places.AutocompleteService();
-  placeService = new google.maps.places.PlacesService(map);
-
   sessionToken = new google.maps.places.AutocompleteSessionToken();
 
-  // UBICACIÓN ACTUAL REAL
+  // Ubicación real del usuario
   navigator.geolocation.getCurrentPosition(
-    (pos)=>{
-      userLocation = {
-        lat: pos.coords.latitude,
-        lng: pos.coords.longitude
-      };
+    (pos) => {
+      const lat = pos.coords.latitude;
+      const lng = pos.coords.longitude;
+
+      userLocation = new google.maps.LatLng(lat, lng);
+
+      const geocoder = new google.maps.Geocoder();
+      geocoder.geocode({ location: userLocation }, (res, status) => {
+        if (status === "OK" && res[0]) {
+          document.getElementById("origen").value = res[0].formatted_address;
+        }
+      });
+
+      new google.maps.Marker({
+        position: userLocation,
+        map,
+        icon: {
+          path: google.maps.SymbolPath.CIRCLE,
+          scale: 8,
+          fillColor: "#3a7ce9",
+          fillOpacity: 1,
+          strokeColor: "#fff",
+          strokeWeight: 2
+        }
+      });
 
       map.setCenter(userLocation);
-      placeOriginMarker(userLocation.lat, userLocation.lng);
-
-      new google.maps.Geocoder().geocode(
-        { location: userLocation },
-        (res, status)=>{
-          if(status==="OK" && res[0]){
-            document.getElementById("origen").value = res[0].formatted_address;
-          }
-        }
-      );
     }
   );
 
@@ -303,130 +312,83 @@ function initMap() {
 
 function setupSmartAutocomplete(inputId, isOrigin) {
   const input = document.getElementById(inputId);
+  const sugBox = document.getElementById(isOrigin ? "sug-origen" : "sug-destino");
 
   input.addEventListener("input", () => {
-    if (!input.value.trim() || !userLocation) return;
+    const value = input.value.trim();
+    if (!value || !userLocation) return sugBox.style.display="none";
 
     autoService.getPlacePredictions(
       {
-        input: input.value,
+        input: value,
         sessionToken,
         componentRestrictions: { country: "co" },
         location: userLocation,
-        radius: 50000,
-        types: ["establishment", "geocode"]
+        radius: 40000,
+        types: ["address"]
       },
-      (predictions) => showPredictionList(predictions, inputId, isOrigin)
+      (preds) => {
+        if (!preds || preds.length === 0) {
+          return sugBox.style.display = "none";
+        }
+
+        sugBox.innerHTML = "";
+        preds.forEach(p => {
+          const item = document.createElement("div");
+          item.className = "suggestion-item";
+          item.textContent = p.description;
+
+          item.onclick = () => {
+            input.value = p.description;
+            sugBox.style.display = "none";
+            loadAddress(p.place_id, isOrigin);
+          };
+
+          sugBox.appendChild(item);
+        });
+
+        sugBox.style.display = "block";
+      }
     );
   });
 }
 
-function showPredictionList(predictions, inputId, isOrigin) {
-  removeExistingList();
+function loadAddress(placeId, isOrigin) {
+  const details = new google.maps.places.PlacesService(map);
 
-  if (!predictions || predictions.length === 0) return;
+  details.getDetails(
+    { placeId },
+    (place) => {
+      if (!place || !place.geometry) return;
 
-  const input = document.getElementById(inputId);
-  const list = document.createElement("div");
-  list.className = "auto-list";
+      const pos = place.geometry.location;
 
-  list.style.width = input.offsetWidth + "px";
-  list.style.top = (input.offsetTop + input.offsetHeight + 5) + "px";
-  list.style.left = input.offsetLeft + "px";
-
-  predictions.forEach((p)=>{
-    const item = document.createElement("div");
-    item.className = "auto-item";
-    item.textContent = p.description;
-    item.onclick = () => {
-      selectPrediction(p, inputId, isOrigin);
-      removeExistingList();
-    };
-    list.appendChild(item);
-  });
-
-  document.body.appendChild(list);
-}
-
-function removeExistingList(){
-  document.querySelectorAll(".auto-list").forEach(e => e.remove());
-}
-
-function selectPrediction(pred, inputId, isOrigin){
-  placeService.getDetails(
-    { placeId: pred.place_id, fields:["formatted_address","geometry","name"] },
-    (place)=>{
-      if(!place || !place.geometry) return;
-
-      const lat = place.geometry.location.lat();
-      const lng = place.geometry.location.lng();
-      const input = document.getElementById(inputId);
-
-      input.value = place.formatted_address;
-
-      if(isOrigin) placeOriginMarker(lat, lng);
-      else placeDestinationMarker(lat, lng);
-
-      calcularRuta();
+      if (isOrigin) calculateRoute(place.formatted_address, document.getElementById("destino").value);
+      else calculateRoute(document.getElementById("origen").value, place.formatted_address);
     }
   );
 }
 
-function placeOriginMarker(lat,lng){
-  const pos = {lat,lng};
-  if(!originMarker){
-    originMarker = new google.maps.Marker({
-      position: pos,
-      map,
-      icon:{
-        path: google.maps.SymbolPath.CIRCLE,
-        scale:8,
-        fillColor:"#3a7ce9",
-        fillOpacity:1,
-        strokeColor:"#fff",
-        strokeWeight:2
-      }
-    });
-  } else originMarker.setPosition(pos);
-}
-
-function placeDestinationMarker(lat,lng){
-  const pos = {lat,lng};
-  if(!destMarker){
-    destMarker = new google.maps.Marker({
-      position: pos,
-      map,
-      icon:{
-        path:"M 0 0 L 2 4 L 0 12 L -2 4 Z",
-        fillColor:"#4bff8f",
-        fillOpacity:1
-      }
-    });
-  } else destMarker.setPosition(pos);
-}
-
-function calcularRuta(){
-  const o = document.getElementById("origen").value.trim();
-  const d = document.getElementById("destino").value.trim();
-  if(!o || !d) return;
+function calculateRoute(origen, destino) {
+  if (!origen || !destino) return;
 
   directionsService.route(
     {
-      origin:o,
-      destination:d,
-      travelMode:"DRIVING",
+      origin: origen,
+      destination: destino,
+      travelMode: "DRIVING",
       drivingOptions: {
         departureTime: new Date(),
         trafficModel: "best_guess"
       }
     },
-    (res,status)=>{
-      if(status==="OK"){
+    (res, status) => {
+      if (status === "OK") {
         directionsRenderer.setDirections(res);
+
         const leg = res.routes[0].legs[0];
         document.getElementById("distancia").textContent = leg.distance.text;
-        document.getElementById("tiempo").textContent =
-          (leg.duration_in_traffic || leg.duration).text;
+        document.getElementById("tiempo").textContent = leg.duration_in_traffic.text;
       }
     }
   );
