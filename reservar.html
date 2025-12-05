@@ -2,79 +2,138 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <meta name="theme-color" content="#050508">
 <title>Reservar – COLESTUR</title>
 
-<!-- EMAILJS -->
-<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-<script>
-  emailjs.init("BBBTYChL9Rq9ynJgJ"); /* PUBLIC KEY */
-</script>
-
 <style>
   :root {
-    --bg:#050508; --card:#0c0d11; --card-soft:#13141b;
-    --accent:#3a7ce9; --text:#f4f6f9; --muted:#9ca3b5; --border:#1c1d25;
+    --bg: #050508;
+    --card: #0c0d11;
+    --card-soft: #13141b;
+    --accent: #3a7ce9;
+    --text: #f4f6f9;
+    --muted: #9ca3b5;
+    --border: #1c1d25;
   }
 
-  body { margin:0; background:var(--bg); font-family:system-ui; color:var(--text); }
+  body {
+    margin: 0;
+    background: var(--bg);
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    color: var(--text);
+  }
 
   header {
-    padding:16px; display:flex; align-items:center; gap:12px;
-    background:rgba(10,10,14,.6); border-bottom:1px solid #0e1015;
-    position:sticky; top:0; z-index:50;
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: #050508;
+    border-bottom: 1px solid #0e1015;
+    position: sticky;
+    top: 0;
+    z-index: 50;
   }
 
   .logo-circle {
-    width:38px; height:38px; border-radius:50%;
-    background:linear-gradient(135deg,#ffeaa7,#f1c40f);
-    display:flex; justify-content:center; align-items:center; font-weight:800;
+    width: 38px;
+    height: 38px;
+    border-radius: 999px;
+    background: linear-gradient(135deg, #ffeaa7, #f1c40f);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #111;
+    font-weight: 800;
   }
 
-  main { padding:20px 16px 140px!important; max-width:780px; margin:auto; }
+  main {
+    padding: 20px 16px 140px;
+    max-width: 780px;
+    margin: auto;
+  }
 
   .trip-card {
-    background:var(--card); padding:18px; border-radius:18px;
-    border:1px solid var(--border); margin-bottom:22px;
+    background: var(--card);
+    padding: 18px;
+    border-radius: 18px;
+    border: 1px solid var(--border);
+    margin-bottom: 22px;
   }
 
-  input,select {
-    width:100%; padding:12px; border-radius:14px;
-    background:var(--card-soft); border:1px solid var(--border); color:var(--text);
+  label {
+    font-size: 12px;
+    color: var(--muted);
+    display: block;
+    margin-bottom: 6px;
+  }
+
+  input, select {
+    width: 100%;
+    padding: 12px;
+    border-radius: 14px;
+    background: var(--card-soft);
+    border: 1px solid var(--border);
+    color: var(--text);
   }
 
   #map {
-    width:100%; height:300px; margin-bottom:18px;
-    border-radius:18px; border:1px solid var(--border);
+    width: 100%;
+    height: 300px;
+    border-radius: 18px;
+    border: 1px solid var(--border);
+    margin-bottom: 18px;
   }
 
   .info-box {
-    background:var(--card); padding:14px;
-    border-radius:14px; border:1px solid var(--border);
-    margin-bottom:20px;
+    background: var(--card);
+    padding: 14px;
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    margin-bottom: 20px;
   }
 
+  .info-item { font-size: 15px; margin-bottom: 6px; }
+
+  /* BOTTOM NAV */
   .bottom-nav {
-    position:fixed; bottom:0; left:0; right:0;
-    height:65px; background:#0d0e12;
-    border-top:1px solid #1f2027;
-    display:flex; justify-content:space-around; align-items:center;
-    z-index:99999;
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    height: 65px;
+    background: #0d0e12;
+    border-top: 1px solid #1f2027;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    z-index: 9999;
   }
 
-  .nav-item { color:#9ca3b5; text-decoration:none; text-align:center; }
-  .nav-active { color:white!important; font-weight:700; }
-  .nav-item span { font-size:22px; display:block; }
+  .nav-item { text-align: center; color: #9ca3b5; text-decoration: none; font-size: 13px; }
+  .nav-item span { font-size: 22px; display: block; }
+  .nav-active { color: white; font-weight: 600; }
 
+  /* BOTÓN RESERVAR */
   .confirm-container {
-    position:fixed; bottom:75px; left:0; right:0;
-    padding:0 18px; z-index:9999;
+    position: fixed;
+    bottom: 75px;
+    left: 0; right: 0;
+    padding: 0 18px;
+    display: flex;
+    justify-content: center;
+    z-index: 9999;
   }
 
   .btn-confirm {
-    width:100%; padding:15px; border:none; border-radius:999px;
-    background:var(--accent); color:white; font-weight:700; font-size:16px;
+    width: 100%;
+    background: var(--accent);
+    padding: 15px;
+    border-radius: 999px;
+    border: none;
+    color: white;
+    font-weight: 700;
+    font-size: 16px;
+    box-shadow: 0 12px 28px rgba(58,124,233,.45);
   }
 </style>
 </head>
@@ -93,17 +152,17 @@
 
   <section class="trip-card">
     <label>Punto de recogida</label>
-    <input id="origen" placeholder="Cargando ubicación..." />
+    <input id="origen" placeholder="Cargando ubicación..." autocomplete="off">
 
     <label style="margin-top:14px;">Destino</label>
-    <input id="destino" placeholder="¿A dónde vas?" />
+    <input id="destino" placeholder="¿A dónde vas?" autocomplete="off">
   </section>
 
   <div id="map"></div>
 
   <div class="info-box">
-    <div>📍 <b>Distancia:</b> <span id="distancia">—</span></div>
-    <div>⏱ <b>Tiempo estimado:</b> <span id="tiempo">—</span></div>
+    <div class="info-item">📍 <b>Distancia:</b> <span id="distancia">—</span></div>
+    <div class="info-item">⏱ <b>Tiempo estimado:</b> <span id="tiempo">—</span></div>
   </div>
 
   <section class="trip-card">
@@ -111,7 +170,7 @@
     <input id="nombre">
 
     <label style="margin-top:12px;">WhatsApp</label>
-    <input id="telefono" type="tel">
+    <input id="telefono" type="tel" placeholder="57300...">
 
     <label style="margin-top:12px;">Servicio</label>
     <select id="servicio">
@@ -133,141 +192,149 @@
 
 </main>
 
+<!-- BOTÓN -->
 <div class="confirm-container">
-  <button class="btn-confirm" id="btnReservar">Confirmar reserva</button>
+  <button id="btnReservar" class="btn-confirm">Confirmar reserva</button>
 </div>
 
+<!-- NAV -->
 <div class="bottom-nav">
   <a href="index.html" class="nav-item"><span>🏠</span>Inicio</a>
   <a href="reservar.html" class="nav-item nav-active"><span>🚌</span>Reservar</a>
   <a href="contacto.html" class="nav-item"><span>📞</span>Contacto</a>
 </div>
 
-<!-- MAPS -->
+<!-- SCRIPTS MAPA -->
 <script>
-let map, directionsService, directionsRenderer;
-let originLatLng = null, destLatLng = null;
-let originMarker, destMarker;
+let map, originMarker, destMarker, directionsService, directionsRenderer;
 
+// =========================
+//        INICIAR MAPA
+// =========================
 function initMap() {
-
   directionsService = new google.maps.DirectionsService();
   directionsRenderer = new google.maps.DirectionsRenderer({
-    suppressMarkers:true,
-    polylineOptions:{ strokeColor:"#3a7ce9", strokeWeight:6 }
+    suppressMarkers: true,
+    polylineOptions: { strokeColor:"#3a7ce9", strokeWeight:6 }
   });
 
   map = new google.maps.Map(document.getElementById("map"), {
-    center:{lat:4.7, lng:-74.05},
-    zoom:14,
-    disableDefaultUI:true
+    center: {lat: 4.71, lng: -74.07},
+    zoom: 14,
+    disableDefaultUI: true
   });
 
   directionsRenderer.setMap(map);
 
-  /* ===== UBICACIÓN REAL ===== */
-  navigator.geolocation.getCurrentPosition(pos => {
-    originLatLng = new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude);
-    map.setCenter(originLatLng);
+  const geocoder = new google.maps.Geocoder();
 
-    const geo = new google.maps.Geocoder();
-    geo.geocode({ location: originLatLng }, (res,status)=>{
-      if(status==="OK" && res[0]) {
+  // ========== UBICACIÓN REAL ==========
+  navigator.geolocation.getCurrentPosition(pos => {
+    const lat = pos.coords.latitude;
+    const lng = pos.coords.longitude;
+
+    placeOrigin(lat, lng);
+    map.setCenter({lat, lng});
+
+    geocoder.geocode({location:{lat,lng}}, (res, status)=>{
+      if(status === "OK" && res[0]){
         document.getElementById("origen").value = res[0].formatted_address;
       }
     });
-
-    originMarker = new google.maps.Marker({
-      position: originLatLng,
-      map,
-      icon:{
-        path:google.maps.SymbolPath.CIRCLE,
-        scale:8, fillColor:"#3a7ce9",
-        fillOpacity:1, strokeColor:"#fff", strokeWeight:2
-      }
-    });
-
   });
 
-  /* ===== AUTOCOMPLETE SOLO COLOMBIA ===== */
-  let acOptions = { fields:["geometry","formatted_address"], componentRestrictions:{ country:"co" } };
-
-  const acOrigen = new google.maps.places.Autocomplete(origen, acOptions);
-  const acDestino = new google.maps.places.Autocomplete(destino, acOptions);
-
-  acOrigen.addListener("place_changed", ()=>{
-    let p = acOrigen.getPlace();
-    if (!p.geometry) return;
-
-    originLatLng = p.geometry.location;
-    origen.value = p.formatted_address;
-
-    if (!originMarker)
-      originMarker = new google.maps.Marker({position:originLatLng,map});
-    else
-      originMarker.setPosition(originLatLng);
-
-    calcularRuta();
-  });
-
-  acDestino.addListener("place_changed", ()=>{
-    let p = acDestino.getPlace();
-    if (!p.geometry) return;
-
-    destLatLng = p.geometry.location;
-    destino.value = p.formatted_address;
-
-    if (!destMarker)
-      destMarker = new google.maps.Marker({position:destLatLng,map});
-    else
-      destMarker.setPosition(destLatLng);
-
-    calcularRuta();
-  });
-
-  /* ===== BOTÓN DE RESERVA ===== */
-  document.getElementById("btnReservar").onclick = ()=>{
-
-    if (!origen.value || !destino.value || !nombre.value || !telefono.value || !fecha.value || !hora.value) {
-      alert("Completa todos los campos antes de enviar.");
-      return;
-    }
-
-    let data = {
-      nombre: nombre.value,
-      telefono: telefono.value,
-      servicio: servicio.value,
-      origen: origen.value,
-      destino: destino.value,
-      fecha: fecha.value,
-      hora: hora.value,
-      pasajeros: pasajeros.value
-    };
-
-    emailjs.send("service_bsdpr26", "template_fmqabdi", data)
-      .then(()=>{ alert("Reserva enviada con éxito 🚐✨"); })
-      .catch(()=>{ alert("Error al enviar la reserva"); });
+  // AUTOCOMPLETE EXCLUSIVO COLOMBIA y lugares cercanos
+  const options = {
+    componentRestrictions: { country: "co" },
+    fields: ["formatted_address", "geometry", "name"]
   };
+
+  const acOrigen = new google.maps.places.Autocomplete(origen, options);
+  const acDestino = new google.maps.places.Autocomplete(destino, options);
+
+  acOrigen.addListener("place_changed", () => {
+    fixPlace(acOrigen, true);
+  });
+
+  acDestino.addListener("place_changed", () => {
+    fixPlace(acDestino, false);
+  });
 }
 
-function calcularRuta(){
-  if (!originLatLng || !destLatLng) return;
+// =========================
+//  FIJAR UBICACIÓN EXACTA
+// =========================
+function fixPlace(autocomplete, isOrigin){
+  const p = autocomplete.getPlace();
+  if(!p.geometry) return;
+
+  const lat = p.geometry.location.lat();
+  const lng = p.geometry.location.lng();
+
+  if(isOrigin){
+    placeOrigin(lat, lng);
+    origen.value = p.name || p.formatted_address;
+  } else {
+    placeDest(lat, lng);
+    destino.value = p.name || p.formatted_address;
+  }
+
+  calculateRoute();
+}
+
+function placeOrigin(lat,lng){
+  if(!originMarker){
+    originMarker = new google.maps.Marker({
+      position:{lat,lng},
+      map,
+      icon:{
+        path: google.maps.SymbolPath.CIRCLE,
+        scale: 8,
+        fillColor:"#3a7ce9",
+        fillOpacity:1,
+        strokeColor:"#fff",
+        strokeWeight:2
+      }
+    });
+  } else {
+    originMarker.setPosition({lat,lng});
+  }
+}
+
+function placeDest(lat,lng){
+  if(!destMarker){
+    destMarker = new google.maps.Marker({
+      position:{lat,lng},
+      map,
+      icon:{
+        path:"M 0 0 L 2 4 L 0 12 L -2 4 Z",
+        fillColor:"#4bff8f",
+        fillOpacity:1
+      }
+    });
+  } else {
+    destMarker.setPosition({lat,lng});
+  }
+}
+
+function calculateRoute(){
+  if(!origen.value || !destino.value) return;
 
   directionsService.route({
-    origin: originLatLng,
-    destination: destLatLng,
-    travelMode:"DRIVING",
+    origin: origen.value,
+    destination: destino.value,
+    travelMode: "DRIVING",
     drivingOptions:{
       departureTime: new Date(),
-      trafficModel:"best_guess"
+      trafficModel: "best_guess"
     }
-  }, (res,status)=>{
-    if(status==="OK"){
+  }, (res, status)=>{
+    if(status === "OK"){
       directionsRenderer.setDirections(res);
 
-      let leg = res.routes[0].legs[0];
+      const leg = res.routes[0].legs[0];
       distancia.textContent = leg.distance.text;
-      tiempo.textContent = leg.duration_in_traffic?.text || leg.duration.text;
+      tiempo.textContent = leg.duration_in_traffic.text;
     }
   });
 }
@@ -275,6 +342,7 @@ function calcularRuta(){
 window.initMap = initMap;
 </script>
 
+<!-- GOOGLE MAPS -->
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD32zkRd46s5jKHkTjj2868WOMfv7m_V48&libraries=places&callback=initMap" async defer></script>
 
 </body>
