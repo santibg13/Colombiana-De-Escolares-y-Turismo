@@ -24,7 +24,6 @@
     color: var(--text);
   }
 
-  /* HEADER */
   header {
     padding: 16px;
     display: flex;
@@ -50,7 +49,7 @@
   }
 
   main {
-    padding: 20px 16px 140px !important;
+    padding: 20px 16px 140px;
     max-width: 780px;
     margin: auto;
   }
@@ -92,7 +91,6 @@
     padding: 14px;
     border-radius: 14px;
     border: 1px solid var(--border);
-    margin-top: -8px;
     margin-bottom: 20px;
   }
 
@@ -101,7 +99,6 @@
     margin-bottom: 6px;
   }
 
-  /* BOTTOM NAV */
   .bottom-nav {
     position: fixed;
     bottom: 0; left: 0; right: 0;
@@ -127,12 +124,6 @@
     margin-bottom: 2px;
   }
 
-  .nav-active {
-    color: white;
-    font-weight: 600;
-  }
-
-  /* BOTÓN CONFIRMAR */
   .confirm-container {
     position: fixed;
     bottom: 75px;
@@ -153,7 +144,6 @@
     color: white;
     font-weight: 700;
     font-size: 16px;
-    box-shadow: 0 12px 28px rgba(58,124,233,.45);
   }
 
 </style>
@@ -190,10 +180,10 @@
     <label>Nombre completo</label>
     <input id="nombre" />
 
-    <label style="margin-top:12px;">WhatsApp</label>
+    <label>WhatsApp</label>
     <input id="telefono" type="tel" placeholder="57300..." />
 
-    <label style="margin-top:12px;">Servicio</label>
+    <label>Servicio</label>
     <select id="servicio">
       <option>Escolar</option>
       <option>Empresarial</option>
@@ -201,161 +191,145 @@
       <option>Aeropuerto</option>
     </select>
 
-    <label style="margin-top:12px;">Fecha</label>
+    <label>Fecha</label>
     <input type="date" id="fecha">
 
-    <label style="margin-top:12px;">Hora</label>
+    <label>Hora</label>
     <input type="time" id="hora">
 
-    <label style="margin-top:12px;">Pasajeros</label>
+    <label>Pasajeros</label>
     <input type="number" id="pasajeros" value="1" min="1">
   </section>
 
 </main>
 
-<!-- BOTÓN CONFIRMAR -->
 <div class="confirm-container">
   <button id="btnReservar" class="btn-confirm">Confirmar reserva</button>
 </div>
 
-<!-- NAV INFERIOR -->
 <div class="bottom-nav">
-  <a href="index.html" class="nav-item"><span>🏠</span>Inicio</a>
-  <a href="reservar.html" class="nav-item nav-active"><span>🚌</span>Reservar</a>
-  <a href="contacto.html" class="nav-item"><span>📞</span>Contacto</a>
+  <a href="index.html" class="nav-item"><span>🏠</span> Inicio</a>
+  <a href="reservar.html" class="nav-item"><span>🚌</span> Reservar</a>
+  <a href="contacto.html" class="nav-item"><span>📞</span> Contacto</a>
 </div>
 
-<!-- ===================== MAPS SCRIPT ===================== -->
 <script>
-let map, originMarker, destMarker, directionsService, directionsRenderer, geocoder;
-let userBounds;
+let map, originMarker, destMarker;
+let directionsService, directionsRenderer;
 
-// ---------- CREAR BOUNDS PARA LUGARES CERCANOS ----------
-function setUserBounds(lat, lng) {
-  userBounds = new google.maps.LatLngBounds(
-    new google.maps.LatLng(lat - 0.09, lng - 0.09),
-    new google.maps.LatLng(lat + 0.09, lng + 0.09)
-  );
-}
-
-// ================== INIT MAP ==================
+/* ========================================================
+   INICIALIZAR MAPA
+======================================================== */
 function initMap() {
-  geocoder = new google.maps.Geocoder();
   directionsService = new google.maps.DirectionsService();
   directionsRenderer = new google.maps.DirectionsRenderer({
     suppressMarkers: true,
-    polylineOptions:{ strokeColor:"#3a7ce9", strokeWeight:6 }
+    polylineOptions: { strokeColor: "#3a7ce9", strokeWeight: 6 }
   });
 
   map = new google.maps.Map(document.getElementById("map"), {
-    center:{ lat:4.71, lng:-74.07 },
-    zoom:14,
-    disableDefaultUI:true
+    center: { lat: 4.71, lng: -74.07 },
+    zoom: 14,
+    disableDefaultUI: true
   });
 
   directionsRenderer.setMap(map);
 
-  // GEOLOCALIZACIÓN REAL
-  navigator.geolocation.getCurrentPosition(pos => {
-    const lat = pos.coords.latitude;
-    const lng = pos.coords.longitude;
+  const geocoder = new google.maps.Geocoder();
 
-    setUserBounds(lat, lng);
-    placeOrigin(lat, lng);
+  navigator.geolocation.getCurrentPosition(
+    pos => {
+      const loc = { lat: pos.coords.latitude, lng: pos.coords.longitude };
 
-    map.setCenter({lat, lng});
+      setOrigin(loc);
+      geocoder.geocode({ location: loc }, (res, status) => {
+        if (status === "OK" && res[0]) {
+          document.getElementById("origen").value = res[0].formatted_address;
+        }
+      });
+    }
+  );
 
-    geocoder.geocode({ location:{lat, lng} }, (res) => {
-      if(res[0]) document.getElementById("origen").value = res[0].formatted_address;
-    });
-  });
-
-  // AUTOCOMPLETE CONFIGURADO CORRECTAMENTE
-  const acOptions = {
-    bounds: userBounds,
-    strictBounds: false,
-    componentRestrictions: { country: "co" },
-    fields: ["formatted_address","geometry","name"],
-    types: ["establishment","geocode"]
+  const options = {
+    fields: ["formatted_address", "geometry", "name"],
+    componentRestrictions: { country: "co" }
   };
 
-  const acOrigen = new google.maps.places.Autocomplete(
-    document.getElementById("origen"),
-    acOptions
-  );
-
-  const acDestino = new google.maps.places.Autocomplete(
-    document.getElementById("destino"),
-    acOptions
-  );
+  const acOrigen = new google.maps.places.Autocomplete(document.getElementById("origen"), options);
+  const acDestino = new google.maps.places.Autocomplete(document.getElementById("destino"), options);
 
   acOrigen.addListener("place_changed", () => {
     const p = acOrigen.getPlace();
-    if (!p.geometry) return;
-    placeOrigin(p.geometry.location.lat(), p.geometry.location.lng(), p.formatted_address);
-    calculateRoute();
+    if (p.geometry) {
+      setOrigin(p.geometry.location);
+      calcularRuta();
+    }
   });
 
   acDestino.addListener("place_changed", () => {
     const p = acDestino.getPlace();
-    if (!p.geometry) return;
-    placeDestination(p.geometry.location.lat(), p.geometry.location.lng(), p.formatted_address);
-    calculateRoute();
+    if (p.geometry) {
+      setDestino(p.geometry.location);
+      calcularRuta();
+    }
   });
 }
 
-// MARCADORES
-function placeOrigin(lat, lng, text=null){
-  if(!originMarker){
+/* ========================================================
+   MARCADORES
+======================================================== */
+function setOrigin(latLng) {
+  if (!originMarker) {
     originMarker = new google.maps.Marker({
-      position:{lat,lng},
+      position: latLng,
       map,
-      icon:{
-        path:google.maps.SymbolPath.CIRCLE,
-        scale:8,
-        fillColor:"#3a7ce9",
-        fillOpacity:1,
-        strokeColor:"#fff",
-        strokeWeight:2
+      icon: {
+        path: google.maps.SymbolPath.CIRCLE,
+        scale: 7,
+        fillColor: "#3a7ce9",
+        fillOpacity: 1,
+        strokeColor: "#fff",
+        strokeWeight: 2
       }
     });
-  } else originMarker.setPosition({lat,lng});
-
-  if(text) document.getElementById("origen").value = text;
+  } else originMarker.setPosition(latLng);
 }
 
-function placeDestination(lat, lng, text=null){
-  if(!destMarker){
+function setDestino(latLng) {
+  if (!destMarker) {
     destMarker = new google.maps.Marker({
-      position:{lat,lng},
+      position: latLng,
       map,
-      icon:{
-        path:"M 0 0 L 2 4 L 0 12 L -2 4 Z",
-        fillColor:"#4bff8f",
-        fillOpacity:1
+      icon: {
+        path: "M0 0 L 2 4 L 0 12 L -2 4 Z",
+        fillColor: "#4bff8f",
+        fillOpacity: 1
       }
     });
-  } else destMarker.setPosition({lat,lng});
-
-  if(text) document.getElementById("destino").value = text;
+  } else destMarker.setPosition(latLng);
 }
 
-// RUTA
-function calculateRoute(){
-  if(!originMarker || !destMarker) return;
+/* ========================================================
+   CALCULAR RUTA
+======================================================== */
+function calcularRuta() {
+  const origen = document.getElementById("origen").value;
+  const destino = document.getElementById("destino").value;
+
+  if (!origen || !destino) return;
 
   directionsService.route(
     {
-      origin: originMarker.getPosition(),
-      destination: destMarker.getPosition(),
+      origin: origen,
+      destination: destino,
       travelMode: "DRIVING",
-      drivingOptions:{
+      drivingOptions: {
         departureTime: new Date(),
         trafficModel: "best_guess"
       }
     },
-    (res, status)=>{
-      if(status === "OK"){
+    (res, status) => {
+      if (status === "OK") {
         directionsRenderer.setDirections(res);
 
         const leg = res.routes[0].legs[0];
